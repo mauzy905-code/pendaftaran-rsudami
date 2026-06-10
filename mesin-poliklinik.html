@@ -28,7 +28,7 @@
                                 RSUD AJI MUHAMMAD IDRIS
                             </div>
                             <div class="mt-3 text-emerald-50/95 text-lg md:text-xl font-semibold leading-relaxed">
-                                Mesin Antrian Poliklinik • Pilih jenis pasien lalu pilih poli tujuan.
+                                Mesin Antrian Poliklinik • Pilih jalur, lalu pilih BPJS/UMUM, kemudian nomor langsung dicetak.
                             </div>
                         </div>
                         <div class="flex flex-col gap-3 md:flex-row md:items-center">
@@ -47,15 +47,15 @@
                                 <div class="flex items-start gap-4 rounded-2xl bg-emerald-50 px-4 py-4">
                                     <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-600 text-lg font-black text-white">1</div>
                                     <div>
-                                        <div class="text-base font-extrabold text-slate-900">Pilih Jenis Pasien</div>
-                                        <div class="mt-1 text-sm font-semibold text-slate-500">BPJS atau UMUM</div>
+                                        <div class="text-base font-extrabold text-slate-900">Pilih Jalur</div>
+                                        <div class="mt-1 text-sm font-semibold text-slate-500">UMUM atau PRIORITAS</div>
                                     </div>
                                 </div>
                                 <div class="flex items-start gap-4 rounded-2xl bg-blue-50 px-4 py-4">
                                     <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-lg font-black text-white">2</div>
                                     <div>
-                                        <div class="text-base font-extrabold text-slate-900">Pilih Poli Tujuan</div>
-                                        <div class="mt-1 text-sm font-semibold text-slate-500">Spesialis Anak / Penyakit Dalam / Dokter Umum</div>
+                                        <div class="text-base font-extrabold text-slate-900">Pilih BPJS / UMUM</div>
+                                        <div class="mt-1 text-sm font-semibold text-slate-500">Setelah memilih jalur</div>
                                     </div>
                                 </div>
                                 <div class="flex items-start gap-4 rounded-2xl bg-slate-50 px-4 py-4">
@@ -101,7 +101,7 @@
                             <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                                 <div>
                                     <div class="text-sm font-extrabold tracking-[0.28em] text-blue-700 uppercase">Poliklinik</div>
-                                    <div class="mt-2 text-2xl md:text-3xl font-black tracking-tight text-slate-900">Pilih Jenis Pasien</div>
+                                    <div class="mt-2 text-2xl md:text-3xl font-black tracking-tight text-slate-900">Pilih Jalur</div>
                                 </div>
                                 <div class="rounded-2xl border border-emerald-100 bg-white px-5 py-4 shadow-sm">
                                     <div class="text-xs font-extrabold uppercase tracking-[0.24em] text-slate-400">Status Mesin</div>
@@ -113,27 +113,27 @@
                             </div>
 
                             <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-                                <button type="button" class="jenis-btn group relative overflow-hidden rounded-[30px] border border-emerald-200 bg-[linear-gradient(145deg,_#6ee7b7_0%,_#34d399_58%,_#10b981_100%)] p-8 text-left text-white shadow-[0_28px_50px_-24px_rgba(16,185,129,0.45)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_34px_60px_-24px_rgba(16,185,129,0.55)] active:scale-[0.99]" data-jenis="BPJS">
-                                    <div class="absolute right-0 top-0 h-32 w-32 translate-x-10 -translate-y-10 rounded-full bg-white/10 blur-2xl"></div>
-                                    <div class="relative">
-                                        <div class="flex items-center justify-between gap-4">
-                                            <div class="flex h-20 w-20 items-center justify-center rounded-[24px] bg-white/14 text-5xl shadow-inner shadow-white/10">🛡️</div>
-                                            <div class="rounded-full bg-white/14 px-4 py-2 text-xs font-extrabold tracking-[0.28em] uppercase">Touch Here</div>
-                                        </div>
-                                        <div class="mt-8 text-3xl font-black leading-tight tracking-tight">PASIEN BPJS</div>
-                                        <div class="mt-3 text-base font-semibold text-emerald-50/95 leading-7">LANJUTKAN PILIH POLI TUJUAN.</div>
-                                    </div>
-                                </button>
-
-                                <button type="button" class="jenis-btn group relative overflow-hidden rounded-[30px] border border-blue-200 bg-[linear-gradient(145deg,_#60a5fa_0%,_#3b82f6_55%,_#2563eb_100%)] p-8 text-left text-white shadow-[0_28px_50px_-24px_rgba(37,99,235,0.5)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_34px_60px_-24px_rgba(37,99,235,0.6)] active:scale-[0.99]" data-jenis="UMUM">
+                                <button type="button" class="jalur-btn group relative overflow-hidden rounded-[30px] border border-emerald-200 bg-[linear-gradient(145deg,_#6ee7b7_0%,_#34d399_58%,_#10b981_100%)] p-8 text-left text-white shadow-[0_28px_50px_-24px_rgba(16,185,129,0.45)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_34px_60px_-24px_rgba(16,185,129,0.55)] active:scale-[0.99]" data-jalur="UMUM">
                                     <div class="absolute right-0 top-0 h-32 w-32 translate-x-10 -translate-y-10 rounded-full bg-white/10 blur-2xl"></div>
                                     <div class="relative">
                                         <div class="flex items-center justify-between gap-4">
                                             <div class="flex h-20 w-20 items-center justify-center rounded-[24px] bg-white/14 text-5xl shadow-inner shadow-white/10">👤</div>
                                             <div class="rounded-full bg-white/14 px-4 py-2 text-xs font-extrabold tracking-[0.28em] uppercase">Touch Here</div>
                                         </div>
-                                        <div class="mt-8 text-3xl font-black leading-tight tracking-tight">PASIEN UMUM</div>
-                                        <div class="mt-3 text-base font-semibold text-blue-50/95 leading-7">LANJUTKAN PILIH POLI TUJUAN.</div>
+                                        <div class="mt-8 text-3xl font-black leading-tight tracking-tight">POLIKLINIK</div>
+                                        <div class="mt-3 text-base font-semibold text-emerald-50/95 leading-7">JALUR REGULER. LANJUTKAN PILIH BPJS/UMUM.</div>
+                                    </div>
+                                </button>
+
+                                <button type="button" class="jalur-btn group relative overflow-hidden rounded-[30px] border border-amber-200 bg-[linear-gradient(145deg,_#fbbf24_0%,_#f59e0b_55%,_#d97706_100%)] p-8 text-left text-white shadow-[0_28px_50px_-24px_rgba(245,158,11,0.5)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_34px_60px_-24px_rgba(245,158,11,0.6)] active:scale-[0.99]" data-jalur="PRIORITAS">
+                                    <div class="absolute right-0 top-0 h-32 w-32 translate-x-10 -translate-y-10 rounded-full bg-white/10 blur-2xl"></div>
+                                    <div class="relative">
+                                        <div class="flex items-center justify-between gap-4">
+                                            <div class="flex h-20 w-20 items-center justify-center rounded-[24px] bg-white/14 text-5xl shadow-inner shadow-white/10">⚡</div>
+                                            <div class="rounded-full bg-white/14 px-4 py-2 text-xs font-extrabold tracking-[0.28em] uppercase">Touch Here</div>
+                                        </div>
+                                        <div class="mt-8 text-3xl font-black leading-tight tracking-tight">PRIORITAS</div>
+                                        <div class="mt-3 text-base font-semibold text-amber-50/95 leading-7">JALUR PRIORITAS. LANJUTKAN PILIH BPJS/UMUM.</div>
                                     </div>
                                 </button>
                             </div>
@@ -144,44 +144,35 @@
         </div>
     </div>
 
-    <div id="poliModal" class="fixed inset-0 z-50 hidden">
+    <div id="payerModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-slate-950/50 backdrop-blur-sm"></div>
         <div class="relative min-h-full flex items-center justify-center p-4">
             <div class="w-full max-w-2xl rounded-[32px] border border-white/70 bg-white shadow-[0_30px_90px_-30px_rgba(15,23,42,0.55)] overflow-hidden">
                 <div class="bg-[linear-gradient(135deg,_#065f46_0%,_#0f766e_42%,_#1d4ed8_100%)] px-8 py-7">
-                    <div class="text-emerald-100 text-xs font-extrabold tracking-[0.32em] uppercase">Langkah 2 • Poli Tujuan</div>
+                    <div class="text-emerald-100 text-xs font-extrabold tracking-[0.32em] uppercase">Langkah 2 • Jenis Pasien</div>
                     <div class="text-white text-3xl font-black tracking-tight mt-2">POLIKLINIK</div>
-                    <div id="modalJenisTitle" class="text-emerald-100 text-base font-semibold mt-2">-</div>
+                    <div id="modalJalurTitle" class="text-emerald-100 text-base font-semibold mt-2">-</div>
                 </div>
                 <div class="p-8 space-y-4 bg-[linear-gradient(180deg,_#ffffff_0%,_#f8fafc_100%)]">
-                    <button class="poli-btn w-full rounded-[26px] border border-emerald-200 bg-[linear-gradient(180deg,_#ecfdf5_0%,_#d1fae5_100%)] px-6 py-6 text-left hover:-translate-y-0.5 hover:shadow-lg transition" data-poli="SPESIALIS_ANAK">
+                    <button type="button" class="payer-btn w-full rounded-[26px] border border-emerald-200 bg-[linear-gradient(180deg,_#ecfdf5_0%,_#d1fae5_100%)] px-6 py-6 text-left hover:-translate-y-0.5 hover:shadow-lg transition" data-jenis="BPJS">
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <div class="text-2xl font-black text-emerald-900 tracking-tight">SPESIALIS ANAK</div>
-                                <div class="text-base font-semibold text-emerald-700/80 mt-2">LAYANAN KONSULTASI DAN PEMERIKSAAN ANAK</div>
+                                <div class="text-2xl font-black text-emerald-900 tracking-tight">PASIEN BPJS</div>
+                                <div class="text-base font-semibold text-emerald-700/80 mt-2">PESERTA JKN / BPJS KESEHATAN</div>
                             </div>
-                            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/70 text-3xl">🧒</div>
+                            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/70 text-3xl">🛡️</div>
                         </div>
                     </button>
-                    <button class="poli-btn w-full rounded-[26px] border border-blue-200 bg-[linear-gradient(180deg,_#eff6ff_0%,_#dbeafe_100%)] px-6 py-6 text-left hover:-translate-y-0.5 hover:shadow-lg transition" data-poli="SPESIALIS_PENYAKIT_DALAM">
+                    <button type="button" class="payer-btn w-full rounded-[26px] border border-blue-200 bg-[linear-gradient(180deg,_#eff6ff_0%,_#dbeafe_100%)] px-6 py-6 text-left hover:-translate-y-0.5 hover:shadow-lg transition" data-jenis="UMUM">
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <div class="text-2xl font-black text-blue-900 tracking-tight">SPESIALIS PENYAKIT DALAM</div>
-                                <div class="text-base font-semibold text-blue-700/80 mt-2">LAYANAN PEMERIKSAAN PENYAKIT DALAM DEWASA</div>
+                                <div class="text-2xl font-black text-blue-900 tracking-tight">PASIEN UMUM</div>
+                                <div class="text-base font-semibold text-blue-700/80 mt-2">PASIEN UMUM / NON BPJS</div>
                             </div>
-                            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/70 text-3xl">🫀</div>
+                            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/70 text-3xl">👤</div>
                         </div>
                     </button>
-                    <button class="poli-btn w-full rounded-[26px] border border-slate-200 bg-[linear-gradient(180deg,_#f8fafc_0%,_#e2e8f0_100%)] px-6 py-6 text-left hover:-translate-y-0.5 hover:shadow-lg transition" data-poli="DOKTER_UMUM">
-                        <div class="flex items-start justify-between gap-4">
-                            <div>
-                                <div class="text-2xl font-black text-slate-900 tracking-tight">DOKTER UMUM</div>
-                                <div class="text-base font-semibold text-slate-600 mt-2">LAYANAN PEMERIKSAAN UMUM DAN KONSULTASI AWAL</div>
-                            </div>
-                            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/70 text-3xl">🩺</div>
-                        </div>
-                    </button>
-                    <button id="closePoliModal" type="button" class="w-full min-h-[64px] rounded-2xl border border-slate-200 bg-white px-6 text-slate-700 text-lg font-black hover:bg-slate-50 transition">
+                    <button id="closePayerModal" type="button" class="w-full min-h-[64px] rounded-2xl border border-slate-200 bg-white px-6 text-slate-700 text-lg font-black hover:bg-slate-50 transition">
                         BATAL
                     </button>
                 </div>
@@ -283,9 +274,9 @@
             }
 
             const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            const poliModal = document.getElementById('poliModal');
-            const modalJenisTitle = document.getElementById('modalJenisTitle');
-            const closePoliModal = document.getElementById('closePoliModal');
+            const payerModal = document.getElementById('payerModal');
+            const modalJalurTitle = document.getElementById('modalJalurTitle');
+            const closePayerModal = document.getElementById('closePayerModal');
             const resetToggleBtn = document.getElementById('resetToggleBtn');
             const resetPanel = document.getElementById('resetPanel');
             const resetPoliBtn = document.getElementById('resetPoliBtn');
@@ -294,14 +285,8 @@
 
             const unit = 'POLIKLINIK';
             const unitLabel = 'POLIKLINIK';
-            const unitPrefix = 'P';
+            let selectedJalur = '';
             let selectedJenis = '';
-
-            const poliNames = {
-                'SPESIALIS_ANAK': 'SPESIALIS ANAK',
-                'SPESIALIS_PENYAKIT_DALAM': 'SPESIALIS PENYAKIT DALAM',
-                'DOKTER_UMUM': 'DOKTER UMUM'
-            };
 
             function getTodayRangeISO() {
                 const start = new Date();
@@ -323,15 +308,22 @@
                 }
             }
 
-            function openPoliModal(jenisPasien) {
-                selectedJenis = jenisPasien;
-                modalJenisTitle.textContent = 'Jenis Pasien: ' + jenisPasien;
-                poliModal.classList.remove('hidden');
+            function openPayerModal(jalur) {
+                selectedJalur = jalur;
+                selectedJenis = '';
+                modalJalurTitle.textContent = 'Jalur: ' + jalur;
+                payerModal.classList.remove('hidden');
             }
 
-            function closeModal() {
+            function closePayer() {
+                payerModal.classList.add('hidden');
+                selectedJalur = '';
                 selectedJenis = '';
-                poliModal.classList.add('hidden');
+            }
+
+            function getPrefixForJalur() {
+                if (selectedJalur === 'PRIORITAS') return 'B';
+                return 'A';
             }
 
             async function resetAntrean(targetUnit, buttonEl) {
@@ -407,6 +399,7 @@
             }
 
             async function generateNoAntrian() {
+                const prefix = getPrefixForJalur();
                 const { startISO, endISO } = getTodayRangeISO();
                 const { data, error } = await supabaseClient
                     .from('antrian')
@@ -414,20 +407,21 @@
                     .gte('created_at', startISO)
                     .lte('created_at', endISO)
                     .eq('unit', unit)
+                    .ilike('no_antrian', prefix + '-%')
                     .order('created_at', { ascending: false })
                     .limit(1);
 
                 if (error) {
                     console.error('Error fetching last antrian:', error);
-                    return unitPrefix + '-001';
+                    return prefix + '-001';
                 }
 
-                if (!data || data.length === 0) return unitPrefix + '-001';
+                if (!data || data.length === 0) return prefix + '-001';
                 const lastNumber = parseInt(String(data[0].no_antrian || '').split('-')[1] || '0', 10);
-                return unitPrefix + '-' + (lastNumber + 1).toString().padStart(3, '0');
+                return prefix + '-' + (lastNumber + 1).toString().padStart(3, '0');
             }
 
-            async function processTicket(jenisPasien, poliTujuan) {
+            async function processTicket() {
                 const noAntrian = await generateNoAntrian();
                 const now = new Date();
 
@@ -436,8 +430,8 @@
                     .insert([{
                         no_antrian: noAntrian,
                         unit: unit,
-                        jenis_pasien: jenisPasien,
-                        poli_tujuan: poliTujuan,
+                        jenis_pasien: selectedJenis,
+                        poli_tujuan: unit,
                         status: 'menunggu',
                         created_at: now.toISOString()
                     }]);
@@ -445,8 +439,13 @@
                 if (error) throw new Error(error.message);
 
                 document.getElementById('strukUnit').textContent = unitLabel;
-                document.getElementById('strukJenisPasien').textContent = 'JENIS PASIEN: ' + jenisPasien;
-                document.getElementById('strukPoli').textContent = poliNames[poliTujuan] || poliTujuan || '-';
+                if (selectedJalur === 'PRIORITAS') {
+                    document.getElementById('strukJenisPasien').textContent = 'PRIORITAS • ' + (selectedJenis || '-');
+                } else {
+                    document.getElementById('strukJenisPasien').textContent = 'JENIS PASIEN: ' + (selectedJenis || '-');
+                }
+                document.getElementById('strukPoli').textContent = '';
+                document.getElementById('strukPoli').style.display = 'none';
                 document.getElementById('strukNoAntrian').textContent = noAntrian;
                 document.getElementById('strukTanggal').textContent =
                     now.getDate().toString().padStart(2, '0') + '-' +
@@ -456,38 +455,41 @@
                     now.getHours().toString().padStart(2, '0') + ':' +
                     now.getMinutes().toString().padStart(2, '0');
 
-                closeModal();
                 await printTicket();
-                alert('Nomor antrian ' + noAntrian + ' (' + jenisPasien + ') berhasil diambil.');
+                alert('Nomor antrian ' + noAntrian + ' (' + (selectedJalur || '-') + ' / ' + (selectedJenis || '-') + ') berhasil diambil.');
             }
 
-            document.querySelectorAll('.jenis-btn').forEach(btn => {
+            document.querySelectorAll('.jalur-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    openPoliModal(this.dataset.jenis);
+                    openPayerModal(this.dataset.jalur);
                 });
             });
 
-            document.querySelectorAll('.poli-btn').forEach(btn => {
+            document.querySelectorAll('.payer-btn').forEach(btn => {
                 btn.addEventListener('click', async function() {
-                    const poliTujuan = this.dataset.poli;
                     const original = this.innerHTML;
                     this.disabled = true;
                     this.innerHTML = '⏳ Memproses...';
+
                     try {
-                        await processTicket(selectedJenis, poliTujuan);
+                        selectedJenis = this.dataset.jenis;
+                        payerModal.classList.add('hidden');
+                        await processTicket();
                     } catch (err) {
                         alert('Terjadi kesalahan: ' + (err?.message || String(err)));
                     } finally {
                         this.disabled = false;
                         this.innerHTML = original;
+                        selectedJalur = '';
+                        selectedJenis = '';
                     }
                 });
             });
 
-            closePoliModal.addEventListener('click', closeModal);
-            poliModal.addEventListener('click', function(e) {
-                if (e.target === poliModal || e.target === this.firstElementChild) {
-                    closeModal();
+            closePayerModal.addEventListener('click', closePayer);
+            payerModal.addEventListener('click', function(e) {
+                if (e.target === payerModal || e.target === this.firstElementChild) {
+                    closePayer();
                 }
             });
 
@@ -516,4 +518,3 @@
     </script>
 </body>
 </html>
-
