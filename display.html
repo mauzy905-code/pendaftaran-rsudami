@@ -20,7 +20,7 @@
             <div class="flex flex-wrap items-center justify-center lg:justify-end gap-2">
                 <a href="index.html" class="rounded-full bg-white/15 px-4 py-2 text-white font-semibold hover:bg-white/20 transition" target="_blank" rel="noreferrer">Admin</a>
                 <button class="display-unit-btn rounded-full bg-white text-emerald-900 font-extrabold px-4 py-2 active" data-unit="ALL">SEMUA</button>
-                <button class="display-unit-btn rounded-full bg-red-600/90 text-white font-bold px-4 py-2 hover:bg-red-700 transition" data-unit="UGD">UGD</button>
+                <button class="display-unit-btn rounded-full bg-red-600/90 text-white font-bold px-4 py-2 hover:bg-red-700 transition" data-unit="FARMASI">FARMASI</button>
                 <button class="display-unit-btn rounded-full bg-blue-600/90 text-white font-bold px-4 py-2 hover:bg-blue-700 transition" data-unit="POLIKLINIK">POLIKLINIK</button>
             </div>
         </div>
@@ -56,7 +56,7 @@
 
                 // Mapping nama unit
                 const unitNames = {
-                    'UGD': '🏥 UNIT GAWAT DARURAT',
+                    'FARMASI': '💊 FARMASI',
                     'POLIKLINIK': '🩺 POLIKLINIK'
                 };
 
@@ -69,7 +69,7 @@
                 
                 function poliLabel(poli) {
                     if (!poli) return '-';
-                    if (poli === 'UGD') return 'UGD';
+                    if (poli === 'FARMASI') return 'FARMASI';
                     if (poli === 'SPESIALIS_ANAK') return 'Spesialis Anak';
                     if (poli === 'SPESIALIS_PENYAKIT_DALAM') return 'Spesialis Penyakit Dalam';
                     if (poli === 'DOKTER_UMUM') return 'Dokter Umum';
