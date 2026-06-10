@@ -22,6 +22,7 @@
                 <button class="display-unit-btn rounded-full bg-white text-emerald-900 font-extrabold px-4 py-2 active" data-unit="ALL">SEMUA</button>
                 <button class="display-unit-btn rounded-full bg-red-600/90 text-white font-bold px-4 py-2 hover:bg-red-700 transition" data-unit="FARMASI">FARMASI</button>
                 <button class="display-unit-btn rounded-full bg-blue-600/90 text-white font-bold px-4 py-2 hover:bg-blue-700 transition" data-unit="POLIKLINIK">POLIKLINIK</button>
+                <div id="syncStatus" class="ml-1 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-xs font-semibold text-white/80">Sinkron: -</div>
             </div>
         </div>
     </div>
@@ -130,6 +131,27 @@
                     return { startISO: start.toISOString(), endISO: end.toISOString() };
                 }
 
+                function isTodayLocal(isoString) {
+                    if (!isoString) return false;
+                    const d = new Date(isoString);
+                    if (Number.isNaN(d.getTime())) return false;
+                    const now = new Date();
+                    return d.getFullYear() === now.getFullYear() &&
+                        d.getMonth() === now.getMonth() &&
+                        d.getDate() === now.getDate();
+                }
+
+                function setSyncStatus(text, variant) {
+                    const el = document.getElementById('syncStatus');
+                    if (!el) return;
+                    el.textContent = text;
+                    if (variant === 'error') {
+                        el.className = 'ml-1 rounded-full border border-red-200/30 bg-red-500/15 px-3 py-2 text-xs font-semibold text-red-100';
+                    } else {
+                        el.className = 'ml-1 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-xs font-semibold text-white/80';
+                    }
+                }
+
                 function sectionPrefix(unit) {
                     return unit === 'FARMASI' ? 'farmasi' : 'poliklinik';
                 }
@@ -154,17 +176,18 @@
                 function setEmptyState(unit) {
                     const prefix = sectionPrefix(unit);
                     document.getElementById(prefix + 'CurrentAntrian').textContent = '-';
-                    document.getElementById(prefix + 'CurrentNama').textContent = 'Belum ada antrean siap dipanggil';
+                    document.getElementById(prefix + 'CurrentNama').textContent = 'Belum ada antrean';
                     document.getElementById(prefix + 'CurrentJenisPasien').textContent = '-';
                     document.getElementById(prefix + 'CurrentPoli').textContent = '-';
-                    document.getElementById(prefix + 'AntrianList').innerHTML = '<div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm font-semibold text-white/70">Belum ada antrean terdaftar untuk ditampilkan.</div>';
+                    document.getElementById(prefix + 'AntrianList').innerHTML = '<div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm font-semibold text-white/70">Belum ada antrean hari ini.</div>';
                 }
 
                 function renderFocusedQueue(unit, rows) {
                     const called = (rows || []).filter(a => a.status_norm === 'dipanggil');
                     const queued = (rows || []).filter(a => a.status_norm === 'terdaftar');
-                    const ordered = [...called, ...queued];
-                    const current = ordered.length > 0 ? ordered[0] : null;
+                    const waiting = (rows || []).filter(a => a.status_norm === 'menunggu');
+                    const current = called[0] || queued[0] || null;
+                    const ordered = [...called, ...queued, ...waiting];
                     const isFarmasi = unit === 'FARMASI';
 
                     document.getElementById('focusedUnit').textContent = unitNames[unit] || unit;
@@ -178,19 +201,38 @@
 
                     if (!current) {
                         document.getElementById('focusedAntrian').textContent = '-';
-                        document.getElementById('focusedNama').textContent = 'Belum ada antrean siap dipanggil';
+                        document.getElementById('focusedNama').textContent = 'Menunggu petugas';
                         document.getElementById('focusedJenisPasien').textContent = '-';
                         document.getElementById('focusedPoli').textContent = '-';
-                        document.getElementById('focusedAntrianList').innerHTML = '<div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm font-semibold text-white/70">Belum ada antrean terdaftar untuk ditampilkan.</div>';
+                        if (waiting.length > 0) {
+                            const listContainer = document.getElementById('focusedAntrianList');
+                            const accentClass = isFarmasi
+                                ? 'from-emerald-900/55 to-emerald-800/35 border-emerald-700/50 text-emerald-100'
+                                : 'from-blue-900/55 to-slate-800/55 border-blue-700/50 text-blue-100';
+                            listContainer.innerHTML = waiting.map((item) => `
+                                <div class="bg-gradient-to-r ${accentClass} border rounded-xl p-4 flex justify-between items-center gap-4 shadow-lg">
+                                    <div>
+                                        <div class="text-3xl font-extrabold">${item.no_antrian || '-'}</div>
+                                        <div class="text-sm mt-1 font-bold uppercase tracking-[0.18em] opacity-80">${jenisPasienLabel(item.jenis_pasien)}</div>
+                                        <div class="text-sm mt-1 font-semibold opacity-90">${poliLabel(item.poli_tujuan)}</div>
+                                    </div>
+                                    <div class="text-lg text-right font-semibold">${item.nama_pasien ? item.nama_pasien : 'Menunggu registrasi'}</div>
+                                </div>
+                            `).join('');
+                        } else {
+                            document.getElementById('focusedAntrianList').innerHTML = '<div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm font-semibold text-white/70">Belum ada antrean hari ini.</div>';
+                        }
                         return;
                     }
 
                     document.getElementById('focusedAntrian').textContent = current.no_antrian || '-';
-                    document.getElementById('focusedNama').textContent = current.nama_pasien ? current.nama_pasien : 'Siap dipanggil';
+                    document.getElementById('focusedNama').textContent = current.nama_pasien
+                        ? current.nama_pasien
+                        : (current.status_norm === 'menunggu' ? 'Menunggu petugas' : 'Siap dipanggil');
                     document.getElementById('focusedJenisPasien').textContent = jenisPasienLabel(current.jenis_pasien);
                     document.getElementById('focusedPoli').textContent = poliLabel(current.poli_tujuan);
 
-                    const nextList = ordered.slice(1);
+                    const nextList = ordered.filter((item) => item.id !== current.id);
                     const listContainer = document.getElementById('focusedAntrianList');
                     if (nextList.length === 0) {
                         listContainer.innerHTML = '<div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm font-semibold text-white/70">Tidak ada antrean berikutnya.</div>';
@@ -210,7 +252,7 @@
                                 <div class="text-sm mt-1 font-bold uppercase tracking-[0.18em] opacity-80">${jenisPasienLabel(item.jenis_pasien)}</div>
                                 <div class="text-sm mt-1 font-semibold opacity-90">${poliLabel(item.poli_tujuan)}</div>
                             </div>
-                            <div class="text-lg text-right font-semibold">${item.nama_pasien ? item.nama_pasien : 'Siap dipanggil'}</div>
+                            <div class="text-lg text-right font-semibold">${item.nama_pasien ? item.nama_pasien : (item.status_norm === 'menunggu' ? 'Menunggu registrasi' : 'Siap dipanggil')}</div>
                         `;
                         listContainer.appendChild(div);
                     });
@@ -220,20 +262,44 @@
                     const prefix = sectionPrefix(unit);
                     const called = (rows || []).filter(a => a.status_norm === 'dipanggil');
                     const queued = (rows || []).filter(a => a.status_norm === 'terdaftar');
-                    const ordered = [...called, ...queued];
-                    const current = ordered.length > 0 ? ordered[0] : null;
+                    const waiting = (rows || []).filter(a => a.status_norm === 'menunggu');
+                    const current = called[0] || queued[0] || null;
+                    const ordered = [...called, ...queued, ...waiting];
 
                     if (!current) {
-                        setEmptyState(unit);
+                        document.getElementById(prefix + 'CurrentAntrian').textContent = '-';
+                        document.getElementById(prefix + 'CurrentNama').textContent = waiting.length > 0 ? 'Menunggu petugas' : 'Belum ada antrean';
+                        document.getElementById(prefix + 'CurrentJenisPasien').textContent = '-';
+                        document.getElementById(prefix + 'CurrentPoli').textContent = '-';
+                        const listContainer = document.getElementById(prefix + 'AntrianList');
+                        if (waiting.length > 0) {
+                            const accentClass = unit === 'FARMASI'
+                                ? 'from-emerald-900/50 to-emerald-800/40 border-emerald-700/50 text-emerald-100'
+                                : 'from-blue-900/50 to-slate-800/60 border-blue-700/50 text-blue-100';
+                            listContainer.innerHTML = waiting.map((item) => `
+                                <div class="bg-gradient-to-r ${accentClass} border rounded-2xl p-4 flex justify-between items-center gap-4 shadow-lg">
+                                    <div>
+                                        <div class="text-2xl font-extrabold">${item.no_antrian || '-'}</div>
+                                        <div class="mt-1 text-xs font-bold uppercase tracking-[0.18em] opacity-80">${jenisPasienLabel(item.jenis_pasien)}</div>
+                                        <div class="mt-1 text-sm font-semibold opacity-90">${poliLabel(item.poli_tujuan)}</div>
+                                    </div>
+                                    <div class="text-right text-base font-semibold">${item.nama_pasien ? item.nama_pasien : 'Menunggu registrasi'}</div>
+                                </div>
+                            `).join('');
+                        } else {
+                            listContainer.innerHTML = '<div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm font-semibold text-white/70">Belum ada antrean hari ini.</div>';
+                        }
                         return;
                     }
 
                     document.getElementById(prefix + 'CurrentAntrian').textContent = current.no_antrian || '-';
-                    document.getElementById(prefix + 'CurrentNama').textContent = current.nama_pasien ? current.nama_pasien : 'Siap dipanggil';
+                    document.getElementById(prefix + 'CurrentNama').textContent = current.nama_pasien
+                        ? current.nama_pasien
+                        : (current.status_norm === 'menunggu' ? 'Menunggu petugas' : 'Siap dipanggil');
                     document.getElementById(prefix + 'CurrentJenisPasien').textContent = jenisPasienLabel(current.jenis_pasien);
                     document.getElementById(prefix + 'CurrentPoli').textContent = poliLabel(current.poli_tujuan);
 
-                    const nextList = ordered.slice(1);
+                    const nextList = ordered.filter((item) => item.id !== current.id);
                     const listContainer = document.getElementById(prefix + 'AntrianList');
                     if (nextList.length === 0) {
                         listContainer.innerHTML = '<div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm font-semibold text-white/70">Tidak ada antrean berikutnya.</div>';
@@ -253,44 +319,57 @@
                                 <div class="mt-1 text-xs font-bold uppercase tracking-[0.18em] opacity-80">${jenisPasienLabel(item.jenis_pasien)}</div>
                                 <div class="mt-1 text-sm font-semibold opacity-90">${poliLabel(item.poli_tujuan)}</div>
                             </div>
-                            <div class="text-right text-base font-semibold">${item.nama_pasien ? item.nama_pasien : 'Siap dipanggil'}</div>
+                            <div class="text-right text-base font-semibold">${item.nama_pasien ? item.nama_pasien : (item.status_norm === 'menunggu' ? 'Menunggu registrasi' : 'Siap dipanggil')}</div>
                         `;
                         listContainer.appendChild(div);
                     });
                 }
 
                 async function loadAntrian() {
-                    const { startISO, endISO } = getTodayRangeISO();
-                    
-                    const { data: antrianData, error: antrianError } = await supabaseClient
-                        .from('antrian')
-                        .select('*')
-                        .gte('created_at', startISO)
-                        .lte('created_at', endISO)
-                        .order('created_at', { ascending: true });
-                    
-                    if (antrianError) {
-                        console.error('Error loading antrian:', antrianError);
-                        return;
-                    }
-                    
-                    const mergedData = (antrianData || []).map(a => ({
-                        ...a,
-                        status_norm: String(a.status || '').toLowerCase(),
-                        nama_pasien: a.nama_pasien || ''
-                    }));
-                    
-                    const farmasiRows = mergedData.filter(a => a.unit === 'FARMASI');
-                    const poliklinikRows = mergedData.filter(a => a.unit === 'POLIKLINIK');
+                    try {
+                        const { data: antrianData, error: antrianError } = await supabaseClient
+                            .from('antrian')
+                            .select('*')
+                            .order('created_at', { ascending: false })
+                            .limit(250);
 
-                    renderUnitQueue('FARMASI', farmasiRows);
-                    renderUnitQueue('POLIKLINIK', poliklinikRows);
-                    if (selectedUnit === 'FARMASI') {
-                        renderFocusedQueue('FARMASI', farmasiRows);
-                    } else if (selectedUnit === 'POLIKLINIK') {
-                        renderFocusedQueue('POLIKLINIK', poliklinikRows);
+                        if (antrianError) {
+                            console.error('Error loading antrian:', antrianError);
+                            setSyncStatus('Sinkron gagal', 'error');
+                            return;
+                        }
+
+                        const todayData = (antrianData || []).filter((row) => isTodayLocal(row.created_at));
+                        todayData.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+
+                        const mergedData = todayData.map(a => ({
+                            ...a,
+                            unit_norm: String(a.unit || '').toUpperCase(),
+                            status_norm: String(a.status || '').toLowerCase(),
+                            nama_pasien: a.nama_pasien || ''
+                        }));
+
+                        const farmasiRows = mergedData.filter(a => a.unit_norm === 'FARMASI');
+                        const poliklinikRows = mergedData.filter(a => a.unit_norm === 'POLIKLINIK');
+
+                        renderUnitQueue('FARMASI', farmasiRows);
+                        renderUnitQueue('POLIKLINIK', poliklinikRows);
+                        if (selectedUnit === 'FARMASI') {
+                            renderFocusedQueue('FARMASI', farmasiRows);
+                        } else if (selectedUnit === 'POLIKLINIK') {
+                            renderFocusedQueue('POLIKLINIK', poliklinikRows);
+                        }
+                        setSectionVisibility();
+
+                        const now = new Date();
+                        const hh = now.getHours().toString().padStart(2, '0');
+                        const mm = now.getMinutes().toString().padStart(2, '0');
+                        const ss = now.getSeconds().toString().padStart(2, '0');
+                        setSyncStatus(`Sinkron: ${hh}:${mm}:${ss} • ${todayData.length} data`, 'ok');
+                    } catch (err) {
+                        console.error('Display loadAntrian exception:', err);
+                        setSyncStatus('Sinkron error', 'error');
                     }
-                    setSectionVisibility();
                 }
 
                 function subscribeToRealtime() {
@@ -326,7 +405,11 @@
                 setSectionVisibility();
                 loadAntrian();
                 subscribeToRealtime();
-                window.setInterval(() => loadAntrian(), 5000);
+                window.setInterval(() => loadAntrian(), 3000);
+                window.addEventListener('focus', () => loadAntrian());
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden) loadAntrian();
+                });
             }
         });
     </script>
