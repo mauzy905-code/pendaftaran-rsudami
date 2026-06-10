@@ -228,12 +228,15 @@
                                     </select>
                                 </div>
 
-                                <div>
-                                    <label class="block text-slate-700 font-semibold mb-2">Nomor Antrian</label>
-                                    <select id="no_antrian" class="w-full rounded-2xl border border-emerald-200 bg-white px-4 py-3 shadow-sm transition focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500" required>
-                                        <option value="">Pilih Nomor Antrian</option>
-                                    </select>
+                                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                                    <div class="text-xs font-extrabold tracking-[0.22em] uppercase text-slate-500">Nomor Antrian</div>
+                                    <div id="autoNoAntrian" class="mt-1 text-lg font-extrabold text-slate-900">Otomatis</div>
+                                    <div class="mt-1 text-xs font-semibold text-slate-500">Nomor diambil otomatis dari antrean aktif (dipanggil/terdaftar/menunggu).</div>
                                 </div>
+
+                                <select id="no_antrian" class="hidden" tabindex="-1" aria-hidden="true">
+                                    <option value=""></option>
+                                </select>
 
                                 <div>
                                     <label class="block text-slate-700 font-semibold mb-2">Nama Pasien</label>
@@ -1077,6 +1080,7 @@
 
                 async function loadAvailableAntrian(unit, jenisPasien) {
                     const select = document.getElementById('no_antrian');
+                    if (!select) return;
                     if (!unit) {
                         select.innerHTML = '<option value="">Pilih Unit Terlebih Dahulu</option>';
                         return;
@@ -1258,6 +1262,33 @@
                             }
                         }
                     });
+
+                    const autoNoEl = document.getElementById('autoNoAntrian');
+                    const hiddenNoAntrian = document.getElementById('no_antrian');
+                    if (autoNoEl && hiddenNoAntrian) {
+                        const selectedUnit = document.getElementById('unitSelect')?.value || '';
+                        if (!selectedUnit) {
+                            autoNoEl.textContent = 'Otomatis';
+                            hiddenNoAntrian.value = '';
+                        } else {
+                            const unitRows = rows.filter((item) => item.unit === selectedUnit);
+                            const calledRow = unitRows.find((item) => String(item.status || '').toLowerCase() === 'dipanggil') || null;
+                            const queuedRow = unitRows.find((item) => String(item.status || '').toLowerCase() === 'terdaftar') || null;
+                            const waitingRows = unitRows.filter((item) => String(item.status || '').toLowerCase() === 'menunggu');
+                            let waitingPick = waitingRows[0] || null;
+                            if (selectedUnit === 'POLIKLINIK') {
+                                waitingPick = waitingRows.find((x) => isPoliklinikRegulerNoAntrian(x.no_antrian)) || waitingRows[0] || null;
+                            }
+                            const pick = calledRow || queuedRow || waitingPick;
+                            if (!pick) {
+                                autoNoEl.textContent = 'Belum ada antrean';
+                                hiddenNoAntrian.value = '';
+                            } else {
+                                autoNoEl.textContent = String(pick.no_antrian || '-');
+                                hiddenNoAntrian.value = String(pick.no_antrian || '');
+                            }
+                        }
+                    }
                 }
 
                 async function callPrioritasPoliklinik(buttonEl) {
@@ -1339,6 +1370,60 @@
 
                     try {
                         const { startISO, endISO } = getTodayRangeISO();
+                        const promoteNext = async () => {
+                            const { data: activeCalled, error: calledError } = await withTimeout(
+                                supabaseClient
+                                    .from('antrian')
+                                    .select('id')
+                                    .gte('created_at', startISO)
+                                    .lte('created_at', endISO)
+                                    .eq('unit', unit)
+                                    .eq('status', 'dipanggil')
+                                    .limit(1),
+                                15000,
+                                'Cek antrean dipanggil'
+                            );
+                            if (calledError) throw new Error(calledError.message);
+                            if (activeCalled && activeCalled.length > 0) return;
+
+                            const { data: candidatesRaw, error: candError } = await withTimeout(
+                                supabaseClient
+                                    .from('antrian')
+                                    .select('id,no_antrian,status,created_at')
+                                    .gte('created_at', startISO)
+                                    .lte('created_at', endISO)
+                                    .eq('unit', unit)
+                                    .in('status', ['terdaftar', 'menunggu'])
+                                    .order('created_at', { ascending: true })
+                                    .limit(25),
+                                15000,
+                                'Muat antrean berikutnya'
+                            );
+                            if (candError) throw new Error(candError.message);
+
+                            const candidates = candidatesRaw || [];
+                            let target = candidates.find((x) => String(x.status || '').toLowerCase() === 'terdaftar') || null;
+                            if (!target) {
+                                if (unit === 'POLIKLINIK') {
+                                    target = candidates.find((x) => String(x.status || '').toLowerCase() === 'menunggu' && isPoliklinikRegulerNoAntrian(x.no_antrian)) || null;
+                                }
+                            }
+                            if (!target) {
+                                target = candidates.find((x) => String(x.status || '').toLowerCase() === 'menunggu') || null;
+                            }
+                            if (!target) return;
+
+                            const updateRes = await withTimeout(
+                                supabaseClient
+                                    .from('antrian')
+                                    .update({ status: 'dipanggil' })
+                                    .eq('id', target.id),
+                                15000,
+                                'Aktifkan antrean berikutnya'
+                            );
+                            if (updateRes?.error) throw new Error(updateRes.error.message);
+                        };
+
                         const findActive = async (status) => {
                             const { data, error } = await withTimeout(
                                 supabaseClient
@@ -1358,13 +1443,39 @@
                         };
 
                         const called = await findActive('dipanggil');
-                        const queued = called.length > 0 ? called : await findActive('terdaftar');
-                        if (queued.length === 0) {
-                            if (unit === 'POLIKLINIK') {
+                        if (called.length > 0) {
+                            const current = called[0];
+                            if (!String(current.nama_pasien || '').trim()) {
+                                throw new Error('Registrasi pasien dulu sebelum klik Next, agar antrean tidak terlewat.');
+                            }
+                            const updateRes = await withTimeout(
+                                supabaseClient
+                                    .from('antrian')
+                                    .update({ status: 'selesai' })
+                                    .eq('id', current.id),
+                                15000,
+                                'Selesaikan antrean'
+                            );
+
+                            if (updateRes?.error) throw new Error(updateRes.error.message);
+                            await promoteNext();
+                        } else {
+                            const queued = await findActive('terdaftar');
+                            if (queued.length > 0) {
+                                const updateRes = await withTimeout(
+                                    supabaseClient
+                                        .from('antrian')
+                                        .update({ status: 'dipanggil' })
+                                        .eq('id', queued[0].id),
+                                    15000,
+                                    'Panggil antrean berikutnya'
+                                );
+                                if (updateRes?.error) throw new Error(updateRes.error.message);
+                            } else {
                                 const { data: waitingData, error: waitingError } = await withTimeout(
                                     supabaseClient
                                         .from('antrian')
-                                        .select('id,no_antrian,status')
+                                        .select('id,no_antrian,status,created_at')
                                         .gte('created_at', startISO)
                                         .lte('created_at', endISO)
                                         .eq('unit', unit)
@@ -1377,7 +1488,11 @@
                                 if (waitingError) throw new Error(waitingError.message);
 
                                 const waitingRows = waitingData || [];
-                                const pick = waitingRows.find((x) => isPoliklinikRegulerNoAntrian(x.no_antrian)) || waitingRows[0] || null;
+                                let pick = null;
+                                if (unit === 'POLIKLINIK') {
+                                    pick = waitingRows.find((x) => isPoliklinikRegulerNoAntrian(x.no_antrian)) || null;
+                                }
+                                pick = pick || waitingRows[0] || null;
                                 if (!pick) {
                                     throw new Error(`Belum ada antrean ${queueControlPrefix(unit)} yang menunggu.`);
                                 }
@@ -1390,34 +1505,9 @@
                                     15000,
                                     'Panggil antrean pertama'
                                 );
-
                                 if (updateRes?.error) throw new Error(updateRes.error.message);
-
-                                await loadQueueControls();
-                                await refreshStats();
-                                if (!viewRekap.classList.contains('hidden')) {
-                                    await r_loadPage(r_currentPage);
-                                }
-                                return;
                             }
-
-                            throw new Error(`Belum ada antrean ${queueControlPrefix(unit)} yang siap di-slide.`);
                         }
-
-                        const current = queued[0];
-                        if (!String(current.nama_pasien || '').trim()) {
-                            throw new Error('Registrasi pasien dulu sebelum klik Next, agar antrean tidak terlewat.');
-                        }
-                        const updateRes = await withTimeout(
-                            supabaseClient
-                                .from('antrian')
-                                .update({ status: 'selesai' })
-                                .eq('id', current.id),
-                            15000,
-                            'Geser antrean'
-                        );
-
-                        if (updateRes?.error) throw new Error(updateRes.error.message);
 
                         await loadQueueControls();
                         await refreshStats();
@@ -1433,6 +1523,8 @@
                 }
 
                 function refreshAntrianDropdown() {
+                    const select = document.getElementById('no_antrian');
+                    if (!select) return;
                     loadAvailableAntrian(
                         document.getElementById('unitSelect').value,
                         document.getElementById('jenis_pasien').value
@@ -1500,7 +1592,6 @@
 
                     const no_registrasi = (document.getElementById('no_registrasi').value || '').trim();
                     const no_rm = (document.getElementById('no_rm').value || '').trim();
-                    const no_antrian = document.getElementById('no_antrian').value;
                     const unit = document.getElementById('unitSelect').value;
                     const jenis_pasien = document.getElementById('jenis_pasien').value;
                     const poli_tujuan = unit === 'POLIKLINIK' ? document.getElementById('poli_tujuan').value : 'FARMASI';
@@ -1514,6 +1605,47 @@
                     const waktu_daftar = new Date();
 
                     try {
+                        const { startISO, endISO } = getTodayRangeISO();
+                        const pickRegistrationAntrian = async () => {
+                            const { data, error } = await withTimeout(
+                                supabaseClient
+                                    .from('antrian')
+                                    .select('id,no_antrian,unit,status,jenis_pasien,poli_tujuan,created_at')
+                                    .gte('created_at', startISO)
+                                    .lte('created_at', endISO)
+                                    .eq('unit', unit)
+                                    .in('status', ['dipanggil', 'terdaftar', 'menunggu'])
+                                    .order('created_at', { ascending: true })
+                                    .limit(50),
+                                15000,
+                                'Muat antrean registrasi'
+                            );
+                            if (error) throw new Error(error.message);
+
+                            const rows = data || [];
+                            const called = rows.find((x) => String(x.status || '').toLowerCase() === 'dipanggil') || null;
+                            if (called) return called;
+
+                            const queued = rows.find((x) => String(x.status || '').toLowerCase() === 'terdaftar') || null;
+                            if (queued) return queued;
+
+                            const waiting = rows.filter((x) => String(x.status || '').toLowerCase() === 'menunggu');
+                            if (unit === 'POLIKLINIK') {
+                                return waiting.find((x) => isPoliklinikRegulerNoAntrian(x.no_antrian)) || waiting[0] || null;
+                            }
+                            return waiting[0] || null;
+                        };
+
+                        const antrianTarget = await pickRegistrationAntrian();
+                        if (!antrianTarget) {
+                            throw new Error('Belum ada antrean untuk unit ini. Silakan pasien ambil nomor dahulu, atau klik Next untuk memanggil antrean pertama.');
+                        }
+
+                        const no_antrian = String(antrianTarget.no_antrian || '').trim();
+                        if (!no_antrian) {
+                            throw new Error('Nomor antrean tidak valid. Coba refresh data antrean lalu ulangi.');
+                        }
+
                         if (patientMode === 'lama' && !loadedOldPatient) {
                             throw new Error('Pilih Pasien Lama lalu cari No RM terlebih dahulu sampai data pasien ditemukan.');
                         }
@@ -1534,6 +1666,10 @@
                             throw new Error('Nomor BPJS wajib diisi untuk pasien BPJS.');
                         }
 
+                        const effectiveJenisPasien = unit === 'POLIKLINIK'
+                            ? (String(antrianTarget.jenis_pasien || '').trim() || jenis_pasien)
+                            : jenis_pasien;
+
                         const pasienPayload = {
                             no_rm,
                             nama_pasien,
@@ -1544,7 +1680,7 @@
                             umur,
                             no_antrian,
                             unit,
-                            jenis_pasien,
+                            jenis_pasien: effectiveJenisPasien,
                             poli_tujuan,
                             created_at: waktu_daftar.toISOString()
                         };
@@ -1569,45 +1705,25 @@
                             throw new Error(insertRes.error.message);
                         }
 
-                        let nextStatus = 'terdaftar';
-                        try {
-                            const { data: statusRow, error: statusError } = await withTimeout(
-                                supabaseClient
-                                    .from('antrian')
-                                    .select('status')
-                                    .eq('no_antrian', no_antrian)
-                                    .eq('unit', unit)
-                                    .order('created_at', { ascending: false })
-                                    .limit(1),
-                                15000,
-                                'Cek status antrean'
-                            );
-
-                            if (!statusError && statusRow && statusRow.length > 0) {
-                                const currentStatus = String(statusRow[0].status || '').toLowerCase();
-                                if (currentStatus === 'dipanggil') {
-                                    nextStatus = 'dipanggil';
-                                }
-                            }
-                        } catch (_) {}
+                        const currentStatus = String(antrianTarget.status || '').toLowerCase();
+                        const nextStatus = currentStatus === 'dipanggil' ? 'dipanggil' : 'terdaftar';
 
                         const updatePayload = { status: nextStatus, nama_pasien };
                         let updateQuery = supabaseClient
                             .from('antrian')
                             .update(updatePayload)
-                            .eq('no_antrian', no_antrian)
-                            .eq('unit', unit)
-                            .eq('jenis_pasien', jenis_pasien);
+                            .eq('id', antrianTarget.id);
 
                         if (unit === 'POLIKLINIK') {
                             updatePayload.poli_tujuan = poli_tujuan;
-                            updateQuery = updateQuery.in('poli_tujuan', ['POLIKLINIK', poli_tujuan]);
+                            updateQuery = updateQuery;
                         } else if (unit === 'FARMASI') {
                             updatePayload.jenis_pasien = jenis_pasien;
-                            updateQuery = updateQuery.in('jenis_pasien', [jenis_pasien, 'BELUM_DITENTUKAN']);
-                            updateQuery = updateQuery.eq('poli_tujuan', poli_tujuan);
+                            updatePayload.poli_tujuan = poli_tujuan;
+                            updateQuery = updateQuery;
                         } else {
-                            updateQuery = updateQuery.eq('poli_tujuan', poli_tujuan);
+                            updatePayload.poli_tujuan = poli_tujuan;
+                            updateQuery = updateQuery;
                         }
 
                         const updateRes = await withTimeout(updateQuery, 15000, 'Update antrian');
@@ -1629,7 +1745,7 @@
                         this.reset();
                         await initForm();
 
-                        loadAvailableAntrian(unit, jenis_pasien);
+                        refreshAntrianDropdown();
                         loadQueueControls();
                         r_reloadToFirstPage();
                         refreshStats();
@@ -1662,7 +1778,6 @@
                 supabaseClient
                     .channel('public:antrian')
                     .on('postgres_changes', { event: '*', schema: 'public', table: 'antrian' }, () => {
-                        refreshAntrianDropdown();
                         scheduleRealtimeDashboardRefresh();
                     })
                     .subscribe();
@@ -1676,18 +1791,15 @@
 
                 window.setInterval(() => {
                     scheduleRealtimeDashboardRefresh();
-                    refreshAntrianDropdown();
                 }, 2000);
 
                 window.addEventListener('focus', () => {
                     scheduleRealtimeDashboardRefresh();
-                    refreshAntrianDropdown();
                 });
 
                 document.addEventListener('visibilitychange', () => {
                     if (!document.hidden) {
                         scheduleRealtimeDashboardRefresh();
-                        refreshAntrianDropdown();
                     }
                 });
 
