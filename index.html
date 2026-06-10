@@ -89,6 +89,9 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
+                <div id="adminIdentityBadge" class="hidden rounded-full border border-blue-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-700 shadow-sm md:inline-flex">
+                    Profil Admin
+                </div>
                 <div class="hidden 2xl:flex items-center rounded-full border border-emerald-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-700 shadow-sm">
                     RSUD AJI MUHAMMAD IDRIS
                 </div>
@@ -109,6 +112,20 @@
                                 <div class="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-emerald-50">Panel Admin</div>
                                 <div class="mt-3 text-2xl md:text-3xl font-black tracking-tight text-white">Pendaftaran Pasien & Rekap Terpadu</div>
                                 <div class="mt-2 text-sm md:text-base font-semibold leading-relaxed text-emerald-50/95">Kelola registrasi pasien baru maupun lama, pantau antrean, dan akses rekap data dalam satu dashboard yang rapi dan efisien.</div>
+                                <div class="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+                                    <div class="rounded-2xl border border-white/15 bg-white/10 px-3.5 py-3.5 text-white">
+                                        <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-100">Admin Aktif</div>
+                                        <div id="adminNameDisplay" class="mt-1.5 text-base font-black">-</div>
+                                    </div>
+                                    <div class="rounded-2xl border border-white/15 bg-white/10 px-3.5 py-3.5 text-white">
+                                        <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-100">Role</div>
+                                        <div id="adminRoleDisplay" class="mt-1.5 text-base font-black">-</div>
+                                    </div>
+                                    <div class="rounded-2xl border border-white/15 bg-white/10 px-3.5 py-3.5 text-white">
+                                        <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-100">Loket Aktif</div>
+                                        <div id="adminLoketDisplay" class="mt-1.5 text-base font-black">-</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 min-w-full xl:min-w-[360px]">
                                 <div class="rounded-2xl border border-white/15 bg-white/10 px-3.5 py-3.5 text-white">
@@ -333,6 +350,9 @@
                                             <button id="nextFarmasiBtn" type="button" class="mt-4 w-full rounded-2xl bg-[linear-gradient(135deg,_#059669_0%,_#0f766e_42%,_#047857_100%)] px-4 py-3 text-sm font-bold text-white shadow-[0_14px_24px_-12px_rgba(5,150,105,0.5)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50">
                                                 Next Farmasi
                                             </button>
+                                        <button id="skipFarmasiBtn" type="button" class="mt-3 w-full rounded-2xl border border-rose-200 bg-[linear-gradient(135deg,_#fb7185_0%,_#f43f5e_48%,_#e11d48_100%)] px-4 py-3 text-sm font-bold text-white shadow-[0_14px_24px_-12px_rgba(244,63,94,0.45)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50">
+                                            Lewati Antrean
+                                        </button>
                                         </div>
                                         <div class="rounded-[22px] border border-blue-100 bg-white px-4 py-4 shadow-sm">
                                             <div class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-blue-700">Poliklinik</div>
@@ -341,9 +361,15 @@
                                             <button id="nextPoliklinikBtn" type="button" class="mt-4 w-full rounded-2xl bg-[linear-gradient(135deg,_#2563eb_0%,_#1d4ed8_42%,_#1e40af_100%)] px-4 py-3 text-sm font-bold text-white shadow-[0_14px_24px_-12px_rgba(37,99,235,0.45)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50">
                                                 Next Poliklinik
                                             </button>
+                                            <button id="nextPrioritasBtn" type="button" class="mt-3 hidden w-full rounded-2xl border border-amber-200 bg-[linear-gradient(135deg,_#fbbf24_0%,_#f59e0b_55%,_#d97706_100%)] px-4 py-3 text-sm font-bold text-white shadow-[0_14px_24px_-12px_rgba(245,158,11,0.45)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50">
+                                                Next Prioritas
+                                            </button>
                                             <button id="callPrioritasPoliklinikBtn" type="button" class="mt-3 w-full rounded-2xl border border-amber-200 bg-[linear-gradient(135deg,_#fbbf24_0%,_#f59e0b_55%,_#d97706_100%)] px-4 py-3 text-sm font-bold text-white shadow-[0_14px_24px_-12px_rgba(245,158,11,0.45)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50">
                                                 Panggil Prioritas
                                             </button>
+                                        <button id="skipPoliklinikBtn" type="button" class="mt-3 w-full rounded-2xl border border-rose-200 bg-[linear-gradient(135deg,_#fb7185_0%,_#f43f5e_48%,_#e11d48_100%)] px-4 py-3 text-sm font-bold text-white shadow-[0_14px_24px_-12px_rgba(244,63,94,0.45)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50">
+                                            Lewati Antrean
+                                        </button>
                                         </div>
                                     </div>
                                 </div>
@@ -583,6 +609,10 @@
                 const menuRekap = document.getElementById('menuRekap');
                 const logoutBtnTop = document.getElementById('logoutBtnTop');
                 const logoutBtnDrawer = document.getElementById('logoutBtnDrawer');
+                const adminIdentityBadge = document.getElementById('adminIdentityBadge');
+                const adminNameDisplay = document.getElementById('adminNameDisplay');
+                const adminRoleDisplay = document.getElementById('adminRoleDisplay');
+                const adminLoketDisplay = document.getElementById('adminLoketDisplay');
                 const modeBaruBtn = document.getElementById('modeBaruBtn');
                 const modeLamaBtn = document.getElementById('modeLamaBtn');
                 const pasienBaruPanel = document.getElementById('pasienBaruPanel');
@@ -604,7 +634,10 @@
                 const openHistoryDriveBtn = document.getElementById('openHistoryDriveBtn');
                 const historyDriveMessage = document.getElementById('historyDriveMessage');
                 const nextFarmasiBtn = document.getElementById('nextFarmasiBtn');
+                const skipFarmasiBtn = document.getElementById('skipFarmasiBtn');
                 const nextPoliklinikBtn = document.getElementById('nextPoliklinikBtn');
+                const skipPoliklinikBtn = document.getElementById('skipPoliklinikBtn');
+                const nextPrioritasBtn = document.getElementById('nextPrioritasBtn');
                 const callPrioritasPoliklinikBtn = document.getElementById('callPrioritasPoliklinikBtn');
                 const queueCurrentFarmasi = document.getElementById('queueCurrentFarmasi');
                 const queueCurrentFarmasiMeta = document.getElementById('queueCurrentFarmasiMeta');
@@ -617,6 +650,11 @@
                 let currentHistoryPatientName = '';
                 let riwayatLinkColumnAvailable = true;
                 let noRegistrasiColumnAvailable = true;
+                let queueRoutingColumnsAvailable = true;
+                let queueProcessingColumnsAvailable = true;
+                let currentAdminProfile = null;
+                let currentAdminRole = '';
+                let currentLoket = '';
 
                 function openDrawer() {
                     drawer.classList.remove('-translate-x-full');
@@ -638,6 +676,226 @@
                     }
                 }
 
+                function formatAdminRoleLabel(role) {
+                    const value = String(role || '').trim().toLowerCase();
+                    if (value === 'supervisor') return 'Supervisor';
+                    if (value === 'admin_pendaftaran') return 'Admin Pendaftaran';
+                    return value ? value.replace(/_/g, ' ') : 'Belum Diatur';
+                }
+
+                function formatLoketLabel(loket) {
+                    const value = String(loket || '').trim().toUpperCase();
+                    if (value === 'LOKET_1') return 'Loket 1';
+                    if (value === 'LOKET_2') return 'Loket 2';
+                    if (value === 'SUPERVISOR') return 'Supervisor';
+                    return value ? value.replace(/_/g, ' ') : '-';
+                }
+
+                function renderAdminIdentity() {
+                    const namaAdmin = currentAdminProfile?.nama_admin
+                        || currentAdminProfile?.email
+                        || 'Admin';
+                    const roleLabel = formatAdminRoleLabel(currentAdminRole);
+                    const loketLabel = formatLoketLabel(currentLoket);
+
+                    adminNameDisplay.textContent = namaAdmin;
+                    adminRoleDisplay.textContent = roleLabel;
+                    adminLoketDisplay.textContent = loketLabel;
+                    adminIdentityBadge.textContent = `${roleLabel}${loketLabel !== '-' ? ' • ' + loketLabel : ''}`;
+                    adminIdentityBadge.classList.remove('hidden');
+                }
+
+                function resetAdminIdentity() {
+                    currentAdminProfile = null;
+                    currentAdminRole = '';
+                    currentLoket = '';
+                    adminNameDisplay.textContent = '-';
+                    adminRoleDisplay.textContent = '-';
+                    adminLoketDisplay.textContent = '-';
+                    adminIdentityBadge.textContent = 'Profil Admin';
+                    adminIdentityBadge.classList.add('hidden');
+                }
+
+                function getCurrentAdminEmail() {
+                    return String(currentAdminProfile?.email || loginEmail.value || '').trim();
+                }
+
+                function getCurrentLoketValue() {
+                    return String(currentLoket || '').trim().toUpperCase();
+                }
+
+                function isSupervisorRole() {
+                    return String(currentAdminRole || '').trim().toLowerCase() === 'supervisor';
+                }
+
+                function hasLoketScope() {
+                    return queueRoutingColumnsAvailable && !isSupervisorRole() && !!getCurrentLoketValue();
+                }
+
+                function normalizeLoketValue(value) {
+                    return String(value || '').trim().toUpperCase();
+                }
+
+                function rowMatchesCurrentLoket(item, allowUnassigned = true) {
+                    if (!hasLoketScope()) {
+                        return true;
+                    }
+                    const rowLoket = normalizeLoketValue(item?.loket_tujuan);
+                    if (!rowLoket) {
+                        return allowUnassigned;
+                    }
+                    return rowLoket === getCurrentLoketValue();
+                }
+
+                function filterRowsByCurrentLoket(rows, allowUnassigned = true) {
+                    return (rows || []).filter((item) => rowMatchesCurrentLoket(item, allowUnassigned));
+                }
+
+                function applyCurrentLoketClaimFilter(query) {
+                    if (!queueRoutingColumnsAvailable || !hasLoketScope()) {
+                        return query;
+                    }
+                    return query.or(`loket_tujuan.is.null,loket_tujuan.eq.${getCurrentLoketValue()}`);
+                }
+
+                function buildQueueCallPayload(basePayload = {}) {
+                    const payload = { ...basePayload };
+                    if (!queueRoutingColumnsAvailable) {
+                        return payload;
+                    }
+
+                    const adminEmail = getCurrentAdminEmail();
+                    const loketAktif = getCurrentLoketValue();
+                    if (loketAktif) {
+                        payload.loket_tujuan = loketAktif;
+                    }
+                    if (adminEmail) {
+                        payload.dipanggil_oleh = adminEmail;
+                    }
+                    payload.waktu_panggil = new Date().toISOString();
+                    return payload;
+                }
+
+                async function claimQueueAsCalled(target, expectedStatus, label) {
+                    let query = supabaseClient
+                        .from('antrian')
+                        .update(buildQueueCallPayload({ status: 'dipanggil' }))
+                        .eq('id', target.id)
+                        .eq('status', expectedStatus);
+
+                    query = applyCurrentLoketClaimFilter(query);
+
+                    const res = await withTimeout(
+                        query.select('id'),
+                        15000,
+                        label
+                    );
+
+                    if (res?.error) {
+                        throw new Error(res.error.message);
+                    }
+
+                    const claimedRows = res?.data || [];
+                    if (claimedRows.length === 0) {
+                        return false;
+                    }
+                    return true;
+                }
+
+                async function detectQueueRoutingColumns() {
+                    try {
+                        const { error } = await supabaseClient
+                            .from('antrian')
+                            .select('loket_tujuan,dipanggil_oleh,waktu_panggil')
+                            .limit(1);
+                        queueRoutingColumnsAvailable = !error;
+                        if (error) {
+                            console.warn('Kolom routing antrean belum siap:', error.message);
+                        }
+                    } catch (err) {
+                        queueRoutingColumnsAvailable = false;
+                        console.warn('Gagal deteksi kolom routing antrean:', err);
+                    }
+                }
+
+                function buildQueueProcessingPayload(basePayload = {}) {
+                    const payload = { ...basePayload };
+                    if (!queueProcessingColumnsAvailable) {
+                        return payload;
+                    }
+
+                    const adminEmail = getCurrentAdminEmail();
+                    if (adminEmail) {
+                        payload.diproses_oleh = adminEmail;
+                    }
+                    payload.waktu_mulai_layanan = new Date().toISOString();
+                    return payload;
+                }
+
+                async function detectQueueProcessingColumns() {
+                    try {
+                        const { error } = await supabaseClient
+                            .from('antrian')
+                            .select('diproses_oleh,waktu_mulai_layanan,waktu_selesai_layanan')
+                            .limit(1);
+                        queueProcessingColumnsAvailable = !error;
+                        if (error) {
+                            console.warn('Kolom proses antrean belum siap:', error.message);
+                        }
+                    } catch (err) {
+                        queueProcessingColumnsAvailable = false;
+                        console.warn('Gagal deteksi kolom proses antrean:', err);
+                    }
+                }
+
+                async function loadAdminProfile(session) {
+                    const user = session?.user || null;
+                    const fallbackProfile = {
+                        id: user?.id || '',
+                        email: user?.email || '',
+                        nama_admin: user?.email || 'Admin',
+                        role: 'admin_pendaftaran',
+                        loket_default: '',
+                        aktif: true
+                    };
+
+                    if (!user?.id) {
+                        currentAdminProfile = fallbackProfile;
+                        currentAdminRole = fallbackProfile.role;
+                        currentLoket = fallbackProfile.loket_default;
+                        renderAdminIdentity();
+                        return fallbackProfile;
+                    }
+
+                    try {
+                        const { data, error } = await supabaseClient
+                            .from('admin_profiles')
+                            .select('id,email,nama_admin,role,loket_default,aktif')
+                            .eq('id', user.id)
+                            .maybeSingle();
+
+                        if (error) {
+                            console.warn('Gagal memuat admin_profiles:', error.message);
+                            currentAdminProfile = fallbackProfile;
+                        } else if (!data) {
+                            currentAdminProfile = fallbackProfile;
+                        } else {
+                            currentAdminProfile = {
+                                ...fallbackProfile,
+                                ...data
+                            };
+                        }
+                    } catch (err) {
+                        console.warn('Gagal memuat profil admin:', err);
+                        currentAdminProfile = fallbackProfile;
+                    }
+
+                    currentAdminRole = String(currentAdminProfile?.role || 'admin_pendaftaran');
+                    currentLoket = String(currentAdminProfile?.loket_default || '');
+                    renderAdminIdentity();
+                    return currentAdminProfile;
+                }
+
                 function showView(view) {
                     if (view === 'rekap') {
                         viewPendaftaran.classList.add('hidden');
@@ -654,9 +912,11 @@
                     const { data } = await supabaseClient.auth.getSession();
                     const session = data?.session || null;
                     if (!session) {
+                        resetAdminIdentity();
                         loginOverlay.classList.remove('hidden');
                         viewPendaftaran.classList.add('hidden');
                         viewRekap.classList.add('hidden');
+                        logoutBtnTop.classList.add('hidden');
                         return null;
                     }
                     loginOverlay.classList.add('hidden');
@@ -674,7 +934,11 @@
                         loginError.classList.remove('hidden');
                         return;
                     }
-                    await requireSession();
+                    const session = await requireSession();
+                    if (!session) return;
+                    await loadAdminProfile(session);
+                    await detectQueueRoutingColumns();
+                    await detectQueueProcessingColumns();
                     await detectRiwayatLinkColumn();
                     await detectNoRegistrasiColumn();
                     showView('pendaftaran');
@@ -687,6 +951,7 @@
                 async function logout() {
                     await supabaseClient.auth.signOut();
                     loginPassword.value = '';
+                    resetAdminIdentity();
                     loginOverlay.classList.remove('hidden');
                     viewPendaftaran.classList.add('hidden');
                     viewRekap.classList.add('hidden');
@@ -1119,9 +1384,10 @@
                         console.error('Error loading antrian:', error);
                         return;
                     }
-                    
+
+                    const scopedRows = filterRowsByCurrentLoket(data || [], true);
                     select.innerHTML = '<option value="">Pilih Nomor Antrian</option>';
-                    data.forEach(item => {
+                    scopedRows.forEach(item => {
                         const option = document.createElement('option');
                         option.value = item.no_antrian;
                         option.textContent = item.no_antrian;
@@ -1173,7 +1439,7 @@
                     const { startISO, endISO } = getTodayRangeISO();
                     const { data, error } = await supabaseClient
                         .from('antrian')
-                        .select('id,no_antrian,unit,status,nama_pasien,jenis_pasien,poli_tujuan,created_at')
+                        .select('id,no_antrian,unit,status,nama_pasien,jenis_pasien,poli_tujuan,loket_tujuan,created_at')
                         .gte('created_at', startISO)
                         .lte('created_at', endISO)
                         .order('created_at', { ascending: true });
@@ -1184,33 +1450,45 @@
                         queueCurrentPoliklinik.textContent = '-';
                         queueCurrentPoliklinikMeta.textContent = 'Gagal memuat kontrol antrean.';
                         nextFarmasiBtn.disabled = true;
+                        skipFarmasiBtn.disabled = true;
                         nextPoliklinikBtn.disabled = true;
+                        skipPoliklinikBtn.disabled = true;
+                        if (nextPrioritasBtn) {
+                            nextPrioritasBtn.disabled = true;
+                            nextPrioritasBtn.classList.add('hidden');
+                        }
                         callPrioritasPoliklinikBtn.disabled = true;
                         return;
                     }
 
                     const rows = data || [];
                     ['FARMASI', 'POLIKLINIK'].forEach((unit) => {
-                        const called = rows.filter((item) => item.unit === unit && String(item.status || '').toLowerCase() === 'dipanggil');
-                        const queued = rows.filter((item) => item.unit === unit && String(item.status || '').toLowerCase() === 'terdaftar');
+                        const unitRows = filterRowsByCurrentLoket(rows.filter((item) => item.unit === unit), true);
+                        const called = unitRows.filter((item) => String(item.status || '').toLowerCase() === 'dipanggil');
+                        const queued = unitRows.filter((item) => String(item.status || '').toLowerCase() === 'terdaftar');
                         const current = called[0] || queued[0] || null;
                         const prefix = queueControlPrefix(unit);
                         const labelEl = unit === 'FARMASI' ? queueCurrentFarmasi : queueCurrentPoliklinik;
                         const metaEl = unit === 'FARMASI' ? queueCurrentFarmasiMeta : queueCurrentPoliklinikMeta;
                         const btnEl = unit === 'FARMASI' ? nextFarmasiBtn : nextPoliklinikBtn;
+                        const skipBtnEl = unit === 'FARMASI' ? skipFarmasiBtn : skipPoliklinikBtn;
 
                         if (!current) {
                             labelEl.textContent = '-';
                             metaEl.textContent = 'Belum ada antrean terdaftar.';
                             btnEl.disabled = true;
+                            skipBtnEl.disabled = true;
                             if (unit === 'POLIKLINIK') {
-                                const waitingReguler = rows.filter((item) =>
-                                    item.unit === 'POLIKLINIK' &&
+                                if (nextPrioritasBtn) {
+                                    nextPrioritasBtn.disabled = true;
+                                    nextPrioritasBtn.classList.add('hidden');
+                                }
+
+                                const waitingReguler = unitRows.filter((item) =>
                                     String(item.status || '').toLowerCase() === 'menunggu' &&
                                     isPoliklinikRegulerNoAntrian(item.no_antrian)
                                 ).length;
-                                const waitingAny = rows.filter((item) =>
-                                    item.unit === 'POLIKLINIK' &&
+                                const waitingAny = unitRows.filter((item) =>
                                     String(item.status || '').toLowerCase() === 'menunggu'
                                 ).length;
 
@@ -1220,18 +1498,18 @@
                                     metaEl.textContent = `Ada ${waitingAny} antrean menunggu. Klik tombol untuk panggil antrean pertama.`;
                                 }
 
-                                const priorityWaiting = rows.filter((item) =>
-                                    item.unit === 'POLIKLINIK' &&
+                                const priorityWaiting = unitRows.filter((item) =>
                                     String(item.status || '').toLowerCase() === 'menunggu' &&
                                     isPrioritasNoAntrian(item.no_antrian)
                                 ).length;
-                                const hasCalled = called.length > 0;
-                                if (priorityWaiting > 0 && !hasCalled) {
+                                const calledNow = called[0] || null;
+                                const isCallingPrioritas = calledNow ? isPrioritasNoAntrian(calledNow.no_antrian) : false;
+                                if (priorityWaiting > 0 && !calledNow) {
                                     callPrioritasPoliklinikBtn.disabled = false;
                                     callPrioritasPoliklinikBtn.textContent = `Panggil Prioritas (${priorityWaiting})`;
                                 } else {
                                     callPrioritasPoliklinikBtn.disabled = true;
-                                    callPrioritasPoliklinikBtn.textContent = hasCalled ? 'Prioritas Sedang Aktif' : 'Panggil Prioritas';
+                                    callPrioritasPoliklinikBtn.textContent = isCallingPrioritas ? 'Prioritas Sedang Dipanggil' : (priorityWaiting > 0 ? 'Selesaikan A Lalu Prioritas' : 'Panggil Prioritas');
                                 }
                             }
                             return;
@@ -1245,20 +1523,36 @@
                         metaEl.textContent = `${waitingName} • Sisa antrean siap slide: ${totalReady}`;
                         btnEl.disabled = false;
                         btnEl.textContent = 'Next ' + prefix;
+                        skipBtnEl.disabled = false;
+                        skipBtnEl.textContent = 'Lewati Antrean';
 
                         if (unit === 'POLIKLINIK') {
-                            const priorityWaiting = rows.filter((item) =>
-                                item.unit === 'POLIKLINIK' &&
+                            const isCurrentPrioritas = isPrioritasNoAntrian(currentNo);
+                            if (nextPrioritasBtn) {
+                                if (isCurrentPrioritas) {
+                                    nextPrioritasBtn.disabled = false;
+                                    nextPrioritasBtn.classList.remove('hidden');
+                                    nextPoliklinikBtn.disabled = true;
+                                    nextPoliklinikBtn.textContent = 'Next Poliklinik';
+                                    metaEl.textContent = `${waitingName} • Gunakan Next Prioritas untuk lanjut B berikutnya.`;
+                                } else {
+                                    nextPrioritasBtn.disabled = true;
+                                    nextPrioritasBtn.classList.add('hidden');
+                                }
+                            }
+
+                            const priorityWaiting = unitRows.filter((item) =>
                                 String(item.status || '').toLowerCase() === 'menunggu' &&
                                 isPrioritasNoAntrian(item.no_antrian)
                             ).length;
-                            const hasCalled = called.length > 0;
-                            if (priorityWaiting > 0 && !hasCalled) {
+                            const calledNow = called[0] || null;
+                            const isCallingPrioritas = calledNow ? isPrioritasNoAntrian(calledNow.no_antrian) : false;
+                            if (priorityWaiting > 0 && !calledNow) {
                                 callPrioritasPoliklinikBtn.disabled = false;
                                 callPrioritasPoliklinikBtn.textContent = `Panggil Prioritas (${priorityWaiting})`;
                             } else {
                                 callPrioritasPoliklinikBtn.disabled = true;
-                                callPrioritasPoliklinikBtn.textContent = hasCalled ? 'Prioritas Sedang Aktif' : 'Panggil Prioritas';
+                                callPrioritasPoliklinikBtn.textContent = isCallingPrioritas ? 'Prioritas Sedang Dipanggil' : (priorityWaiting > 0 ? 'Selesaikan A Lalu Prioritas' : 'Panggil Prioritas');
                             }
                         }
                     });
@@ -1271,7 +1565,7 @@
                             autoNoEl.textContent = 'Otomatis';
                             hiddenNoAntrian.value = '';
                         } else {
-                            const unitRows = rows.filter((item) => item.unit === selectedUnit);
+                            const unitRows = filterRowsByCurrentLoket(rows.filter((item) => item.unit === selectedUnit), true);
                             const calledRow = unitRows.find((item) => String(item.status || '').toLowerCase() === 'dipanggil') || null;
                             const queuedRow = unitRows.find((item) => String(item.status || '').toLowerCase() === 'terdaftar') || null;
                             const waitingRows = unitRows.filter((item) => String(item.status || '').toLowerCase() === 'menunggu');
@@ -1302,53 +1596,52 @@
                         const { data: activeCalled, error: calledError } = await withTimeout(
                             supabaseClient
                                 .from('antrian')
-                                .select('id,no_antrian')
+                                .select('id,no_antrian,nama_pasien,loket_tujuan')
                                 .gte('created_at', startISO)
                                 .lte('created_at', endISO)
                                 .eq('unit', 'POLIKLINIK')
                                 .eq('status', 'dipanggil')
                                 .order('created_at', { ascending: true })
-                                .limit(1),
+                                .limit(25),
                             15000,
                             'Cek antrean dipanggil'
                         );
 
                         if (calledError) throw new Error(calledError.message);
-                        if (activeCalled && activeCalled.length > 0) {
-                            throw new Error('Masih ada antrean yang sedang dipanggil. Selesaikan dulu dengan tombol Next.');
+                        const scopedActiveCalled = filterRowsByCurrentLoket(activeCalled || [], true);
+                        if (scopedActiveCalled.length > 0) {
+                            const currentCalled = scopedActiveCalled[0];
+                            if (isPrioritasNoAntrian(currentCalled.no_antrian)) {
+                                throw new Error('Prioritas sedang dipanggil.');
+                            }
+                            throw new Error('Selesaikan dulu antrean Poliklinik yang sedang aktif, lalu klik Panggil Prioritas.');
                         }
 
                         const { data, error } = await withTimeout(
                             supabaseClient
                                 .from('antrian')
-                                .select('id,no_antrian,status')
+                                .select('id,no_antrian,status,loket_tujuan')
                                 .gte('created_at', startISO)
                                 .lte('created_at', endISO)
                                 .eq('unit', 'POLIKLINIK')
                                 .eq('status', 'menunggu')
                                 .ilike('no_antrian', 'B-%')
                                 .order('created_at', { ascending: true })
-                                .limit(1),
+                                .limit(25),
                             15000,
                             'Muat antrean prioritas'
                         );
 
                         if (error) throw new Error(error.message);
-                        const target = (data || [])[0] || null;
+                        const target = filterRowsByCurrentLoket(data || [], true)[0] || null;
                         if (!target) {
                             throw new Error('Tidak ada antrean prioritas yang siap dipanggil.');
                         }
 
-                        const updateRes = await withTimeout(
-                            supabaseClient
-                                .from('antrian')
-                                .update({ status: 'dipanggil' })
-                                .eq('id', target.id),
-                            15000,
-                            'Aktifkan prioritas'
-                        );
-
-                        if (updateRes?.error) throw new Error(updateRes.error.message);
+                        const claimed = await claimQueueAsCalled(target, 'menunggu', 'Aktifkan prioritas');
+                        if (!claimed) {
+                            throw new Error('Antrean prioritas baru saja diambil loket lain. Silakan klik ulang.');
+                        }
 
                         await loadQueueControls();
                         await refreshStats();
@@ -1363,6 +1656,275 @@
                     }
                 }
 
+                async function slideNextPrioritas(buttonEl) {
+                    const originalText = buttonEl.textContent;
+                    buttonEl.disabled = true;
+                    buttonEl.textContent = 'Memproses...';
+
+                    try {
+                        const { startISO, endISO } = getTodayRangeISO();
+
+                        const { data: active, error: activeError } = await withTimeout(
+                            supabaseClient
+                                .from('antrian')
+                                .select('id,no_antrian,nama_pasien,status,loket_tujuan')
+                                .gte('created_at', startISO)
+                                .lte('created_at', endISO)
+                                .eq('unit', 'POLIKLINIK')
+                                .eq('status', 'dipanggil')
+                                .order('created_at', { ascending: true })
+                                .limit(25),
+                            15000,
+                            'Cek antrean aktif'
+                        );
+
+                        if (activeError) throw new Error(activeError.message);
+                        const current = filterRowsByCurrentLoket(active || [], true)[0] || null;
+                        if (!current || !isPrioritasNoAntrian(current.no_antrian)) {
+                            throw new Error('Tidak ada prioritas yang sedang dipanggil.');
+                        }
+
+                        if (!String(current.nama_pasien || '').trim()) {
+                            throw new Error('Registrasi pasien dulu sebelum Next Prioritas, agar antrean tidak terlewat.');
+                        }
+
+                        const finishRes = await withTimeout(
+                            supabaseClient
+                                .from('antrian')
+                                .update({ status: 'selesai' })
+                                .eq('id', current.id),
+                            15000,
+                            'Selesaikan prioritas'
+                        );
+                        if (finishRes?.error) throw new Error(finishRes.error.message);
+
+                        const { data: nextData, error: nextError } = await withTimeout(
+                            supabaseClient
+                                .from('antrian')
+                                .select('id,no_antrian,loket_tujuan')
+                                .gte('created_at', startISO)
+                                .lte('created_at', endISO)
+                                .eq('unit', 'POLIKLINIK')
+                                .eq('status', 'menunggu')
+                                .ilike('no_antrian', 'B-%')
+                                .order('created_at', { ascending: true })
+                                .limit(25),
+                            15000,
+                            'Muat prioritas berikutnya'
+                        );
+                        if (nextError) throw new Error(nextError.message);
+
+                        const nextRow = filterRowsByCurrentLoket(nextData || [], true)[0] || null;
+                        if (nextRow) {
+                            const claimed = await claimQueueAsCalled(nextRow, 'menunggu', 'Panggil prioritas berikutnya');
+                            if (!claimed) {
+                                throw new Error('Prioritas berikutnya baru saja diambil loket lain. Silakan klik ulang.');
+                            }
+                        } else {
+                            const { data: regularData, error: regularError } = await withTimeout(
+                                supabaseClient
+                                    .from('antrian')
+                                    .select('id,no_antrian,status,loket_tujuan,created_at')
+                                    .gte('created_at', startISO)
+                                    .lte('created_at', endISO)
+                                    .eq('unit', 'POLIKLINIK')
+                                    .in('status', ['terdaftar', 'menunggu'])
+                                    .order('created_at', { ascending: true })
+                                    .limit(25),
+                                15000,
+                                'Muat antrean A berikutnya'
+                            );
+                            if (regularError) throw new Error(regularError.message);
+
+                            const regularRows = filterRowsByCurrentLoket(regularData || [], true);
+                            const nextRegular = regularRows.find((x) => String(x.status || '').toLowerCase() === 'terdaftar' && isPoliklinikRegulerNoAntrian(x.no_antrian))
+                                || regularRows.find((x) => String(x.status || '').toLowerCase() === 'menunggu' && isPoliklinikRegulerNoAntrian(x.no_antrian))
+                                || null;
+
+                            if (nextRegular) {
+                                const claimed = await claimQueueAsCalled(nextRegular, String(nextRegular.status || '').toLowerCase(), 'Kembali ke antrean A');
+                                if (!claimed) {
+                                    throw new Error('Antrean A berikutnya baru saja diambil loket lain. Silakan klik ulang.');
+                                }
+                            }
+                        }
+
+                        await loadQueueControls();
+                        await refreshStats();
+                        if (!viewRekap.classList.contains('hidden')) {
+                            await r_loadPage(r_currentPage);
+                        }
+                    } catch (err) {
+                        alert('Gagal next prioritas: ' + (err?.message || String(err)));
+                    } finally {
+                        buttonEl.disabled = false;
+                        buttonEl.textContent = originalText;
+                    }
+                }
+
+                async function skipCurrentQueue(unit, buttonEl) {
+                    const originalText = buttonEl.textContent;
+                    buttonEl.disabled = true;
+                    buttonEl.textContent = 'Memproses...';
+
+                    try {
+                        const { startISO, endISO } = getTodayRangeISO();
+                        const isPoliklinik = unit === 'POLIKLINIK';
+
+                        const countPriorityWaiting = async () => {
+                            if (!isPoliklinik) return 0;
+                            const { data, error } = await withTimeout(
+                                supabaseClient
+                                    .from('antrian')
+                                    .select('id')
+                                    .gte('created_at', startISO)
+                                    .lte('created_at', endISO)
+                                    .eq('unit', 'POLIKLINIK')
+                                    .eq('status', 'menunggu')
+                                    .ilike('no_antrian', 'B-%')
+                                    .limit(100),
+                                15000,
+                                'Cek antrean prioritas'
+                            );
+                            if (error) throw new Error(error.message);
+                            return (data || []).length;
+                        };
+
+                        const { data: currentData, error: currentError } = await withTimeout(
+                            supabaseClient
+                                .from('antrian')
+                                .select('id,no_antrian,status,loket_tujuan')
+                                .gte('created_at', startISO)
+                                .lte('created_at', endISO)
+                                .eq('unit', unit)
+                                .in('status', ['dipanggil', 'terdaftar'])
+                                .order('created_at', { ascending: true })
+                                .limit(5),
+                            15000,
+                            'Muat antrean yang dilewati'
+                        );
+                        if (currentError) throw new Error(currentError.message);
+
+                        const currentRows = filterRowsByCurrentLoket(currentData || [], true);
+                        const current = currentRows.find((item) => String(item.status || '').toLowerCase() === 'dipanggil')
+                            || currentRows.find((item) => String(item.status || '').toLowerCase() === 'terdaftar')
+                            || null;
+                        if (!current) {
+                            throw new Error(`Tidak ada antrean ${queueControlPrefix(unit)} yang bisa dilewati.`);
+                        }
+
+                        const skipRes = await withTimeout(
+                            supabaseClient
+                                .from('antrian')
+                                .update({ status: 'batal' })
+                                .eq('id', current.id),
+                            15000,
+                            'Lewati antrean aktif'
+                        );
+                        if (skipRes?.error) throw new Error(skipRes.error.message);
+
+                        if (isPoliklinik && isPrioritasNoAntrian(current.no_antrian)) {
+                            const { data: nextPriorityData, error: nextPriorityError } = await withTimeout(
+                                supabaseClient
+                                    .from('antrian')
+                                    .select('id,no_antrian,loket_tujuan')
+                                    .gte('created_at', startISO)
+                                    .lte('created_at', endISO)
+                                    .eq('unit', 'POLIKLINIK')
+                                    .eq('status', 'menunggu')
+                                    .ilike('no_antrian', 'B-%')
+                                    .order('created_at', { ascending: true })
+                                    .limit(1),
+                                15000,
+                                'Muat prioritas berikutnya'
+                            );
+                            if (nextPriorityError) throw new Error(nextPriorityError.message);
+
+                            const nextPriority = filterRowsByCurrentLoket(nextPriorityData || [], true)[0] || null;
+                            if (nextPriority) {
+                                const claimed = await claimQueueAsCalled(nextPriority, 'menunggu', 'Panggil prioritas berikutnya');
+                                if (!claimed) {
+                                    throw new Error('Prioritas berikutnya baru saja diambil loket lain. Silakan klik ulang.');
+                                }
+                            } else {
+                                const { data: regularData, error: regularError } = await withTimeout(
+                                    supabaseClient
+                                        .from('antrian')
+                                        .select('id,no_antrian,status,loket_tujuan,created_at')
+                                        .gte('created_at', startISO)
+                                        .lte('created_at', endISO)
+                                        .eq('unit', 'POLIKLINIK')
+                                        .in('status', ['terdaftar', 'menunggu'])
+                                        .order('created_at', { ascending: true })
+                                        .limit(25),
+                                    15000,
+                                    'Muat antrean A berikutnya'
+                                );
+                                if (regularError) throw new Error(regularError.message);
+
+                                const regularRows = filterRowsByCurrentLoket(regularData || [], true);
+                                const nextRegular = regularRows.find((item) => String(item.status || '').toLowerCase() === 'terdaftar' && isPoliklinikRegulerNoAntrian(item.no_antrian))
+                                    || regularRows.find((item) => String(item.status || '').toLowerCase() === 'menunggu' && isPoliklinikRegulerNoAntrian(item.no_antrian))
+                                    || null;
+                                if (nextRegular) {
+                                    const claimed = await claimQueueAsCalled(nextRegular, String(nextRegular.status || '').toLowerCase(), 'Kembali ke antrean A');
+                                    if (!claimed) {
+                                        throw new Error('Antrean A berikutnya baru saja diambil loket lain. Silakan klik ulang.');
+                                    }
+                                }
+                            }
+                        } else {
+                            const priorityWaiting = await countPriorityWaiting();
+                            if (!(isPoliklinik && priorityWaiting > 0)) {
+                                const { data: nextData, error: nextError } = await withTimeout(
+                                    supabaseClient
+                                        .from('antrian')
+                                        .select('id,no_antrian,status,loket_tujuan,created_at')
+                                        .gte('created_at', startISO)
+                                        .lte('created_at', endISO)
+                                        .eq('unit', unit)
+                                        .in('status', ['terdaftar', 'menunggu'])
+                                        .order('created_at', { ascending: true })
+                                        .limit(25),
+                                    15000,
+                                    'Muat antrean berikutnya'
+                                );
+                                if (nextError) throw new Error(nextError.message);
+
+                                const nextRows = filterRowsByCurrentLoket(nextData || [], true);
+                                let nextTarget = nextRows.find((item) => String(item.status || '').toLowerCase() === 'terdaftar') || null;
+                                if (!nextTarget && isPoliklinik) {
+                                    nextTarget = nextRows.find((item) => String(item.status || '').toLowerCase() === 'menunggu' && isPoliklinikRegulerNoAntrian(item.no_antrian)) || null;
+                                }
+                                nextTarget = nextTarget || nextRows.find((item) => String(item.status || '').toLowerCase() === 'menunggu') || null;
+
+                                if (nextTarget) {
+                                    const callNextRes = await withTimeout(
+                                        supabaseClient
+                                            .from('antrian')
+                                            .update({ status: 'dipanggil' })
+                                            .eq('id', nextTarget.id),
+                                        15000,
+                                        'Panggil antrean berikutnya'
+                                    );
+                                    if (callNextRes?.error) throw new Error(callNextRes.error.message);
+                                }
+                            }
+                        }
+
+                        await loadQueueControls();
+                        await refreshStats();
+                        if (!viewRekap.classList.contains('hidden')) {
+                            await r_loadPage(r_currentPage);
+                        }
+                    } catch (err) {
+                        alert('Gagal melewati antrean: ' + (err?.message || String(err)));
+                    } finally {
+                        buttonEl.disabled = false;
+                        buttonEl.textContent = originalText;
+                    }
+                }
+
                 async function slideNextQueue(unit, buttonEl) {
                     const originalText = buttonEl.textContent;
                     buttonEl.disabled = true;
@@ -1370,26 +1932,51 @@
 
                     try {
                         const { startISO, endISO } = getTodayRangeISO();
+                        const countPriorityWaiting = async () => {
+                            if (unit !== 'POLIKLINIK') return 0;
+                            const { data, error } = await withTimeout(
+                                supabaseClient
+                                    .from('antrian')
+                                    .select('id,loket_tujuan')
+                                    .gte('created_at', startISO)
+                                    .lte('created_at', endISO)
+                                    .eq('unit', 'POLIKLINIK')
+                                    .eq('status', 'menunggu')
+                                    .ilike('no_antrian', 'B-%')
+                                    .limit(100),
+                                15000,
+                                'Cek antrean prioritas'
+                            );
+                            if (error) throw new Error(error.message);
+                            return filterRowsByCurrentLoket(data || [], true).length;
+                        };
+
                         const promoteNext = async () => {
+                            const priorityWaiting = await countPriorityWaiting();
+                            if (unit === 'POLIKLINIK' && priorityWaiting > 0) {
+                                return;
+                            }
+
                             const { data: activeCalled, error: calledError } = await withTimeout(
                                 supabaseClient
                                     .from('antrian')
-                                    .select('id')
+                                    .select('id,loket_tujuan')
                                     .gte('created_at', startISO)
                                     .lte('created_at', endISO)
                                     .eq('unit', unit)
                                     .eq('status', 'dipanggil')
-                                    .limit(1),
+                                    .limit(25),
                                 15000,
                                 'Cek antrean dipanggil'
                             );
                             if (calledError) throw new Error(calledError.message);
-                            if (activeCalled && activeCalled.length > 0) return;
+                            const scopedActiveCalled = filterRowsByCurrentLoket(activeCalled || [], true);
+                            if (scopedActiveCalled.length > 0) return;
 
                             const { data: candidatesRaw, error: candError } = await withTimeout(
                                 supabaseClient
                                     .from('antrian')
-                                    .select('id,no_antrian,status,created_at')
+                                    .select('id,no_antrian,status,loket_tujuan,created_at')
                                     .gte('created_at', startISO)
                                     .lte('created_at', endISO)
                                     .eq('unit', unit)
@@ -1401,7 +1988,7 @@
                             );
                             if (candError) throw new Error(candError.message);
 
-                            const candidates = candidatesRaw || [];
+                            const candidates = filterRowsByCurrentLoket(candidatesRaw || [], true);
                             let target = candidates.find((x) => String(x.status || '').toLowerCase() === 'terdaftar') || null;
                             if (!target) {
                                 if (unit === 'POLIKLINIK') {
@@ -1413,38 +2000,34 @@
                             }
                             if (!target) return;
 
-                            const updateRes = await withTimeout(
-                                supabaseClient
-                                    .from('antrian')
-                                    .update({ status: 'dipanggil' })
-                                    .eq('id', target.id),
-                                15000,
-                                'Aktifkan antrean berikutnya'
-                            );
-                            if (updateRes?.error) throw new Error(updateRes.error.message);
+                            const claimed = await claimQueueAsCalled(target, String(target.status || '').toLowerCase(), 'Aktifkan antrean berikutnya');
+                            if (!claimed) return;
                         };
 
                         const findActive = async (status) => {
                             const { data, error } = await withTimeout(
                                 supabaseClient
                                     .from('antrian')
-                                    .select('id,no_antrian,nama_pasien,status')
+                                    .select('id,no_antrian,nama_pasien,status,loket_tujuan')
                                     .gte('created_at', startISO)
                                     .lte('created_at', endISO)
                                     .eq('unit', unit)
                                     .eq('status', status)
                                     .order('created_at', { ascending: true })
-                                    .limit(1),
+                                    .limit(25),
                                 15000,
                                 'Muat antrean aktif'
                             );
                             if (error) throw new Error(error.message);
-                            return data || [];
+                            return filterRowsByCurrentLoket(data || [], true);
                         };
 
                         const called = await findActive('dipanggil');
                         if (called.length > 0) {
                             const current = called[0];
+                            if (unit === 'POLIKLINIK' && isPrioritasNoAntrian(current.no_antrian)) {
+                                throw new Error('Gunakan tombol Next Prioritas untuk menyelesaikan antrean prioritas.');
+                            }
                             if (!String(current.nama_pasien || '').trim()) {
                                 throw new Error('Registrasi pasien dulu sebelum klik Next, agar antrean tidak terlewat.');
                             }
@@ -1458,24 +2041,33 @@
                             );
 
                             if (updateRes?.error) throw new Error(updateRes.error.message);
+                            const priorityWaitingAfter = await countPriorityWaiting();
+                            if (unit === 'POLIKLINIK' && priorityWaitingAfter > 0) {
+                                await loadQueueControls();
+                                await refreshStats();
+                                if (!viewRekap.classList.contains('hidden')) {
+                                    await r_loadPage(r_currentPage);
+                                }
+                                return;
+                            }
                             await promoteNext();
                         } else {
+                            const priorityWaiting = await countPriorityWaiting();
+                            if (unit === 'POLIKLINIK' && priorityWaiting > 0) {
+                                throw new Error(`Ada ${priorityWaiting} antrean prioritas menunggu. Panggil prioritas terlebih dahulu.`);
+                            }
+
                             const queued = await findActive('terdaftar');
                             if (queued.length > 0) {
-                                const updateRes = await withTimeout(
-                                    supabaseClient
-                                        .from('antrian')
-                                        .update({ status: 'dipanggil' })
-                                        .eq('id', queued[0].id),
-                                    15000,
-                                    'Panggil antrean berikutnya'
-                                );
-                                if (updateRes?.error) throw new Error(updateRes.error.message);
+                                const claimed = await claimQueueAsCalled(queued[0], 'terdaftar', 'Panggil antrean berikutnya');
+                                if (!claimed) {
+                                    throw new Error('Antrean terdaftar ini baru saja diproses loket lain. Silakan klik ulang.');
+                                }
                             } else {
                                 const { data: waitingData, error: waitingError } = await withTimeout(
                                     supabaseClient
                                         .from('antrian')
-                                        .select('id,no_antrian,status,created_at')
+                                        .select('id,no_antrian,status,loket_tujuan,created_at')
                                         .gte('created_at', startISO)
                                         .lte('created_at', endISO)
                                         .eq('unit', unit)
@@ -1487,7 +2079,7 @@
                                 );
                                 if (waitingError) throw new Error(waitingError.message);
 
-                                const waitingRows = waitingData || [];
+                                const waitingRows = filterRowsByCurrentLoket(waitingData || [], true);
                                 let pick = null;
                                 if (unit === 'POLIKLINIK') {
                                     pick = waitingRows.find((x) => isPoliklinikRegulerNoAntrian(x.no_antrian)) || null;
@@ -1497,15 +2089,10 @@
                                     throw new Error(`Belum ada antrean ${queueControlPrefix(unit)} yang menunggu.`);
                                 }
 
-                                const updateRes = await withTimeout(
-                                    supabaseClient
-                                        .from('antrian')
-                                        .update({ status: 'dipanggil' })
-                                        .eq('id', pick.id),
-                                    15000,
-                                    'Panggil antrean pertama'
-                                );
-                                if (updateRes?.error) throw new Error(updateRes.error.message);
+                                const claimed = await claimQueueAsCalled(pick, 'menunggu', 'Panggil antrean pertama');
+                                if (!claimed) {
+                                    throw new Error('Antrean ini baru saja diambil loket lain. Silakan klik ulang.');
+                                }
                             }
                         }
 
@@ -1564,7 +2151,12 @@
                 modeBaruBtn.addEventListener('click', async () => setPatientMode('baru'));
                 modeLamaBtn.addEventListener('click', async () => setPatientMode('lama'));
                 nextFarmasiBtn.addEventListener('click', async () => slideNextQueue('FARMASI', nextFarmasiBtn));
+                skipFarmasiBtn.addEventListener('click', async () => skipCurrentQueue('FARMASI', skipFarmasiBtn));
                 nextPoliklinikBtn.addEventListener('click', async () => slideNextQueue('POLIKLINIK', nextPoliklinikBtn));
+                skipPoliklinikBtn.addEventListener('click', async () => skipCurrentQueue('POLIKLINIK', skipPoliklinikBtn));
+                if (nextPrioritasBtn) {
+                    nextPrioritasBtn.addEventListener('click', async () => slideNextPrioritas(nextPrioritasBtn));
+                }
                 callPrioritasPoliklinikBtn.addEventListener('click', async () => callPrioritasPoliklinik(callPrioritasPoliklinikBtn));
                 cariPasienBtn.addEventListener('click', () => lookupPasienLama());
                 noRmLookup.addEventListener('keydown', (e) => {
@@ -1610,7 +2202,7 @@
                             const { data, error } = await withTimeout(
                                 supabaseClient
                                     .from('antrian')
-                                    .select('id,no_antrian,unit,status,jenis_pasien,poli_tujuan,created_at')
+                                    .select('id,no_antrian,unit,status,jenis_pasien,poli_tujuan,loket_tujuan,created_at')
                                     .gte('created_at', startISO)
                                     .lte('created_at', endISO)
                                     .eq('unit', unit)
@@ -1622,7 +2214,7 @@
                             );
                             if (error) throw new Error(error.message);
 
-                            const rows = data || [];
+                            const rows = filterRowsByCurrentLoket(data || [], true);
                             const called = rows.find((x) => String(x.status || '').toLowerCase() === 'dipanggil') || null;
                             if (called) return called;
 
@@ -1644,6 +2236,9 @@
                         const no_antrian = String(antrianTarget.no_antrian || '').trim();
                         if (!no_antrian) {
                             throw new Error('Nomor antrean tidak valid. Coba refresh data antrean lalu ulangi.');
+                        }
+                        if (!rowMatchesCurrentLoket(antrianTarget, true)) {
+                            throw new Error('Antrean ini sedang diproses loket lain.');
                         }
 
                         if (patientMode === 'lama' && !loadedOldPatient) {
@@ -1708,7 +2303,7 @@
                         const currentStatus = String(antrianTarget.status || '').toLowerCase();
                         const nextStatus = currentStatus === 'dipanggil' ? 'dipanggil' : 'terdaftar';
 
-                        const updatePayload = { status: nextStatus, nama_pasien };
+                        const updatePayload = buildQueueProcessingPayload({ status: nextStatus, nama_pasien });
                         let updateQuery = supabaseClient
                             .from('antrian')
                             .update(updatePayload)
@@ -2136,6 +2731,9 @@
                     const session = await requireSession();
                     if (!session) return;
 
+                    await loadAdminProfile(session);
+                    await detectQueueRoutingColumns();
+                    await detectQueueProcessingColumns();
                     await detectRiwayatLinkColumn();
                     await detectNoRegistrasiColumn();
                     showView('pendaftaran');
