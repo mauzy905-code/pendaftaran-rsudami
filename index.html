@@ -62,9 +62,9 @@
             </button>
             <div id="supervisorMenuLinks" class="hidden space-y-3">
                 <div class="my-4 h-px bg-gradient-to-r from-transparent via-violet-100 to-transparent"></div>
-                <a href="display.html" class="block rounded-2xl border border-violet-100 bg-white px-4 py-3.5 font-semibold text-slate-800 transition hover:bg-violet-50" target="_blank" rel="noreferrer">Display Antrean</a>
-                <a href="mesin-farmasi.html" class="block rounded-2xl border border-violet-100 bg-white px-4 py-3.5 font-semibold text-slate-800 transition hover:bg-violet-50" target="_blank" rel="noreferrer">Mesin Antrean Farmasi</a>
-                <a href="mesin-poliklinik.html" class="block rounded-2xl border border-violet-100 bg-white px-4 py-3.5 font-semibold text-slate-800 transition hover:bg-violet-50" target="_blank" rel="noreferrer">Mesin Antrean Poliklinik</a>
+                <a id="supervisorOpenDisplay" href="display.html" class="block rounded-2xl border border-violet-100 bg-white px-4 py-3.5 font-semibold text-slate-800 transition hover:bg-violet-50" target="_blank" rel="noreferrer">Display Antrean</a>
+                <a id="supervisorOpenMesinFarmasi" href="mesin-farmasi.html" class="block rounded-2xl border border-violet-100 bg-white px-4 py-3.5 font-semibold text-slate-800 transition hover:bg-violet-50" target="_blank" rel="noreferrer">Mesin Antrean Farmasi</a>
+                <a id="supervisorOpenMesinPoliklinik" href="mesin-poliklinik.html" class="block rounded-2xl border border-violet-100 bg-white px-4 py-3.5 font-semibold text-slate-800 transition hover:bg-violet-50" target="_blank" rel="noreferrer">Mesin Antrean Poliklinik</a>
             </div>
             <div class="my-4 h-px bg-gradient-to-r from-transparent via-emerald-100 to-transparent"></div>
             <div id="drawerRoleNote" class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm font-semibold text-slate-600">
@@ -661,6 +661,9 @@
                 const drawerTitle = document.getElementById('drawerTitle');
                 const drawerDescription = document.getElementById('drawerDescription');
                 const supervisorMenuLinks = document.getElementById('supervisorMenuLinks');
+                const supervisorOpenDisplay = document.getElementById('supervisorOpenDisplay');
+                const supervisorOpenMesinFarmasi = document.getElementById('supervisorOpenMesinFarmasi');
+                const supervisorOpenMesinPoliklinik = document.getElementById('supervisorOpenMesinPoliklinik');
                 const drawerRoleNote = document.getElementById('drawerRoleNote');
                 const adminNameDisplay = document.getElementById('adminNameDisplay');
                 const adminRoleDisplay = document.getElementById('adminRoleDisplay');
@@ -746,6 +749,30 @@
                     drawerOverlay.classList.add('hidden');
                 }
 
+                function openExternalPage(relativePath) {
+                    const url = new URL(String(relativePath || '').trim(), window.location.href);
+                    url.searchParams.set('t', String(Date.now()));
+                    window.open(url.toString(), '_blank', 'noopener,noreferrer');
+                }
+
+                function wireSupervisorExternalLinks() {
+                    const links = [
+                        { el: supervisorOpenDisplay, path: 'display.html' },
+                        { el: supervisorOpenMesinFarmasi, path: 'mesin-farmasi.html' },
+                        { el: supervisorOpenMesinPoliklinik, path: 'mesin-poliklinik.html' }
+                    ];
+                    links.forEach(({ el, path }) => {
+                        if (!el) return;
+                        try {
+                            el.href = new URL(path, window.location.href).toString();
+                        } catch (e) {}
+                        el.addEventListener('click', (ev) => {
+                            ev.preventDefault();
+                            openExternalPage(path);
+                        });
+                    });
+                }
+
                 function syncRoleMenuVisibility() {
                     menuPendaftaran.classList.toggle('hidden', !canAccessPendaftaranView());
                     if (menuRekapAll) {
@@ -788,6 +815,8 @@
                     if (value === 'SUPERVISOR') return 'Supervisor';
                     return value ? value.replace(/_/g, ' ') : '-';
                 }
+
+                wireSupervisorExternalLinks();
 
                 function computeAgeYears(dateString) {
                     const raw = String(dateString || '').trim();
