@@ -570,7 +570,7 @@
     
     <div id="stickerContainer" class="hidden">
         <div id="sticker" style="width: 50mm; height: 30mm; padding: 2mm; font-family: Arial, sans-serif; font-size: 7pt; line-height: 1.15;">
-            <div style="text-align: center; font-weight: bold; font-size: 7pt;">SIM-AMI • RSUD AJI MUHAMMAD IDRIS</div>
+            <div style="text-align: center; font-weight: bold; font-size: 7pt;">RSUD AJI MUHAMMAD IDRIS</div>
             <div style="margin-top: 1mm;">
                 <div>
                     <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>Nama</b>: <span id="sticker_nama"></span></div>
@@ -1862,6 +1862,37 @@
                     if (saveErrorEl) saveErrorEl.classList.add('hidden');
                 }
 
+                async function syncRegistrationLockWithCurrentQueue() {
+                    if (!registrationLocked) return;
+
+                    const { startISO, endISO } = getTodayRangeISO();
+                    const { data, error } = await withTimeout(
+                        supabaseClient
+                            .from('antrian')
+                            .select('no_antrian,unit,status,loket_tujuan,created_at')
+                            .gte('created_at', startISO)
+                            .lte('created_at', endISO)
+                            .eq('unit', 'POLIKLINIK')
+                            .in('status', ['dipanggil', 'terdaftar', 'menunggu'])
+                            .order('created_at', { ascending: true })
+                            .limit(50),
+                        15000,
+                        'Sinkron antrean pendaftaran'
+                    );
+
+                    if (error) throw new Error(error.message);
+
+                    const rows = filterRowsByCurrentLoket(data || [], true);
+                    const called = rows.find((item) => String(item.status || '').toLowerCase() === 'dipanggil') || null;
+                    const queued = rows.find((item) => String(item.status || '').toLowerCase() === 'terdaftar') || null;
+                    const waiting = rows.filter((item) => String(item.status || '').toLowerCase() === 'menunggu');
+                    const nextWaiting = waiting.find((item) => isPoliklinikRegulerNoAntrian(item.no_antrian)) || waiting[0] || null;
+                    const currentQueue = called || queued || nextWaiting || null;
+
+                    if (!currentQueue) return;
+                    unlockRegistrationIfQueueChanged(currentQueue.no_antrian);
+                }
+
 
                 function clearIdentityFields() {
                     document.getElementById('nama_pasien').value = '';
@@ -2036,6 +2067,19 @@
                     ]);
                 }
 
+
+                function formatDateSlash(isoOrDate) {
+                    if (!isoOrDate) return '';
+                    const d = new Date(isoOrDate);
+                    if (Number.isNaN(d.getTime())) {
+                        const raw = String(isoOrDate);
+                        const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+                        if (match) return `${match[3]}/${match[2]}/${match[1]}`;
+                        return raw;
+                    }
+                    const pad2 = (n) => String(n).padStart(2, '0');
+                    return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()}`;
+                }
 
                 function formatLocalDateTime(date) {
                     const pad2 = (n) => String(n).padStart(2, '0');
@@ -2266,6 +2310,7 @@
                         }
 
                         await loadQueueControls();
+                        await syncRegistrationLockWithCurrentQueue();
                         await refreshStats();
                         if (!viewRekap.classList.contains('hidden')) {
                             await r_loadPage(r_currentPage);
@@ -2666,8 +2711,10 @@
                             const priorityWaitingAfter = await countPriorityWaiting();
                             if (unit === 'POLIKLINIK' && priorityWaitingAfter > 0) {
                                 await loadQueueControls();
+                                await syncRegistrationLockWithCurrentQueue();
                                 await refreshStats();
                                 if (!viewRekap.classList.contains('hidden')) {
+                                    await r_loadPage(r_currentPage);
                                     await r_loadPage(r_currentPage);
                                 }
                                 return;
@@ -2719,8 +2766,10 @@
                         }
 
                         await loadQueueControls();
+                        await syncRegistrationLockWithCurrentQueue();
                         await refreshStats();
                         if (!viewRekap.classList.contains('hidden')) {
+                            await r_loadPage(r_currentPage);
                             await r_loadPage(r_currentPage);
                         }
                     } catch (err) {
@@ -2953,7 +3002,7 @@
                         }
 
                         document.getElementById('sticker_nama').textContent = nama_pasien;
-                        document.getElementById('sticker_tgl_lahir').textContent = tanggal_lahir || '';
+                        document.getElementById('sticker_tgl_lahir').textContent = formatDateSlash(tanggal_lahir);
                         document.getElementById('sticker_jk').textContent = jenis_kelamin || '';
                         document.getElementById('sticker_waktu').textContent = formatLocalDateTime(waktu_daftar);
                         document.getElementById('sticker_no_rm').textContent = no_rm;
