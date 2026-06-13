@@ -314,12 +314,10 @@ class QueueSoundSystem {
             if (numberPath.length) sequence.push(numberPath);
         }
 
-        // 4. Jenis pasien (Umum/Prioritas)
+        // 4. Hanya antrean prioritas yang dibacakan.
         if (jenisPasien) {
             const jenisLower = jenisPasien.toLowerCase();
-            if (jenisLower.includes('umum') || jenisLower === 'umum') {
-                sequence.push(this.getWordSound(this.soundFiles.umum));
-            } else if (jenisLower.includes('prioritas') || jenisLower === 'prioritas') {
+            if (jenisLower.includes('prioritas') || jenisLower === 'prioritas') {
                 sequence.push(this.getWordSound(this.soundFiles.prioritas));
             }
         }
