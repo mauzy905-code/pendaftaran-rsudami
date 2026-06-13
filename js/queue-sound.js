@@ -11,6 +11,8 @@ class QueueSoundSystem {
         this.soundQueue = [];
         this.currentIndex = 0;
         this.currentAudio = null;
+        this.audioCache = new Map();
+        this.transitionGapMs = 15;
         this.soundFiles = {
             opening: 'nada.mp3',
             attention: 'Perhatian.mp3',
@@ -62,6 +64,33 @@ class QueueSoundSystem {
         return true;
     }
 
+    normalizeCandidates(filePath) {
+        return (Array.isArray(filePath) ? filePath : [filePath])
+            .map((item) => String(item || '').trim())
+            .filter(Boolean);
+    }
+
+    preloadAudio(path) {
+        const src = String(path || '').trim();
+        if (!src) return null;
+        if (this.audioCache.has(src)) return this.audioCache.get(src);
+
+        const audio = new Audio(src);
+        audio.preload = 'auto';
+        try {
+            audio.load();
+        } catch (e) {}
+        this.audioCache.set(src, audio);
+        return audio;
+    }
+
+    preloadCandidates(filePath) {
+        const candidates = this.normalizeCandidates(filePath);
+        for (let i = 0; i < candidates.length; i++) {
+            this.preloadAudio(candidates[i]);
+        }
+    }
+
     /**
      * Memainkan satu file suara
      */
@@ -72,9 +101,7 @@ class QueueSoundSystem {
                 return;
             }
 
-            const candidates = (Array.isArray(filePath) ? filePath : [filePath])
-                .map((item) => String(item || '').trim())
-                .filter(Boolean);
+            const candidates = this.normalizeCandidates(filePath);
 
             if (candidates.length === 0) {
                 resolve();
@@ -89,7 +116,9 @@ class QueueSoundSystem {
                 }
 
                 const currentPath = candidates[index];
-                const audio = new Audio(currentPath);
+                const cachedAudio = this.preloadAudio(currentPath);
+                const audio = cachedAudio ? cachedAudio.cloneNode() : new Audio(currentPath);
+                audio.preload = 'auto';
                 let settled = false;
 
                 const finish = () => {
@@ -130,10 +159,15 @@ class QueueSoundSystem {
         this.currentIndex = 0;
 
         for (let i = 0; i < soundFiles.length; i++) {
+            this.preloadCandidates(soundFiles[i]);
+        }
+
+        for (let i = 0; i < soundFiles.length; i++) {
             if (!this.soundEnabled) break;
             await this.playSound(soundFiles[i]);
-            // Jeda kecil antar suara (100ms)
-            await this.sleep(100);
+            if (this.transitionGapMs > 0 && i < soundFiles.length - 1) {
+                await this.sleep(this.transitionGapMs);
+            }
         }
 
         this.isPlaying = false;
