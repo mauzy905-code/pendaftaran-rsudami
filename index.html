@@ -775,6 +775,7 @@
 
                 function syncRoleMenuVisibility() {
                     menuPendaftaran.classList.toggle('hidden', !canAccessPendaftaranView());
+                    menuRekap.classList.toggle('hidden', !canAccessRekapView());
                     if (menuRekapAll) {
                         menuRekapAll.classList.toggle('hidden', !isPetugasPoliRole());
                     }
@@ -804,7 +805,7 @@
                     if (value === 'supervisor') return 'Supervisor';
                     if (value === 'admin_rme') return 'Admin RME';
                     if (value === 'admin_pendaftaran') return 'Admin Pendaftaran';
-                    if (value === 'petugas_poli' || value === 'petugas poli') return 'Petugas Poli';
+                    if (value === 'petugas_poli' || value === 'petugas poli') return getPetugasPoliAccountLabel();
                     return value ? value.replace(/_/g, ' ') : 'Belum Diatur';
                 }
 
@@ -843,6 +844,7 @@
                     const isSupervisor = isSupervisorRole();
                     const isRme = isRmeRole();
                     const isPetugasPoli = isPetugasPoliRole();
+                    const petugasPoliLabel = getPetugasPoliAccountLabel();
 
                     drawerHeader.className = isSupervisor
                         ? 'bg-[linear-gradient(135deg,_#581c87_0%,_#6d28d9_42%,_#1d4ed8_100%)] px-6 py-6'
@@ -905,16 +907,16 @@
                     } else if (isPetugasPoli) {
                         supervisorMenuLinks.classList.add('hidden');
                         drawerRoleEyebrow.textContent = 'Akses Poliklinik';
-                        drawerTitle.textContent = 'Menu Petugas Poli';
+                        drawerTitle.textContent = `Menu ${petugasPoliLabel}`;
                         drawerDescription.textContent = 'Fokus pada daftar pasien hari ini sesuai poli, serta cek riwayat kunjungan.';
                         drawerRoleNote.textContent = 'Petugas poli hanya mengakses daftar pasien poli hari ini dan riwayat kunjungan. Menu loket pendaftaran dan operasional antrean disembunyikan.';
-                        dashboardRolePill.textContent = 'Panel Petugas Poli';
-                        dashboardTitle.textContent = 'Daftar Pasien Poli Hari Ini';
+                        dashboardRolePill.textContent = petugasPoliLabel;
+                        dashboardTitle.textContent = `${petugasPoliLabel} Hari Ini`;
                         dashboardDescription.textContent = 'Cari pasien poli hari ini sesuai unit, lalu buka riwayat kunjungan bila diperlukan.';
                         summaryBox1Label.textContent = 'Fokus';
-                        summaryBox1Value.textContent = 'Poliklinik';
+                        summaryBox1Value.textContent = petugasPoliLabel;
                         summaryBox2Label.textContent = 'Akses';
-                        summaryBox2Value.textContent = 'Petugas Poli';
+                        summaryBox2Value.textContent = petugasPoliLabel;
                         summaryBox3Label.textContent = 'Riwayat';
                         summaryBox3Value.textContent = 'Siap Dibuka';
                         dashboardQuickHint.textContent = 'Gunakan rekap untuk melihat daftar pasien poli hari ini sesuai poli akun yang sedang login.';
@@ -1100,6 +1102,18 @@
 
                 function isPetugasPoliScopedRekap() {
                     return isPetugasPoliRole() && petugasPoliRekapMode !== 'all';
+                }
+
+                function canAccessRekapView() {
+                    return !isPendaftaranRole();
+                }
+
+                function getPetugasPoliAccountLabel() {
+                    const poli = getPetugasPoliDefaultPoli();
+                    if (poli === 'DOKTER_UMUM') return 'POLIKLINIK UMUM';
+                    if (poli === 'SPESIALIS_ANAK') return 'POLIKLINIK ANAK';
+                    if (poli === 'SPESIALIS_PENYAKIT_DALAM') return 'POLIKLINIK PENYAKIT DALAM';
+                    return 'POLIKLINIK';
                 }
 
                 function canAccessPendaftaranView() {
@@ -1379,6 +1393,9 @@
                 function showView(view) {
                     if (view === 'pendaftaran' && !canAccessPendaftaranView()) {
                         view = 'rekap';
+                    }
+                    if ((view === 'rekap' || view === 'rekap_all') && !canAccessRekapView()) {
+                        view = 'pendaftaran';
                     }
                     if (view === 'rekap' || view === 'rekap_all') {
                         viewPendaftaran.classList.add('hidden');
