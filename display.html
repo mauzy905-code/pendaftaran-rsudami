@@ -649,13 +649,20 @@
                     };
                 }
 
+                function buildAnnouncementSignature(item, fallbackLoket) {
+                    const noAntrian = String(item?.no_antrian || '').trim();
+                    const waktuPanggil = String(item?.waktu_panggil || '').trim();
+                    const loket = String(fallbackLoket || item?.loket_tujuan || '').trim();
+                    return [noAntrian, waktuPanggil, loket].join('|');
+                }
+
                 function announceNewCalls(farmasiRows, poliklinikRows) {
                     if (!soundEnabled) return;
                     const calledFarmasi = (farmasiRows || []).filter((x) => x.status_norm === 'dipanggil');
                     const farmasiCurrent = calledFarmasi[0] || null;
                     if (farmasiCurrent?.no_antrian) {
                         const key = 'FARMASI';
-                        const nextVal = String(farmasiCurrent.no_antrian || '');
+                        const nextVal = buildAnnouncementSignature(farmasiCurrent);
                         if (lastAnnounced[key] !== nextVal) {
                             lastAnnounced[key] = nextVal;
                             persistLastAnnounced();
@@ -668,7 +675,7 @@
                     const loket2 = byLoket.loket2;
                     if (loket1?.no_antrian) {
                         const key = 'POLIKLINIK:LOKET_1';
-                        const nextVal = String(loket1.no_antrian || '');
+                        const nextVal = buildAnnouncementSignature(loket1, 'LOKET_1');
                         if (lastAnnounced[key] !== nextVal) {
                             lastAnnounced[key] = nextVal;
                             persistLastAnnounced();
@@ -677,7 +684,7 @@
                     }
                     if (loket2?.no_antrian) {
                         const key = 'POLIKLINIK:LOKET_2';
-                        const nextVal = String(loket2.no_antrian || '');
+                        const nextVal = buildAnnouncementSignature(loket2, 'LOKET_2');
                         if (lastAnnounced[key] !== nextVal) {
                             lastAnnounced[key] = nextVal;
                             persistLastAnnounced();
