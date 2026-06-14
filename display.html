@@ -1057,12 +1057,27 @@
                     })();
                     setSoundEnabled(storedSound === '1');
                     soundToggleBtn.addEventListener('click', async () => {
-                        setSoundEnabled(!soundEnabled);
-                        if (!soundEnabled) return;
+                        const nextEnabled = !soundEnabled;
+                        setSoundEnabled(nextEnabled);
+                        if (!nextEnabled) return;
                         try {
                             await ensureAudioContext();
                         } catch (e) {}
-                        enqueueAnnouncement('Suara panggilan antrean aktif.');
+                        let previewPlayed = false;
+                        if (window.queueSound) {
+                            try {
+                                if (typeof window.queueSound.unlockAudio === 'function') {
+                                    await window.queueSound.unlockAudio();
+                                }
+                                if (typeof window.queueSound.playActivationPreview === 'function') {
+                                    await window.queueSound.playActivationPreview();
+                                    previewPlayed = true;
+                                }
+                            } catch (e) {}
+                        }
+                        if (!previewPlayed) {
+                            await playAirportChime();
+                        }
                     });
                 }
 
