@@ -324,6 +324,9 @@
                     if (window.queueSound && typeof window.queueSound.toggleSound === 'function') {
                         window.queueSound.toggleSound(soundEnabled);
                     }
+                    // #region debug-point A:toggle-sound
+                    fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"A",location:"display.html:setSoundEnabled",msg:"[DEBUG] display sound toggled",data:{soundEnabled:!!soundEnabled,hasQueueSound:!!window.queueSound},ts:Date.now()})}).catch(()=>{});
+                    // #endregion
                     if (soundToggleBtn) {
                         soundToggleBtn.textContent = soundEnabled ? 'Suara: ON' : 'Suara: OFF';
                         soundToggleBtn.className = soundEnabled
@@ -556,6 +559,9 @@
 
                 function enqueueAnnouncement(payload) {
                     if (!soundEnabled) return;
+                    // #region debug-point B:enqueue-announcement
+                    fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"B",location:"display.html:enqueueAnnouncement",msg:"[DEBUG] announcement enqueued",data:{payloadType:typeof payload,isObject:!!(payload&&typeof payload==='object'),noAntrian:String(payload?.noAntrian||payload?.no_antrian||""),unit:String(payload?.unit||""),queueLengthBefore:Number(speechQueue.length||0)},ts:Date.now()})}).catch(()=>{});
+                    // #endregion
                     if (typeof payload === 'string') {
                         const safeText = String(payload || '').trim();
                         if (!safeText) return;
@@ -574,6 +580,9 @@
                     if (speechQueue.length === 0) return;
                     speechBusy = true;
                     const nextItem = speechQueue.shift();
+                    // #region debug-point C:drain-speech
+                    fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"C",location:"display.html:drainSpeechQueue",msg:"[DEBUG] draining speech queue",data:{hasQueueSound:!!window.queueSound,itemType:typeof nextItem,isObject:!!(nextItem&&typeof nextItem==='object'),unit:String(nextItem?.unit||""),noAntrian:String(nextItem?.noAntrian||nextItem?.no_antrian||""),remainingQueue:Number(speechQueue.length||0)},ts:Date.now()})}).catch(()=>{});
+                    // #endregion
                     try {
                         if (nextItem && typeof nextItem === 'object' && window.queueSound) {
                             if (nextItem.unit === 'FARMASI') {
@@ -666,6 +675,9 @@
                         if (lastAnnounced[key] !== nextVal) {
                             lastAnnounced[key] = nextVal;
                             persistLastAnnounced();
+                            // #region debug-point D:announce-farmasi
+                            fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"D",location:"display.html:announceNewCalls:farmasi",msg:"[DEBUG] new farmasi call detected",data:{key:String(key),signature:String(nextVal),noAntrian:String(farmasiCurrent.no_antrian||""),waktuPanggil:String(farmasiCurrent.waktu_panggil||"")},ts:Date.now()})}).catch(()=>{});
+                            // #endregion
                             enqueueAnnouncement(buildAnnouncementPayload('FARMASI', farmasiCurrent) || buildAnnouncementText('FARMASI', farmasiCurrent));
                         }
                     }
@@ -679,6 +691,9 @@
                         if (lastAnnounced[key] !== nextVal) {
                             lastAnnounced[key] = nextVal;
                             persistLastAnnounced();
+                            // #region debug-point D:announce-poliklinik-1
+                            fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"D",location:"display.html:announceNewCalls:poliklinik1",msg:"[DEBUG] new poliklinik loket1 call detected",data:{key:String(key),signature:String(nextVal),noAntrian:String(loket1.no_antrian||""),waktuPanggil:String(loket1.waktu_panggil||""),loket:"LOKET_1"},ts:Date.now()})}).catch(()=>{});
+                            // #endregion
                             enqueueAnnouncement(buildAnnouncementPayload('POLIKLINIK', { ...loket1, loket_tujuan: 'LOKET_1' }) || buildAnnouncementText('POLIKLINIK', { ...loket1, loket_tujuan: 'LOKET_1' }));
                         }
                     }
@@ -688,6 +703,9 @@
                         if (lastAnnounced[key] !== nextVal) {
                             lastAnnounced[key] = nextVal;
                             persistLastAnnounced();
+                            // #region debug-point D:announce-poliklinik-2
+                            fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"D",location:"display.html:announceNewCalls:poliklinik2",msg:"[DEBUG] new poliklinik loket2 call detected",data:{key:String(key),signature:String(nextVal),noAntrian:String(loket2.no_antrian||""),waktuPanggil:String(loket2.waktu_panggil||""),loket:"LOKET_2"},ts:Date.now()})}).catch(()=>{});
+                            // #endregion
                             enqueueAnnouncement(buildAnnouncementPayload('POLIKLINIK', { ...loket2, loket_tujuan: 'LOKET_2' }) || buildAnnouncementText('POLIKLINIK', { ...loket2, loket_tujuan: 'LOKET_2' }));
                         }
                     }
