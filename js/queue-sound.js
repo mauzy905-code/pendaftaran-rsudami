@@ -12,6 +12,9 @@ class QueueSoundSystem {
         this.currentIndex = 0;
         this.currentAudio = null;
         this.audioCache = new Map();
+        this.audioBufferCache = new Map();
+        this.audioContext = null;
+        this.audioUnlocked = false;
         this.transitionGapMs = 15;
         this.soundFiles = {
             opening: 'nada.mp3',
@@ -90,79 +93,157 @@ class QueueSoundSystem {
         const candidates = this.normalizeCandidates(filePath);
         for (let i = 0; i < candidates.length; i++) {
             this.preloadAudio(candidates[i]);
+            this.preloadAudioBuffer(candidates[i]).catch(() => {});
         }
+    }
+
+    async ensureAudioContext() {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return null;
+        if (!this.audioContext) {
+            this.audioContext = new AudioCtx();
+        }
+        if (this.audioContext.state === 'suspended') {
+            await this.audioContext.resume();
+        }
+        return this.audioContext;
+    }
+
+    async unlockAudio() {
+        try {
+            const ctx = await this.ensureAudioContext();
+            if (!ctx) return false;
+            const buffer = ctx.createBuffer(1, 1, 22050);
+            const source = ctx.createBufferSource();
+            const gain = ctx.createGain();
+            gain.gain.value = 0.0001;
+            source.buffer = buffer;
+            source.connect(gain);
+            gain.connect(ctx.destination);
+            source.start(0);
+            source.stop(ctx.currentTime + 0.01);
+            this.audioUnlocked = true;
+            return true;
+        } catch (err) {
+            return false;
+        }
+    }
+
+    async preloadAudioBuffer(path) {
+        const src = String(path || '').trim();
+        if (!src) return null;
+        if (this.audioBufferCache.has(src)) {
+            return this.audioBufferCache.get(src);
+        }
+
+        const bufferPromise = (async () => {
+            const ctx = await this.ensureAudioContext();
+            if (!ctx) throw new Error('AudioContext tidak tersedia.');
+            const response = await fetch(src, { cache: 'force-cache' });
+            if (!response.ok) {
+                throw new Error(`Gagal memuat audio: ${response.status}`);
+            }
+            const arrayBuffer = await response.arrayBuffer();
+            const cloned = arrayBuffer.slice(0);
+            return await new Promise((resolve, reject) => {
+                ctx.decodeAudioData(cloned, resolve, reject);
+            });
+        })();
+
+        this.audioBufferCache.set(src, bufferPromise);
+        return bufferPromise;
+    }
+
+    playAudioBuffer(buffer) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const ctx = await this.ensureAudioContext();
+                if (!ctx || !buffer) {
+                    resolve(false);
+                    return;
+                }
+                const source = ctx.createBufferSource();
+                const gain = ctx.createGain();
+                gain.gain.value = 1;
+                source.buffer = buffer;
+                source.connect(gain);
+                gain.connect(ctx.destination);
+                source.onended = () => resolve(true);
+                source.start(0);
+                this.currentAudio = {
+                    paused: false,
+                    pause: () => {
+                        try {
+                            source.stop(0);
+                        } catch (e) {}
+                    }
+                };
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
+
+    playHtmlAudio(path) {
+        return new Promise((resolve, reject) => {
+            const cachedAudio = this.preloadAudio(path);
+            const audio = cachedAudio ? cachedAudio.cloneNode() : new Audio(path);
+            audio.preload = 'auto';
+            let finished = false;
+            const done = (result) => {
+                if (finished) return;
+                finished = true;
+                resolve(result);
+            };
+            audio.onended = () => done(true);
+            audio.onerror = () => reject(new Error('HTMLAudio gagal memutar file.'));
+            const playPromise = audio.play();
+            if (playPromise && typeof playPromise.then === 'function') {
+                playPromise.catch((err) => reject(err));
+            }
+            this.currentAudio = audio;
+        });
     }
 
     /**
      * Memainkan satu file suara
      */
-    playSound(filePath) {
-        return new Promise((resolve) => {
-            if (!this.soundEnabled) {
-                // #region debug-point E:play-sound-disabled
-                fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"E",location:"queue-sound.js:playSound:disabled",msg:"[DEBUG] playSound skipped because disabled",data:{candidateCount:Array.isArray(filePath)?filePath.length:1},ts:Date.now()})}).catch(()=>{});
+    async playSound(filePath) {
+        if (!this.soundEnabled) {
+            // #region debug-point E:play-sound-disabled
+            fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"E",location:"queue-sound.js:playSound:disabled",msg:"[DEBUG] playSound skipped because disabled",data:{candidateCount:Array.isArray(filePath)?filePath.length:1},ts:Date.now()})}).catch(()=>{});
+            // #endregion
+            return;
+        }
+
+        const candidates = this.normalizeCandidates(filePath);
+        if (candidates.length === 0) return;
+
+        for (let index = 0; index < candidates.length; index++) {
+            const currentPath = candidates[index];
+            try {
+                const buffer = await this.preloadAudioBuffer(currentPath);
+                await this.playAudioBuffer(buffer);
+                // #region debug-point E:play-sound-started
+                fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"E",location:"queue-sound.js:playSound:started",msg:"[DEBUG] playSound started via AudioContext",data:{path:String(currentPath||""),candidateIndex:Number(index||0),audioUnlocked:!!this.audioUnlocked},ts:Date.now()})}).catch(()=>{});
                 // #endregion
-                resolve();
                 return;
-            }
-
-            const candidates = this.normalizeCandidates(filePath);
-
-            if (candidates.length === 0) {
-                resolve();
-                return;
-            }
-
-            const tryPlay = (index) => {
-                if (index >= candidates.length) {
-                    console.warn('⚠️ Tidak dapat memainkan kandidat suara:', candidates);
-                    resolve();
-                    return;
-                }
-
-                const currentPath = candidates[index];
-                const cachedAudio = this.preloadAudio(currentPath);
-                const audio = cachedAudio ? cachedAudio.cloneNode() : new Audio(currentPath);
-                audio.preload = 'auto';
-                let settled = false;
-
-                const finish = () => {
-                    if (settled) return;
-                    settled = true;
-                    resolve();
-                };
-
-                const next = () => {
-                    if (settled) return;
-                    settled = true;
-                    // #region debug-point E:play-sound-next
-                    fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"E",location:"queue-sound.js:playSound:next",msg:"[DEBUG] playSound candidate failed, moving next",data:{path:String(currentPath||""),candidateIndex:Number(index||0)},ts:Date.now()})}).catch(()=>{});
+            } catch (webAudioErr) {
+                try {
+                    await this.playHtmlAudio(currentPath);
+                    // #region debug-point E:play-sound-started-html
+                    fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"E",location:"queue-sound.js:playSound:started-html",msg:"[DEBUG] playSound started via HTMLAudio fallback",data:{path:String(currentPath||""),candidateIndex:Number(index||0),message:String(webAudioErr?.message||webAudioErr||"")},ts:Date.now()})}).catch(()=>{});
                     // #endregion
-                    tryPlay(index + 1);
-                };
-
-                audio.onended = finish;
-                audio.onerror = next;
-
-                const playPromise = audio.play();
-                if (playPromise && typeof playPromise.then === 'function') {
-                    playPromise.then(() => {
-                        // #region debug-point E:play-sound-started
-                        fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"E",location:"queue-sound.js:playSound:started",msg:"[DEBUG] playSound started",data:{path:String(currentPath||""),candidateIndex:Number(index||0)},ts:Date.now()})}).catch(()=>{});
-                        // #endregion
-                    }).catch((err) => {
-                        // #region debug-point E:play-sound-catch
-                        fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"E",location:"queue-sound.js:playSound:catch",msg:"[DEBUG] playSound rejected",data:{path:String(currentPath||""),candidateIndex:Number(index||0),message:String(err?.message||err||"")},ts:Date.now()})}).catch(()=>{});
-                        // #endregion
-                        next();
-                    });
+                    return;
+                } catch (htmlAudioErr) {
+                    // #region debug-point E:play-sound-catch
+                    fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"E",location:"queue-sound.js:playSound:catch",msg:"[DEBUG] playSound rejected",data:{path:String(currentPath||""),candidateIndex:Number(index||0),webAudioMessage:String(webAudioErr?.message||webAudioErr||""),htmlAudioMessage:String(htmlAudioErr?.message||htmlAudioErr||""),audioUnlocked:!!this.audioUnlocked},ts:Date.now()})}).catch(()=>{});
+                    // #endregion
                 }
+            }
+        }
 
-                this.currentAudio = audio;
-            };
-
-            tryPlay(0);
-        });
+        console.warn('⚠️ Tidak dapat memainkan kandidat suara:', candidates);
     }
 
     /**
@@ -173,6 +254,9 @@ class QueueSoundSystem {
         // #region debug-point F:play-sequence
         fetch("http://127.0.0.1:7777/event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:"display-audio-missing",runId:"pre-fix",hypothesisId:"F",location:"queue-sound.js:playSequence",msg:"[DEBUG] playSequence start",data:{length:Number(soundFiles.length||0),preview:Array.isArray(soundFiles)?soundFiles.slice(0,5):[]},ts:Date.now()})}).catch(()=>{});
         // #endregion
+        try {
+            await this.ensureAudioContext();
+        } catch (e) {}
         this.soundQueue = soundFiles;
         this.isPlaying = true;
         this.currentIndex = 0;
@@ -359,6 +443,14 @@ class QueueSoundSystem {
         return sequence;
     }
 
+    async playActivationPreview() {
+        const previewSequence = [
+            this.getOpeningSound(this.soundFiles.opening),
+            this.getWordSound(this.soundFiles.attention)
+        ];
+        await this.playSequence(previewSequence.filter((item) => Array.isArray(item) ? item.length > 0 : !!item));
+    }
+
     /**
      * Memanggil antrian farmasi
      */
@@ -387,7 +479,7 @@ class QueueSoundSystem {
      * Menghentikan suara
      */
     stop() {
-        if (this.currentAudio && !this.currentAudio.paused) {
+        if (this.currentAudio && typeof this.currentAudio.pause === 'function' && !this.currentAudio.paused) {
             this.currentAudio.pause();
         }
         this.isPlaying = false;
@@ -398,3 +490,6 @@ class QueueSoundSystem {
 // Inisialisasi global
 window.queueSound = new QueueSoundSystem();
 const queueSound = window.queueSound;
+if (window.queueSound && typeof window.queueSound.init === 'function') {
+    window.queueSound.init();
+}
