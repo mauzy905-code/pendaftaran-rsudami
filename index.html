@@ -1327,6 +1327,35 @@
                     return (rows || []).filter((item) => rowMatchesCurrentLoket(item, allowUnassigned));
                 }
 
+                function filterActiveRowsByCurrentLoket(rows) {
+                    return filterRowsByCurrentLoket(rows, false);
+                }
+
+                function filterClaimableRowsByCurrentLoket(rows) {
+                    return filterRowsByCurrentLoket(rows, true);
+                }
+
+                function findScopedCurrentQueue(rows, options = {}) {
+                    const { preferPoliklinikRegulerWaiting = false } = options;
+                    const activeRows = filterActiveRowsByCurrentLoket(rows || []);
+                    const claimableRows = filterClaimableRowsByCurrentLoket(rows || []);
+
+                    const called = activeRows.find((item) => String(item.status || '').toLowerCase() === 'dipanggil') || null;
+                    if (called) return called;
+
+                    const queuedActive = activeRows.find((item) => String(item.status || '').toLowerCase() === 'terdaftar') || null;
+                    if (queuedActive) return queuedActive;
+
+                    const queuedClaimable = claimableRows.find((item) => String(item.status || '').toLowerCase() === 'terdaftar') || null;
+                    if (queuedClaimable) return queuedClaimable;
+
+                    const waitingRows = claimableRows.filter((item) => String(item.status || '').toLowerCase() === 'menunggu');
+                    if (preferPoliklinikRegulerWaiting) {
+                        return waitingRows.find((item) => isPoliklinikRegulerNoAntrian(item.no_antrian)) || waitingRows[0] || null;
+                    }
+                    return waitingRows[0] || null;
+                }
+
                 function applyCurrentLoketClaimFilter(query) {
                     if (!queueRoutingColumnsAvailable || !hasLoketScope()) {
                         return query;
@@ -2059,12 +2088,7 @@
 
                     if (error) throw new Error(error.message);
 
-                    const rows = filterRowsByCurrentLoket(data || [], true);
-                    const called = rows.find((item) => String(item.status || '').toLowerCase() === 'dipanggil') || null;
-                    const queued = rows.find((item) => String(item.status || '').toLowerCase() === 'terdaftar') || null;
-                    const waiting = rows.filter((item) => String(item.status || '').toLowerCase() === 'menunggu');
-                    const nextWaiting = waiting.find((item) => isPoliklinikRegulerNoAntrian(item.no_antrian)) || waiting[0] || null;
-                    const currentQueue = called || queued || nextWaiting || null;
+                    const currentQueue = findScopedCurrentQueue(data || [], { preferPoliklinikRegulerWaiting: true });
 
                     if (!currentQueue) return;
                     unlockRegistrationIfQueueChanged(currentQueue.no_antrian);
@@ -2214,7 +2238,7 @@
                         return;
                     }
 
-                    const scopedRows = filterRowsByCurrentLoket(data || [], true);
+                    const scopedRows = filterClaimableRowsByCurrentLoket(data || []);
                     select.innerHTML = '<option value="">Pilih Nomor Antrian</option>';
                     scopedRows.forEach(item => {
                         const option = document.createElement('option');
@@ -2306,8 +2330,10 @@
 
                     const rows = data || [];
                     ['POLIKLINIK'].forEach((unit) => {
-                        const unitRows = filterRowsByCurrentLoket(rows.filter((item) => item.unit === unit), true);
-                        const called = unitRows.filter((item) => String(item.status || '').toLowerCase() === 'dipanggil');
+                        const allUnitRows = rows.filter((item) => item.unit === unit);
+                        const unitRows = filterClaimableRowsByCurrentLoket(allUnitRows);
+                        const activeUnitRows = filterActiveRowsByCurrentLoket(allUnitRows);
+                        const called = activeUnitRows.filter((item) => String(item.status || '').toLowerCase() === 'dipanggil');
                         const queued = unitRows.filter((item) => String(item.status || '').toLowerCase() === 'terdaftar');
                         const current = called[0] || queued[0] || null;
                         const prefix = queueControlPrefix(unit);
@@ -2411,15 +2437,9 @@
                             autoNoEl.textContent = 'Otomatis';
                             hiddenNoAntrian.value = '';
                         } else {
-                            const unitRows = filterRowsByCurrentLoket(rows.filter((item) => item.unit === selectedUnit), true);
-                            const calledRow = unitRows.find((item) => String(item.status || '').toLowerCase() === 'dipanggil') || null;
-                            const queuedRow = unitRows.find((item) => String(item.status || '').toLowerCase() === 'terdaftar') || null;
-                            const waitingRows = unitRows.filter((item) => String(item.status || '').toLowerCase() === 'menunggu');
-                            let waitingPick = waitingRows[0] || null;
-                            if (selectedUnit === 'POLIKLINIK') {
-                                waitingPick = waitingRows.find((x) => isPoliklinikRegulerNoAntrian(x.no_antrian)) || waitingRows[0] || null;
-                            }
-                            const pick = calledRow || queuedRow || waitingPick;
+                            const pick = findScopedCurrentQueue(rows.filter((item) => item.unit === selectedUnit), {
+                                preferPoliklinikRegulerWaiting: selectedUnit === 'POLIKLINIK'
+                            });
                             if (!pick) {
                                 autoNoEl.textContent = 'Belum ada antrean';
                                 hiddenNoAntrian.value = '';
@@ -2456,7 +2476,7 @@
                         );
 
                         if (calledError) throw new Error(calledError.message);
-                        const scopedActiveCalled = filterRowsByCurrentLoket(activeCalled || [], true);
+                        const scopedActiveCalled = filterActiveRowsByCurrentLoket(activeCalled || []);
                         if (scopedActiveCalled.length > 0) {
                             const currentCalled = scopedActiveCalled[0];
                             if (isPrioritasNoAntrian(currentCalled.no_antrian)) {
@@ -2481,7 +2501,7 @@
                         );
 
                         if (error) throw new Error(error.message);
-                        const target = filterRowsByCurrentLoket(data || [], true)[0] || null;
+                        const target = filterClaimableRowsByCurrentLoket(data || [])[0] || null;
                         if (!target) {
                             throw new Error('Tidak ada antrean prioritas yang siap dipanggil.');
                         }
@@ -2528,7 +2548,7 @@
                         );
 
                         if (activeError) throw new Error(activeError.message);
-                        const current = filterRowsByCurrentLoket(active || [], true)[0] || null;
+                        const current = filterActiveRowsByCurrentLoket(active || [])[0] || null;
                         if (!current || !isPrioritasNoAntrian(current.no_antrian)) {
                             throw new Error('Tidak ada prioritas yang sedang dipanggil.');
                         }
@@ -2563,7 +2583,7 @@
                         );
                         if (nextError) throw new Error(nextError.message);
 
-                        const nextRow = filterRowsByCurrentLoket(nextData || [], true)[0] || null;
+                        const nextRow = filterClaimableRowsByCurrentLoket(nextData || [])[0] || null;
                         if (nextRow) {
                             const claimed = await claimQueueAsCalled(nextRow, 'menunggu', 'Panggil prioritas berikutnya');
                             if (!claimed) {
@@ -2585,7 +2605,7 @@
                             );
                             if (regularError) throw new Error(regularError.message);
 
-                            const regularRows = filterRowsByCurrentLoket(regularData || [], true);
+                            const regularRows = filterClaimableRowsByCurrentLoket(regularData || []);
                             const nextRegular = regularRows.find((x) => String(x.status || '').toLowerCase() === 'terdaftar' && isPoliklinikRegulerNoAntrian(x.no_antrian))
                                 || regularRows.find((x) => String(x.status || '').toLowerCase() === 'menunggu' && isPoliklinikRegulerNoAntrian(x.no_antrian))
                                 || null;
@@ -2633,10 +2653,7 @@
                         );
                         if (error) throw new Error(error.message);
 
-                        const scopedRows = filterRowsByCurrentLoket(data || [], true);
-                        const current = scopedRows.find((item) => String(item.status || '').toLowerCase() === 'dipanggil')
-                            || scopedRows.find((item) => String(item.status || '').toLowerCase() === 'terdaftar')
-                            || null;
+                        const current = findScopedCurrentQueue(data || [], { preferPoliklinikRegulerWaiting: unit === 'POLIKLINIK' });
 
                         if (!current) {
                             throw new Error(`Tidak ada antrean ${queueControlPrefix(unit)} yang bisa dipanggil ulang.`);
@@ -2718,10 +2735,7 @@
                         );
                         if (currentError) throw new Error(currentError.message);
 
-                        const currentRows = filterRowsByCurrentLoket(currentData || [], true);
-                        const current = currentRows.find((item) => String(item.status || '').toLowerCase() === 'dipanggil')
-                            || currentRows.find((item) => String(item.status || '').toLowerCase() === 'terdaftar')
-                            || null;
+                        const current = findScopedCurrentQueue(currentData || [], { preferPoliklinikRegulerWaiting: unit === 'POLIKLINIK' });
                         if (!current) {
                             throw new Error(`Tidak ada antrean ${queueControlPrefix(unit)} yang bisa dilewati.`);
                         }
@@ -2753,7 +2767,7 @@
                             );
                             if (nextPriorityError) throw new Error(nextPriorityError.message);
 
-                            const nextPriority = filterRowsByCurrentLoket(nextPriorityData || [], true)[0] || null;
+                            const nextPriority = filterClaimableRowsByCurrentLoket(nextPriorityData || [])[0] || null;
                             if (nextPriority) {
                                 const claimed = await claimQueueAsCalled(nextPriority, 'menunggu', 'Panggil prioritas berikutnya');
                                 if (!claimed) {
@@ -2775,7 +2789,7 @@
                                 );
                                 if (regularError) throw new Error(regularError.message);
 
-                                const regularRows = filterRowsByCurrentLoket(regularData || [], true);
+                                const regularRows = filterClaimableRowsByCurrentLoket(regularData || []);
                                 const nextRegular = regularRows.find((item) => String(item.status || '').toLowerCase() === 'terdaftar' && isPoliklinikRegulerNoAntrian(item.no_antrian))
                                     || regularRows.find((item) => String(item.status || '').toLowerCase() === 'menunggu' && isPoliklinikRegulerNoAntrian(item.no_antrian))
                                     || null;
@@ -2804,7 +2818,7 @@
                                 );
                                 if (nextError) throw new Error(nextError.message);
 
-                                const nextRows = filterRowsByCurrentLoket(nextData || [], true);
+                                const nextRows = filterClaimableRowsByCurrentLoket(nextData || []);
                                 let nextTarget = nextRows.find((item) => String(item.status || '').toLowerCase() === 'terdaftar') || null;
                                 if (!nextTarget && isPoliklinik) {
                                     nextTarget = nextRows.find((item) => String(item.status || '').toLowerCase() === 'menunggu' && isPoliklinikRegulerNoAntrian(item.no_antrian)) || null;
@@ -2812,15 +2826,10 @@
                                 nextTarget = nextTarget || nextRows.find((item) => String(item.status || '').toLowerCase() === 'menunggu') || null;
 
                                 if (nextTarget) {
-                                    const callNextRes = await withTimeout(
-                                        supabaseClient
-                                            .from('antrian')
-                                            .update({ status: 'dipanggil' })
-                                            .eq('id', nextTarget.id),
-                                        15000,
-                                        'Panggil antrean berikutnya'
-                                    );
-                                    if (callNextRes?.error) throw new Error(callNextRes.error.message);
+                                    const claimed = await claimQueueAsCalled(nextTarget, String(nextTarget.status || '').toLowerCase(), 'Panggil antrean berikutnya');
+                                    if (!claimed) {
+                                        throw new Error('Antrean berikutnya baru saja diambil loket lain. Silakan klik ulang.');
+                                    }
                                 }
                             }
                         }
@@ -2861,7 +2870,7 @@
                                 'Cek antrean prioritas'
                             );
                             if (error) throw new Error(error.message);
-                            return filterRowsByCurrentLoket(data || [], true).length;
+                            return filterClaimableRowsByCurrentLoket(data || []).length;
                         };
 
                         const promoteNext = async () => {
@@ -2883,7 +2892,7 @@
                                 'Cek antrean dipanggil'
                             );
                             if (calledError) throw new Error(calledError.message);
-                            const scopedActiveCalled = filterRowsByCurrentLoket(activeCalled || [], true);
+                            const scopedActiveCalled = filterActiveRowsByCurrentLoket(activeCalled || []);
                             if (scopedActiveCalled.length > 0) return;
 
                             const { data: candidatesRaw, error: candError } = await withTimeout(
@@ -2901,7 +2910,7 @@
                             );
                             if (candError) throw new Error(candError.message);
 
-                            const candidates = filterRowsByCurrentLoket(candidatesRaw || [], true);
+                            const candidates = filterClaimableRowsByCurrentLoket(candidatesRaw || []);
                             let target = candidates.find((x) => String(x.status || '').toLowerCase() === 'terdaftar') || null;
                             if (!target) {
                                 if (unit === 'POLIKLINIK') {
@@ -2932,7 +2941,9 @@
                                 'Muat antrean aktif'
                             );
                             if (error) throw new Error(error.message);
-                            return filterRowsByCurrentLoket(data || [], true);
+                            return status === 'dipanggil'
+                                ? filterActiveRowsByCurrentLoket(data || [])
+                                : filterClaimableRowsByCurrentLoket(data || []);
                         };
 
                         const called = await findActive('dipanggil');
@@ -2994,7 +3005,7 @@
                                 );
                                 if (waitingError) throw new Error(waitingError.message);
 
-                                const waitingRows = filterRowsByCurrentLoket(waitingData || [], true);
+                                const waitingRows = filterClaimableRowsByCurrentLoket(waitingData || []);
                                 let pick = null;
                                 if (unit === 'POLIKLINIK') {
                                     pick = waitingRows.find((x) => isPoliklinikRegulerNoAntrian(x.no_antrian)) || null;
@@ -3149,14 +3160,13 @@
                             );
                             if (error) throw new Error(error.message);
 
-                            const rows = filterRowsByCurrentLoket(data || [], true);
-                            const called = rows.find((x) => String(x.status || '').toLowerCase() === 'dipanggil') || null;
+                            const called = filterActiveRowsByCurrentLoket(data || []).find((x) => String(x.status || '').toLowerCase() === 'dipanggil') || null;
                             if (called) return called;
 
-                            const queued = rows.find((x) => String(x.status || '').toLowerCase() === 'terdaftar') || null;
+                            const queued = filterClaimableRowsByCurrentLoket(data || []).find((x) => String(x.status || '').toLowerCase() === 'terdaftar') || null;
                             if (queued) return queued;
 
-                            const waiting = rows.filter((x) => String(x.status || '').toLowerCase() === 'menunggu');
+                            const waiting = filterClaimableRowsByCurrentLoket(data || []).filter((x) => String(x.status || '').toLowerCase() === 'menunggu');
                             if (unit === 'POLIKLINIK') {
                                 return waiting.find((x) => isPoliklinikRegulerNoAntrian(x.no_antrian)) || waiting[0] || null;
                             }
