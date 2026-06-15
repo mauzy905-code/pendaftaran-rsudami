@@ -48,6 +48,37 @@
             </div>
         </div>
     </div>
+    <div id="staffIdentityOverlay" class="fixed inset-0 z-[55] hidden">
+        <div class="absolute inset-0 bg-slate-950/55 backdrop-blur-md"></div>
+        <div class="relative min-h-full flex items-center justify-center p-4">
+            <div class="w-full max-w-md overflow-hidden rounded-[28px] border border-white/70 bg-white/95 shadow-[0_30px_80px_-28px_rgba(15,23,42,0.55)]">
+                <div class="bg-[linear-gradient(135deg,_#065f46_0%,_#0f766e_38%,_#1d4ed8_100%)] px-7 py-7">
+                    <div class="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.28em] text-emerald-50">Petugas Aktif</div>
+                    <div class="mt-6 text-emerald-100 text-[11px] font-semibold tracking-[0.34em] uppercase">SIM-AMI</div>
+                    <div class="mt-2 text-white text-3xl font-black tracking-tight">Isi Nama Petugas</div>
+                    <div class="mt-2 text-emerald-50/90 text-sm font-medium leading-6">Nama petugas aktif wajib diisi sekali untuk sesi kerja ini.</div>
+                </div>
+                <div class="p-7 space-y-5">
+                    <div>
+                        <label class="block text-slate-700 font-semibold mb-2">Nama Petugas</label>
+                        <input id="staffNameInput" type="text" class="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-3.5 shadow-sm transition focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500" placeholder="Contoh: Nur Aini" maxlength="80">
+                    </div>
+                    <div id="staffIdentityInfo" class="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
+                        Nama ini akan dipakai sebagai identitas petugas aktif pada sesi sekarang.
+                    </div>
+                    <div id="staffNameError" class="text-sm font-semibold text-red-600 hidden"></div>
+                    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <button id="staffLogoutBtn" type="button" class="rounded-2xl border border-slate-200 bg-white py-3 text-slate-700 font-bold shadow-sm transition hover:bg-slate-50">
+                            Logout Akun
+                        </button>
+                        <button id="staffNameSaveBtn" type="button" class="rounded-2xl bg-[linear-gradient(135deg,_#059669_0%,_#0f766e_38%,_#2563eb_100%)] py-3 text-white font-bold shadow-[0_16px_30px_-14px_rgba(5,150,105,0.55)] transition hover:brightness-105">
+                            Simpan Nama
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="drawerOverlay" class="fixed inset-0 z-40 hidden">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur"></div>
@@ -103,11 +134,14 @@
             </div>
             <div class="flex items-center gap-2">
                 <div id="adminIdentityBadge" class="hidden rounded-full border border-blue-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-700 shadow-sm md:inline-flex">
-                    Profil Admin
+                    Profil Petugas
                 </div>
                 <div class="hidden 2xl:flex items-center rounded-full border border-emerald-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-700 shadow-sm">
                     SIM-AMI
                 </div>
+                <button id="changeStaffBtn" type="button" class="hidden md:inline-flex items-center justify-center rounded-xl border border-emerald-100 bg-white px-3.5 py-2 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-emerald-50">
+                    Ganti Petugas
+                </button>
                 <button id="logoutBtnTop" type="button" class="hidden md:inline-flex items-center justify-center rounded-xl border border-emerald-100 bg-white px-3.5 py-2 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-emerald-50">
                     Logout
                 </button>
@@ -122,16 +156,16 @@
                     <div id="dashboardHero" class="bg-[linear-gradient(135deg,_#065f46_0%,_#0f766e_38%,_#1d4ed8_100%)] px-5 py-5 md:px-6">
                         <div class="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
                             <div class="max-w-3xl">
-                                <div id="dashboardRolePill" class="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-emerald-50">Panel Admin Loket</div>
+                                <div id="dashboardRolePill" class="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-emerald-50">Panel Pendaftaran</div>
                                 <div id="dashboardTitle" class="mt-3 text-2xl md:text-3xl font-black tracking-tight text-white">Pendaftaran Poliklinik & Rekap</div>
                                 <div id="dashboardDescription" class="mt-2 text-sm md:text-base font-semibold leading-relaxed text-emerald-50/95">Kelola registrasi pasien Poliklinik.</div>
                                 <div class="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
                                     <div class="rounded-2xl border border-white/15 bg-white/10 px-3.5 py-3.5 text-white">
-                                        <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-100">Admin Aktif</div>
+                                        <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-100">Petugas Aktif</div>
                                         <div id="adminNameDisplay" class="mt-1.5 text-base font-black">-</div>
                                     </div>
                                     <div class="rounded-2xl border border-white/15 bg-white/10 px-3.5 py-3.5 text-white">
-                                        <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-100">Role</div>
+                                        <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-100">Peran</div>
                                         <div id="adminRoleDisplay" class="mt-1.5 text-base font-black">-</div>
                                     </div>
                                     <div class="rounded-2xl border border-white/15 bg-white/10 px-3.5 py-3.5 text-white">
@@ -147,7 +181,7 @@
                                 </div>
                                 <div class="rounded-2xl border border-white/15 bg-white/10 px-3.5 py-3.5 text-white">
                                     <div id="summaryBox2Label" class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-100">Akses</div>
-                                    <div id="summaryBox2Value" class="mt-1.5 text-lg font-black">Admin Only</div>
+                                        <div id="summaryBox2Value" class="mt-1.5 text-lg font-black">Pendaftaran</div>
                                 </div>
                                 <div class="rounded-2xl border border-white/15 bg-white/10 px-3.5 py-3.5 text-white">
                                     <div id="summaryBox3Label" class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-100">Backup</div>
@@ -761,6 +795,12 @@
                 const loginPassword = document.getElementById('loginPassword');
                 const loginBtn = document.getElementById('loginBtn');
                 const loginError = document.getElementById('loginError');
+                const staffIdentityOverlay = document.getElementById('staffIdentityOverlay');
+                const staffNameInput = document.getElementById('staffNameInput');
+                const staffNameSaveBtn = document.getElementById('staffNameSaveBtn');
+                const staffLogoutBtn = document.getElementById('staffLogoutBtn');
+                const staffNameError = document.getElementById('staffNameError');
+                const staffIdentityInfo = document.getElementById('staffIdentityInfo');
 
                 const burgerBtn = document.getElementById('burgerBtn');
                 const drawer = document.getElementById('drawer');
@@ -768,6 +808,7 @@
                 const menuPendaftaran = document.getElementById('menuPendaftaran');
                 const menuRekap = document.getElementById('menuRekap');
                 const menuRekapAll = document.getElementById('menuRekapAll');
+                const changeStaffBtn = document.getElementById('changeStaffBtn');
                 const logoutBtnTop = document.getElementById('logoutBtnTop');
                 const logoutBtnDrawer = document.getElementById('logoutBtnDrawer');
                 const adminIdentityBadge = document.getElementById('adminIdentityBadge');
@@ -855,6 +896,11 @@
                 let currentAdminProfile = null;
                 let currentAdminRole = '';
                 let currentLoket = '';
+                let currentStaffName = '';
+                let pendingStaffResolver = null;
+
+                const STAFF_NAME_STORAGE_PREFIX = 'simami-staff-name:';
+                const STAFF_ACTIVITY_LOG_KEY = 'simami-staff-activity-log';
 
                 function openDrawer() {
                     drawer.classList.remove('-translate-x-full');
@@ -921,9 +967,171 @@
                     const value = String(role || '').trim().toLowerCase();
                     if (value === 'supervisor') return 'Supervisor';
                     if (value === 'admin_rme') return 'Admin RME';
-                    if (value === 'admin_pendaftaran') return 'Admin Pendaftaran';
+                    if (value === 'admin_pendaftaran') return 'Petugas Pendaftaran';
                     if (value === 'petugas_poli' || value === 'petugas poli') return getPetugasPoliAccountLabel();
                     return value ? value.replace(/_/g, ' ') : 'Belum Diatur';
+                }
+
+                function normalizeStaffName(value) {
+                    return String(value || '').replace(/\s+/g, ' ').trim();
+                }
+
+                function getStaffStorageKey(profile = currentAdminProfile) {
+                    const profileKey = String(profile?.id || profile?.email || '').trim().toLowerCase();
+                    return profileKey ? STAFF_NAME_STORAGE_PREFIX + profileKey : '';
+                }
+
+                function getStoredStaffName(profile = currentAdminProfile) {
+                    const key = getStaffStorageKey(profile);
+                    if (!key) return '';
+                    try {
+                        return normalizeStaffName(window.sessionStorage.getItem(key) || '');
+                    } catch (e) {
+                        return '';
+                    }
+                }
+
+                function setStoredStaffName(name, profile = currentAdminProfile) {
+                    const key = getStaffStorageKey(profile);
+                    if (!key) return;
+                    try {
+                        window.sessionStorage.setItem(key, normalizeStaffName(name));
+                    } catch (e) {}
+                }
+
+                function clearStoredStaffName(profile = currentAdminProfile) {
+                    const key = getStaffStorageKey(profile);
+                    if (!key) return;
+                    try {
+                        window.sessionStorage.removeItem(key);
+                    } catch (e) {}
+                }
+
+                function isStaffIdentityRequired() {
+                    return isPendaftaranRole();
+                }
+
+                function getCurrentOperatorName() {
+                    return normalizeStaffName(currentStaffName)
+                        || normalizeStaffName(currentAdminProfile?.nama_admin)
+                        || normalizeStaffName(currentAdminProfile?.email)
+                        || 'Petugas';
+                }
+
+                function getCurrentOperatorAuditLabel() {
+                    const operatorName = getCurrentOperatorName();
+                    const adminEmail = getCurrentAdminEmail();
+                    if (operatorName && adminEmail && operatorName.toLowerCase() !== adminEmail.toLowerCase()) {
+                        return `${operatorName} | ${adminEmail}`;
+                    }
+                    return operatorName || adminEmail;
+                }
+
+                function appendStaffActivity(action, details = {}) {
+                    const entry = {
+                        id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+                        created_at: new Date().toISOString(),
+                        action: String(action || '').trim(),
+                        petugas: getCurrentOperatorName(),
+                        email: getCurrentAdminEmail(),
+                        role: String(currentAdminRole || '').trim(),
+                        loket: getCurrentLoketValue(),
+                        details: details && typeof details === 'object' ? details : { value: String(details || '') }
+                    };
+
+                    try {
+                        const existing = JSON.parse(localStorage.getItem(STAFF_ACTIVITY_LOG_KEY) || '[]');
+                        const next = Array.isArray(existing) ? existing : [];
+                        next.unshift(entry);
+                        localStorage.setItem(STAFF_ACTIVITY_LOG_KEY, JSON.stringify(next.slice(0, 300)));
+                    } catch (e) {}
+
+                    return entry;
+                }
+
+                function showStaffNameError(message) {
+                    staffNameError.textContent = message;
+                    staffNameError.classList.remove('hidden');
+                }
+
+                function hideStaffNameError() {
+                    staffNameError.textContent = '';
+                    staffNameError.classList.add('hidden');
+                }
+
+                function openStaffIdentityOverlay(options = {}) {
+                    const {
+                        allowLogout = true,
+                        prefill = ''
+                    } = options || {};
+                    if (!staffIdentityOverlay) return;
+                    hideStaffNameError();
+                    staffIdentityOverlay.classList.remove('hidden');
+                    staffLogoutBtn.classList.toggle('hidden', !allowLogout);
+                    staffNameInput.value = normalizeStaffName(prefill || currentStaffName || getStoredStaffName() || '');
+                    if (staffIdentityInfo) {
+                        staffIdentityInfo.textContent = allowLogout
+                            ? 'Nama ini akan dipakai sebagai identitas petugas aktif pada sesi sekarang.'
+                            : 'Lengkapi nama petugas terlebih dahulu untuk melanjutkan ke dashboard.';
+                    }
+                    window.setTimeout(() => staffNameInput.focus(), 30);
+                }
+
+                function closeStaffIdentityOverlay() {
+                    if (!staffIdentityOverlay) return;
+                    staffIdentityOverlay.classList.add('hidden');
+                    hideStaffNameError();
+                }
+
+                function applyStaffName(name, options = {}) {
+                    const normalized = normalizeStaffName(name);
+                    if (!normalized) {
+                        throw new Error('Nama petugas wajib diisi.');
+                    }
+                    if (normalized.length < 3) {
+                        throw new Error('Nama petugas minimal 3 karakter.');
+                    }
+
+                    currentStaffName = normalized;
+                    setStoredStaffName(normalized);
+                    renderAdminIdentity();
+                    appendStaffActivity(options.reason || 'set_petugas_aktif', { petugas: normalized });
+                    closeStaffIdentityOverlay();
+
+                    if (pendingStaffResolver) {
+                        const resolver = pendingStaffResolver;
+                        pendingStaffResolver = null;
+                        resolver(normalized);
+                    }
+                    return normalized;
+                }
+
+                async function ensureStaffIdentity() {
+                    if (!isStaffIdentityRequired()) {
+                        currentStaffName = '';
+                        closeStaffIdentityOverlay();
+                        return '';
+                    }
+
+                    const storedName = getStoredStaffName();
+                    if (storedName) {
+                        currentStaffName = storedName;
+                        return storedName;
+                    }
+
+                    openStaffIdentityOverlay({ allowLogout: true });
+                    return await new Promise((resolve) => {
+                        pendingStaffResolver = resolve;
+                    });
+                }
+
+                function resetStaffIdentity() {
+                    if (pendingStaffResolver) {
+                        pendingStaffResolver = null;
+                    }
+                    clearStoredStaffName();
+                    currentStaffName = '';
+                    closeStaffIdentityOverlay();
                 }
 
                 function formatLoketLabel(loket) {
@@ -1040,16 +1248,16 @@
                     } else {
                         supervisorMenuLinks.classList.add('hidden');
                         drawerRoleEyebrow.textContent = 'SIM-AMI';
-                        drawerTitle.textContent = 'Menu Admin Loket';
+                        drawerTitle.textContent = 'Menu Petugas Pendaftaran';
                         drawerDescription.textContent = 'Navigasi cepat untuk input pasien dan rekap data.';
-                        drawerRoleNote.textContent = 'Menu admin hanya difokuskan untuk input pasien dan rekap. Halaman display antrean serta mesin antrean dibuka dari perangkat khusus.';
-                        dashboardRolePill.textContent = 'Panel Admin Loket';
+                        drawerRoleNote.textContent = 'Fokus untuk input pasien dan pemantauan antrean loket. Halaman display antrean serta mesin antrean dibuka dari perangkat khusus.';
+                        dashboardRolePill.textContent = 'Panel Pendaftaran';
                         dashboardTitle.textContent = 'Pendaftaran Poliklinik & Rekap';
                         dashboardDescription.textContent = 'Kelola registrasi pasien Poliklinik.';
                         summaryBox1Label.textContent = 'Workflow';
                         summaryBox1Value.textContent = 'Terintegrasi';
                         summaryBox2Label.textContent = 'Akses';
-                        summaryBox2Value.textContent = 'Admin Loket';
+                        summaryBox2Value.textContent = 'Petugas Pendaftaran';
                         summaryBox3Label.textContent = 'Backup';
                         summaryBox3Value.textContent = 'Excel Ready';
                         dashboardQuickHint.textContent = 'Gunakan menu di kiri atas untuk berpindah cepat antara formulir pendaftaran Poliklinik dan rekap data pasien.';
@@ -1153,9 +1361,7 @@
                 }
 
                 function renderAdminIdentity() {
-                    const namaAdmin = currentAdminProfile?.nama_admin
-                        || currentAdminProfile?.email
-                        || 'Admin';
+                    const namaAdmin = getCurrentOperatorName();
                     const roleLabel = formatAdminRoleLabel(currentAdminRole);
                     const loketLabel = formatLoketLabel(currentLoket);
 
@@ -1164,6 +1370,7 @@
                     adminLoketDisplay.textContent = loketLabel;
                     adminIdentityBadge.textContent = `${roleLabel}${loketLabel !== '-' ? ' • ' + loketLabel : ''}`;
                     applyRolePresentation();
+                    changeStaffBtn.classList.toggle('hidden', !isStaffIdentityRequired());
                     adminIdentityBadge.classList.remove('hidden');
                 }
 
@@ -1171,10 +1378,12 @@
                     currentAdminProfile = null;
                     currentAdminRole = '';
                     currentLoket = '';
+                    resetStaffIdentity();
                     adminNameDisplay.textContent = '-';
                     adminRoleDisplay.textContent = '-';
                     adminLoketDisplay.textContent = '-';
-                    adminIdentityBadge.textContent = 'Profil Admin';
+                    adminIdentityBadge.textContent = 'Profil Petugas';
+                    changeStaffBtn.classList.add('hidden');
                     applyRolePresentation();
                     adminIdentityBadge.classList.add('hidden');
                 }
@@ -1369,13 +1578,13 @@
                         return payload;
                     }
 
-                    const adminEmail = getCurrentAdminEmail();
+                    const operatorLabel = getCurrentOperatorAuditLabel();
                     const loketAktif = getCurrentLoketValue();
                     if (loketAktif) {
                         payload.loket_tujuan = loketAktif;
                     }
-                    if (adminEmail) {
-                        payload.dipanggil_oleh = adminEmail;
+                    if (operatorLabel) {
+                        payload.dipanggil_oleh = operatorLabel;
                     }
                     payload.waktu_panggil = new Date().toISOString();
                     return payload;
@@ -1429,11 +1638,25 @@
                         return payload;
                     }
 
-                    const adminEmail = getCurrentAdminEmail();
-                    if (adminEmail) {
-                        payload.diproses_oleh = adminEmail;
+                    const operatorLabel = getCurrentOperatorAuditLabel();
+                    if (operatorLabel) {
+                        payload.diproses_oleh = operatorLabel;
                     }
                     payload.waktu_mulai_layanan = new Date().toISOString();
+                    return payload;
+                }
+
+                function buildQueueCompletionPayload(status) {
+                    const payload = { status };
+                    if (!queueProcessingColumnsAvailable) {
+                        return payload;
+                    }
+
+                    const operatorLabel = getCurrentOperatorAuditLabel();
+                    if (operatorLabel) {
+                        payload.diproses_oleh = operatorLabel;
+                    }
+                    payload.waktu_selesai_layanan = new Date().toISOString();
                     return payload;
                 }
 
@@ -1558,6 +1781,7 @@
                         viewPendaftaran.classList.add('hidden');
                         viewRekap.classList.add('hidden');
                         logoutBtnTop.classList.add('hidden');
+                        closeStaffIdentityOverlay();
                         return null;
                     }
                     loginOverlay.classList.add('hidden');
@@ -1579,9 +1803,11 @@
                         const session = await requireSession();
                         if (!session) return;
                         await loadAdminProfile(session);
+                        await ensureStaffIdentity();
                         await detectQueueRoutingColumns();
                         await detectQueueProcessingColumns();
                         await detectPoliExamColumns();
+                        await detectAlamatColumn();
                         await detectRiwayatLinkColumn();
                         await detectNoRegistrasiColumn();
                         showView(canAccessPendaftaranView() ? 'pendaftaran' : 'rekap');
@@ -1589,10 +1815,12 @@
                         await loadQueueControls();
                         await refreshStats();
                         await r_reloadToFirstPage();
+                        appendStaffActivity('login_dashboard', { session: 'login' });
                     });
                 }
 
                 async function logout() {
+                    appendStaffActivity('logout_dashboard', { session: 'logout' });
                     await supabaseClient.auth.signOut();
                     loginPassword.value = '';
                     resetAdminIdentity();
@@ -1638,9 +1866,33 @@
                 }
                 logoutBtnTop.addEventListener('click', () => logout());
                 logoutBtnDrawer.addEventListener('click', () => logout());
+                changeStaffBtn.addEventListener('click', () => {
+                    openStaffIdentityOverlay({ allowLogout: false, prefill: currentStaffName || getStoredStaffName() });
+                });
                 loginBtn.addEventListener('click', () => login());
                 loginPassword.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter') login();
+                });
+                staffNameSaveBtn.addEventListener('click', async () => {
+                    try {
+                        staffNameSaveBtn.disabled = true;
+                        applyStaffName(staffNameInput.value, {
+                            reason: currentStaffName ? 'ganti_petugas' : 'set_petugas_aktif'
+                        });
+                    } catch (err) {
+                        showStaffNameError(err?.message || String(err));
+                    } finally {
+                        staffNameSaveBtn.disabled = false;
+                    }
+                });
+                staffNameInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        staffNameSaveBtn.click();
+                    }
+                });
+                staffLogoutBtn.addEventListener('click', async () => {
+                    await logout();
                 });
                 if (tanggalLahirInput) {
                     tanggalLahirInput.addEventListener('change', () => syncUmurFromTanggalLahir());
@@ -2510,6 +2762,11 @@
                         if (!claimed) {
                             throw new Error('Antrean prioritas baru saja diambil loket lain. Silakan klik ulang.');
                         }
+                        appendStaffActivity('panggil_prioritas', {
+                            unit: 'POLIKLINIK',
+                            no_antrian: target.no_antrian || '',
+                            status: 'dipanggil'
+                        });
 
                         await loadQueueControls();
                         await syncRegistrationLockWithCurrentQueue();
@@ -2560,7 +2817,7 @@
                         const finishRes = await withTimeout(
                             supabaseClient
                                 .from('antrian')
-                                .update({ status: 'selesai' })
+                                .update(buildQueueCompletionPayload('selesai'))
                                 .eq('id', current.id),
                             15000,
                             'Selesaikan prioritas'
@@ -2623,6 +2880,11 @@
                         if (!viewRekap.classList.contains('hidden')) {
                             await r_loadPage(r_currentPage);
                         }
+                        appendStaffActivity('next_prioritas', {
+                            unit: 'POLIKLINIK',
+                            no_antrian: current.no_antrian || '',
+                            status: 'selesai'
+                        });
                     } catch (err) {
                         alert('Gagal next prioritas: ' + (err?.message || String(err)));
                     } finally {
@@ -2677,6 +2939,11 @@
                         if (!Array.isArray(updateRes?.data) || updateRes.data.length === 0) {
                             throw new Error('Antrean ini baru saja diproses loket lain. Silakan klik ulang.');
                         }
+                        appendStaffActivity('panggil_ulang_antrean', {
+                            unit,
+                            no_antrian: current.no_antrian || '',
+                            status: 'dipanggil'
+                        });
 
                         await loadQueueControls();
                         await syncRegistrationLockWithCurrentQueue();
@@ -2743,12 +3010,17 @@
                         const skipRes = await withTimeout(
                             supabaseClient
                                 .from('antrian')
-                                .update({ status: 'batal' })
+                                .update(buildQueueCompletionPayload('batal'))
                                 .eq('id', current.id),
                             15000,
                             'Lewati antrean aktif'
                         );
                         if (skipRes?.error) throw new Error(skipRes.error.message);
+                        appendStaffActivity('lewati_antrean', {
+                            unit,
+                            no_antrian: current.no_antrian || '',
+                            status: 'batal'
+                        });
 
                         if (isPoliklinik && isPrioritasNoAntrian(current.no_antrian)) {
                             const { data: nextPriorityData, error: nextPriorityError } = await withTimeout(
@@ -2958,7 +3230,7 @@
                             const updateRes = await withTimeout(
                                 supabaseClient
                                     .from('antrian')
-                                    .update({ status: 'selesai' })
+                                    .update(buildQueueCompletionPayload('selesai'))
                                     .eq('id', current.id),
                                 15000,
                                 'Selesaikan antrean'
@@ -3029,6 +3301,11 @@
                             await r_loadPage(r_currentPage);
                             await r_loadPage(r_currentPage);
                         }
+                        appendStaffActivity('next_antrean', {
+                            unit,
+                            no_antrian: (called[0]?.no_antrian || '').trim(),
+                            status: called.length > 0 ? 'selesai-dan-lanjut' : 'dipanggil'
+                        });
                     } catch (err) {
                         alert('Gagal menjalankan next antrean: ' + (err?.message || String(err)));
                     } finally {
@@ -3280,6 +3557,14 @@
                         r_reloadToFirstPage();
                         refreshStats();
                         lockRegistrationAfterSave(no_antrian);
+                        appendStaffActivity('simpan_pendaftaran', {
+                            no_antrian,
+                            no_rm,
+                            no_registrasi,
+                            nama_pasien,
+                            poli_tujuan,
+                            jenis_pasien: effectiveJenisPasien
+                        });
                     } catch (err) {
                         saveErrorEl.textContent = 'Gagal menyimpan: ' + (err?.message || String(err));
                         saveErrorEl.classList.remove('hidden');
@@ -3727,17 +4012,19 @@
                         if (!session) return;
 
                         await loadAdminProfile(session);
+                        await ensureStaffIdentity();
                         await detectQueueRoutingColumns();
                         await detectQueueProcessingColumns();
                         await detectPoliExamColumns();
                         await detectAlamatColumn();
                         await detectRiwayatLinkColumn();
                         await detectNoRegistrasiColumn();
-                        showView('pendaftaran');
+                        showView(canAccessPendaftaranView() ? 'pendaftaran' : 'rekap');
                         await initForm();
                         await loadQueueControls();
                         await refreshStats();
                         await r_reloadToFirstPage();
+                        appendStaffActivity('restore_dashboard_session', { session: 'restore' });
                     });
                 })();
             }
