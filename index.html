@@ -267,6 +267,7 @@
                                     <label class="block text-slate-700 font-semibold mb-2">Unit Tujuan</label>
                                     <select id="unitSelect" class="w-full rounded-2xl border border-emerald-200 bg-slate-50 px-4 py-3 shadow-sm transition focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500" required disabled>
                                         <option value="POLIKLINIK" selected>🩺 Poliklinik</option>
+                                        <option value="IGD">IGD</option>
                                     </select>
                                 </div>
 
@@ -291,9 +292,16 @@
                                 </div>
 
                                 <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                                    <div id="autoNoAntrianWrap">
                                     <div class="text-xs font-extrabold tracking-[0.22em] uppercase text-slate-500">Nomor Antrian</div>
                                     <div id="autoNoAntrian" class="mt-1 text-lg font-extrabold text-slate-900">Otomatis</div>
                                     <div class="mt-1 text-xs font-semibold text-slate-500">Nomor diambil otomatis dari antrean aktif (dipanggil/terdaftar/menunggu).</div>
+                                    </div>
+                                    <div id="manualNoAntrianWrap" class="hidden">
+                                        <label for="manualNoAntrianInput" class="block text-xs font-extrabold tracking-[0.22em] uppercase text-slate-500">Nomor Antrian IGD</label>
+                                        <input type="text" id="manualNoAntrianInput" class="mt-2 w-full rounded-2xl border border-emerald-200 bg-white px-4 py-3 shadow-sm transition focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500" placeholder="Tulis nomor antrean manual" maxlength="40">
+                                        <div class="mt-1 text-xs font-semibold text-slate-500">Nomor antrean ditulis manual oleh petugas IGD dan harus unik untuk hari yang sama.</div>
+                                    </div>
                                 </div>
 
                                 <select id="no_antrian" class="hidden" tabindex="-1" aria-hidden="true">
@@ -378,7 +386,7 @@
                                 <div id="dashboardQuickHint" class="mt-4 rounded-[24px] border border-emerald-100 bg-emerald-50/70 px-4 py-3.5 text-sm font-semibold text-slate-600">
                                     Gunakan menu di kiri atas untuk berpindah cepat antara formulir pendaftaran dan rekap data pasien.
                                 </div>
-                                <div class="mt-4 rounded-[24px] border border-blue-100 bg-[linear-gradient(135deg,_#eff6ff_0%,_#f8fbff_100%)] p-4 shadow-sm">
+                                <div id="queueControlPanel" class="mt-4 rounded-[24px] border border-blue-100 bg-[linear-gradient(135deg,_#eff6ff_0%,_#f8fbff_100%)] p-4 shadow-sm">
                                     <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                                         <div>
                                             <div class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-blue-700">Kontrol Slide Antrean</div>
@@ -864,6 +872,10 @@
                 const poliExamDiagnosisInput = document.getElementById('poliExamDiagnosisInput');
                 const poliExamMessage = document.getElementById('poliExamMessage');
                 const savePoliExamBtn = document.getElementById('savePoliExamBtn');
+                const queueControlPanel = document.getElementById('queueControlPanel');
+                const autoNoAntrianWrap = document.getElementById('autoNoAntrianWrap');
+                const manualNoAntrianWrap = document.getElementById('manualNoAntrianWrap');
+                const manualNoAntrianInput = document.getElementById('manualNoAntrianInput');
                 const nextFarmasiBtn = document.getElementById('nextFarmasiBtn');
                 const recallFarmasiBtn = document.getElementById('recallFarmasiBtn');
                 const skipFarmasiBtn = document.getElementById('skipFarmasiBtn');
@@ -968,6 +980,7 @@
                     if (value === 'supervisor') return 'Supervisor';
                     if (value === 'admin_rme') return 'Admin RME';
                     if (value === 'admin_pendaftaran') return 'Petugas Pendaftaran';
+                    if (value === 'admin_igd') return 'Petugas IGD';
                     if (value === 'petugas_poli' || value === 'petugas poli') return getPetugasPoliAccountLabel();
                     return value ? value.replace(/_/g, ' ') : 'Belum Diatur';
                 }
@@ -1005,10 +1018,6 @@
                     try {
                         window.sessionStorage.removeItem(key);
                     } catch (e) {}
-                }
-
-                function isStaffIdentityRequired() {
-                    return isPendaftaranRole();
                 }
 
                 function getCurrentOperatorName() {
@@ -1168,6 +1177,7 @@
                 function applyRolePresentation() {
                     const isSupervisor = isSupervisorRole();
                     const isRme = isRmeRole();
+                    const isIgd = isIgdRole();
                     const isPetugasPoli = isPetugasPoliRole();
                     const petugasPoliLabel = getPetugasPoliAccountLabel();
 
@@ -1177,21 +1187,27 @@
                             ? 'bg-[linear-gradient(135deg,_#0f172a_0%,_#0f766e_42%,_#0ea5e9_100%)] px-6 py-6'
                             : (isPetugasPoli
                                 ? 'bg-[linear-gradient(135deg,_#0b3b2e_0%,_#047857_42%,_#0ea5e9_100%)] px-6 py-6'
-                                : 'bg-[linear-gradient(135deg,_#065f46_0%,_#0f766e_42%,_#1d4ed8_100%)] px-6 py-6'));
+                                : (isIgd
+                                    ? 'bg-[linear-gradient(135deg,_#7f1d1d_0%,_#b91c1c_42%,_#dc2626_100%)] px-6 py-6'
+                                    : 'bg-[linear-gradient(135deg,_#065f46_0%,_#0f766e_42%,_#1d4ed8_100%)] px-6 py-6')));
                     dashboardHero.className = isSupervisor
                         ? 'bg-[linear-gradient(135deg,_#4c1d95_0%,_#6d28d9_38%,_#1d4ed8_100%)] px-5 py-5 md:px-6'
                         : (isRme
                             ? 'bg-[linear-gradient(135deg,_#0f172a_0%,_#0f766e_38%,_#0284c7_100%)] px-5 py-5 md:px-6'
                             : (isPetugasPoli
                                 ? 'bg-[linear-gradient(135deg,_#064e3b_0%,_#0f766e_38%,_#0ea5e9_100%)] px-5 py-5 md:px-6'
-                                : 'bg-[linear-gradient(135deg,_#065f46_0%,_#0f766e_38%,_#1d4ed8_100%)] px-5 py-5 md:px-6'));
+                                : (isIgd
+                                    ? 'bg-[linear-gradient(135deg,_#7f1d1d_0%,_#b91c1c_38%,_#dc2626_100%)] px-5 py-5 md:px-6'
+                                    : 'bg-[linear-gradient(135deg,_#065f46_0%,_#0f766e_38%,_#1d4ed8_100%)] px-5 py-5 md:px-6')));
                     adminIdentityBadge.className = isSupervisor
                         ? 'hidden rounded-full border border-violet-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-violet-700 shadow-sm md:inline-flex'
                         : (isRme
                             ? 'hidden rounded-full border border-cyan-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-700 shadow-sm md:inline-flex'
                             : (isPetugasPoli
                                 ? 'hidden rounded-full border border-emerald-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700 shadow-sm md:inline-flex'
-                                : 'hidden rounded-full border border-blue-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-700 shadow-sm md:inline-flex'));
+                                : (isIgd
+                                    ? 'hidden rounded-full border border-rose-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-rose-700 shadow-sm md:inline-flex'
+                                    : 'hidden rounded-full border border-blue-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-700 shadow-sm md:inline-flex')));
 
                     syncRoleMenuVisibility();
                     menuRekap.textContent = isRme ? 'Rekap & Riwayat Pasien' : (isPetugasPoli ? 'Daftar Pasien Poli' : 'Rekap Pasien');
@@ -1245,6 +1261,22 @@
                         summaryBox3Label.textContent = 'Riwayat';
                         summaryBox3Value.textContent = 'Siap Dibuka';
                         dashboardQuickHint.textContent = 'Gunakan rekap untuk melihat daftar pasien poli hari ini sesuai poli akun yang sedang login.';
+                    } else if (isIgd) {
+                        supervisorMenuLinks.classList.add('hidden');
+                        drawerRoleEyebrow.textContent = 'Akses IGD';
+                        drawerTitle.textContent = 'Menu Petugas IGD';
+                        drawerDescription.textContent = 'Fokus pada input pasien IGD dengan nomor antrean manual dan pencatatan sesi petugas.';
+                        drawerRoleNote.textContent = 'Petugas IGD hanya menginput pasien IGD. Kontrol antrean otomatis dan rekap tidak ditampilkan pada akun ini.';
+                        dashboardRolePill.textContent = 'Panel IGD';
+                        dashboardTitle.textContent = 'Input Pasien IGD';
+                        dashboardDescription.textContent = 'Kelola pendaftaran pasien IGD dengan nomor antrean manual yang diisi petugas.';
+                        summaryBox1Label.textContent = 'Unit';
+                        summaryBox1Value.textContent = 'IGD';
+                        summaryBox2Label.textContent = 'Akses';
+                        summaryBox2Value.textContent = 'Petugas IGD';
+                        summaryBox3Label.textContent = 'Antrean';
+                        summaryBox3Value.textContent = 'Manual';
+                        dashboardQuickHint.textContent = 'Isi nomor antrean IGD secara manual, lalu simpan data pasien. Rekap dan kontrol slide antrean tidak dipakai pada akun ini.';
                     } else {
                         supervisorMenuLinks.classList.add('hidden');
                         drawerRoleEyebrow.textContent = 'SIM-AMI';
@@ -1408,6 +1440,14 @@
                     return String(currentAdminRole || '').trim().toLowerCase() === 'admin_pendaftaran';
                 }
 
+                function isIgdRole() {
+                    return String(currentAdminRole || '').trim().toLowerCase() === 'admin_igd';
+                }
+
+                function isRegistrationWorkflowRole() {
+                    return isPendaftaranRole() || isIgdRole();
+                }
+
                 function isPetugasPoliRole() {
                     const value = String(currentAdminRole || '').trim().toLowerCase();
                     return value === 'petugas_poli' || value === 'petugas poli';
@@ -1425,8 +1465,12 @@
                     return isPetugasPoliRole() && petugasPoliRekapMode !== 'all';
                 }
 
+                function isStaffIdentityRequired() {
+                    return isRegistrationWorkflowRole();
+                }
+
                 function canAccessRekapView() {
-                    return !isPendaftaranRole();
+                    return !isRegistrationWorkflowRole();
                 }
 
                 function getPetugasPoliAccountLabel() {
@@ -1438,6 +1482,14 @@
                 }
 
                 function canAccessPendaftaranView() {
+                    return isRegistrationWorkflowRole();
+                }
+
+                function getCurrentRegistrationUnit() {
+                    return isIgdRole() ? 'IGD' : 'POLIKLINIK';
+                }
+
+                function usesAutomaticQueueControls() {
                     return isPendaftaranRole();
                 }
 
@@ -2295,6 +2347,16 @@
 
                 function applyRegistrationLockUI() {
                     const saveBtn = document.getElementById('saveBtn');
+                    if (!usesAutomaticQueueControls()) {
+                        registrationLocked = false;
+                        registrationLockedNoAntrian = '';
+                        if (saveBtn) {
+                            saveBtn.disabled = false;
+                            saveBtn.textContent = 'Simpan Data Pasien';
+                        }
+                        setRegistrationFormEnabled(true);
+                        return;
+                    }
                     if (saveBtn) {
                         saveBtn.disabled = registrationLocked;
                         saveBtn.textContent = registrationLocked ? 'Tunggu Antrean Berikutnya' : 'Simpan Data Pasien';
@@ -2303,6 +2365,13 @@
                 }
 
                 function lockRegistrationAfterSave(noAntrian) {
+                    if (!usesAutomaticQueueControls()) {
+                        registrationLocked = false;
+                        registrationLockedNoAntrian = '';
+                        applyRegistrationLockUI();
+                        setSaveMessage(`Data pasien ${String(noAntrian || '').trim()} berhasil disimpan.`, 'success');
+                        return;
+                    }
                     registrationLocked = true;
                     registrationLockedNoAntrian = String(noAntrian || '').trim();
                     applyRegistrationLockUI();
@@ -2310,6 +2379,7 @@
                 }
 
                 function unlockRegistrationIfQueueChanged(nextNoAntrian) {
+                    if (!usesAutomaticQueueControls()) return;
                     if (!registrationLocked) return;
                     const next = String(nextNoAntrian || '').trim();
                     if (!next || next === registrationLockedNoAntrian) return;
@@ -2321,6 +2391,7 @@
                 }
 
                 async function syncRegistrationLockWithCurrentQueue() {
+                    if (!usesAutomaticQueueControls()) return;
                     if (!registrationLocked) return;
 
                     const { startISO, endISO } = getTodayRangeISO();
@@ -2451,6 +2522,10 @@
                 async function loadAvailableAntrian(unit, jenisPasien) {
                     const select = document.getElementById('no_antrian');
                     if (!select) return;
+                    if (!usesAutomaticQueueControls()) {
+                        select.innerHTML = '<option value="">Mode manual</option>';
+                        return;
+                    }
                     if (!unit) {
                         select.innerHTML = '<option value="">Pilih Unit Terlebih Dahulu</option>';
                         return;
@@ -2500,17 +2575,48 @@
                     });
                 }
 
-                async function initForm() {
-                    await setPatientMode('baru');
+                function configureRegistrationFormMode() {
                     const unitSelect = document.getElementById('unitSelect');
                     const wrap = document.getElementById('poliTujuanWrap');
                     const poliSelect = document.getElementById('poli_tujuan');
-                    unitSelect.value = 'POLIKLINIK';
-                    wrap.classList.remove('hidden');
-                    poliSelect.required = true;
-                    poliSelect.value = '';
+                    const saveErrorEl = document.getElementById('saveError');
+                    const unit = getCurrentRegistrationUnit();
+                    const manualMode = isIgdRole();
+
+                    unitSelect.value = unit;
+                    queueControlPanel.classList.toggle('hidden', manualMode);
+                    autoNoAntrianWrap.classList.toggle('hidden', manualMode);
+                    manualNoAntrianWrap.classList.toggle('hidden', !manualMode);
+
+                    if (manualMode) {
+                        wrap.classList.add('hidden');
+                        poliSelect.required = false;
+                        poliSelect.value = 'IGD';
+                        manualNoAntrianInput.required = true;
+                        manualNoAntrianInput.value = '';
+                        registrationLocked = false;
+                        registrationLockedNoAntrian = '';
+                        if (saveErrorEl) saveErrorEl.classList.add('hidden');
+                    } else {
+                        wrap.classList.remove('hidden');
+                        poliSelect.required = true;
+                        if (poliSelect.value === 'IGD') {
+                            poliSelect.value = '';
+                        }
+                        manualNoAntrianInput.required = false;
+                        manualNoAntrianInput.value = '';
+                    }
+
+                    applyRegistrationLockUI();
+                }
+
+                async function initForm() {
+                    await setPatientMode('baru');
+                    configureRegistrationFormMode();
                     syncNoBpjsField();
-                    refreshAntrianDropdown();
+                    if (usesAutomaticQueueControls()) {
+                        refreshAntrianDropdown();
+                    }
                 }
 
                 function withTimeout(promise, ms, label) {
@@ -2557,6 +2663,11 @@
                 }
 
                 async function loadQueueControls() {
+                    if (!usesAutomaticQueueControls()) {
+                        queueControlPanel.classList.add('hidden');
+                        return;
+                    }
+                    queueControlPanel.classList.remove('hidden');
                     const { startISO, endISO } = getTodayRangeISO();
                     const { data, error } = await supabaseClient
                         .from('antrian')
@@ -3317,6 +3428,10 @@
                 function refreshAntrianDropdown() {
                     const select = document.getElementById('no_antrian');
                     if (!select) return;
+                    if (!usesAutomaticQueueControls()) {
+                        select.innerHTML = '<option value="">Mode manual</option>';
+                        return;
+                    }
                     loadAvailableAntrian(
                         document.getElementById('unitSelect').value,
                         document.getElementById('jenis_pasien').value
@@ -3332,18 +3447,7 @@
 
                 // Event listener untuk memilih unit
                 document.getElementById('unitSelect').addEventListener('change', function() {
-                    const unit = this.value;
-                    const wrap = document.getElementById('poliTujuanWrap');
-                    const poliSelect = document.getElementById('poli_tujuan');
-                    if (unit === 'POLIKLINIK') {
-                        wrap.classList.remove('hidden');
-                        poliSelect.required = true;
-                        poliSelect.value = '';
-                    } else {
-                        wrap.classList.add('hidden');
-                        poliSelect.required = false;
-                        poliSelect.value = '';
-                    }
+                    configureRegistrationFormMode();
                     refreshAntrianDropdown();
                 });
                 document.getElementById('jenis_pasien').addEventListener('change', function() {
@@ -3407,9 +3511,11 @@
 
                     const no_registrasi = (document.getElementById('no_registrasi').value || '').trim();
                     const no_rm = (document.getElementById('no_rm').value || '').trim();
-                    const unit = 'POLIKLINIK';
+                    const unit = getCurrentRegistrationUnit();
+                    const isIgdRegistration = unit === 'IGD';
                     const jenis_pasien = document.getElementById('jenis_pasien').value;
-                    const poli_tujuan = document.getElementById('poli_tujuan').value;
+                    const poli_tujuan = isIgdRegistration ? 'IGD' : document.getElementById('poli_tujuan').value;
+                    const manual_no_antrian = (manualNoAntrianInput?.value || '').trim();
                     const nama_pasien = document.getElementById('nama_pasien').value.trim();
                     const nik = document.getElementById('nik').value.trim();
                     const no_bpjs = document.getElementById('no_bpjs').value.trim();
@@ -3421,47 +3527,8 @@
 
                     try {
                         const { startISO, endISO } = getTodayRangeISO();
-                        const pickRegistrationAntrian = async () => {
-                            const { data, error } = await withTimeout(
-                                supabaseClient
-                                    .from('antrian')
-                                    .select('id,no_antrian,unit,status,jenis_pasien,poli_tujuan,loket_tujuan,created_at')
-                                    .gte('created_at', startISO)
-                                    .lte('created_at', endISO)
-                                    .eq('unit', unit)
-                                    .in('status', ['dipanggil', 'terdaftar', 'menunggu'])
-                                    .order('created_at', { ascending: true })
-                                    .limit(50),
-                                15000,
-                                'Muat antrean registrasi'
-                            );
-                            if (error) throw new Error(error.message);
-
-                            const called = filterActiveRowsByCurrentLoket(data || []).find((x) => String(x.status || '').toLowerCase() === 'dipanggil') || null;
-                            if (called) return called;
-
-                            const queued = filterClaimableRowsByCurrentLoket(data || []).find((x) => String(x.status || '').toLowerCase() === 'terdaftar') || null;
-                            if (queued) return queued;
-
-                            const waiting = filterClaimableRowsByCurrentLoket(data || []).filter((x) => String(x.status || '').toLowerCase() === 'menunggu');
-                            if (unit === 'POLIKLINIK') {
-                                return waiting.find((x) => isPoliklinikRegulerNoAntrian(x.no_antrian)) || waiting[0] || null;
-                            }
-                            return waiting[0] || null;
-                        };
-
-                        const antrianTarget = await pickRegistrationAntrian();
-                        if (!antrianTarget) {
-                            throw new Error('Belum ada antrean untuk unit ini. Silakan pasien ambil nomor dahulu, atau klik Next untuk memanggil antrean pertama.');
-                        }
-
-                        const no_antrian = String(antrianTarget.no_antrian || '').trim();
-                        if (!no_antrian) {
-                            throw new Error('Nomor antrean tidak valid. Coba refresh data antrean lalu ulangi.');
-                        }
-                        if (!rowMatchesCurrentLoket(antrianTarget, true)) {
-                            throw new Error('Antrean ini sedang diproses loket lain.');
-                        }
+                        let antrianTarget = null;
+                        let no_antrian = '';
 
                         if (patientMode === 'lama' && !loadedOldPatient) {
                             throw new Error('Pilih Pasien Lama lalu cari NIK terlebih dahulu sampai data pasien ditemukan.');
@@ -3483,9 +3550,77 @@
                             throw new Error('Nomor BPJS wajib diisi untuk pasien BPJS.');
                         }
 
-                        const effectiveJenisPasien = unit === 'POLIKLINIK'
-                            ? (String(antrianTarget.jenis_pasien || '').trim() || jenis_pasien)
-                            : jenis_pasien;
+                        if (isIgdRegistration) {
+                            no_antrian = manual_no_antrian;
+                            if (!no_antrian) {
+                                throw new Error('Nomor antrean IGD wajib diisi manual.');
+                            }
+
+                            const duplicateRes = await withTimeout(
+                                supabaseClient
+                                    .from('pasien')
+                                    .select('id', { head: false })
+                                    .eq('unit', 'IGD')
+                                    .eq('no_antrian', no_antrian)
+                                    .gte('created_at', startISO)
+                                    .lte('created_at', endISO)
+                                    .limit(1),
+                                15000,
+                                'Cek nomor antrean IGD'
+                            );
+                            if (duplicateRes?.error) {
+                                throw new Error(duplicateRes.error.message);
+                            }
+                            if (Array.isArray(duplicateRes?.data) && duplicateRes.data.length > 0) {
+                                throw new Error(`Nomor antrean IGD ${no_antrian} sudah dipakai hari ini.`);
+                            }
+                        } else {
+                            const pickRegistrationAntrian = async () => {
+                                const { data, error } = await withTimeout(
+                                    supabaseClient
+                                        .from('antrian')
+                                        .select('id,no_antrian,unit,status,jenis_pasien,poli_tujuan,loket_tujuan,created_at')
+                                        .gte('created_at', startISO)
+                                        .lte('created_at', endISO)
+                                        .eq('unit', unit)
+                                        .in('status', ['dipanggil', 'terdaftar', 'menunggu'])
+                                        .order('created_at', { ascending: true })
+                                        .limit(50),
+                                    15000,
+                                    'Muat antrean registrasi'
+                                );
+                                if (error) throw new Error(error.message);
+
+                                const called = filterActiveRowsByCurrentLoket(data || []).find((x) => String(x.status || '').toLowerCase() === 'dipanggil') || null;
+                                if (called) return called;
+
+                                const queued = filterClaimableRowsByCurrentLoket(data || []).find((x) => String(x.status || '').toLowerCase() === 'terdaftar') || null;
+                                if (queued) return queued;
+
+                                const waiting = filterClaimableRowsByCurrentLoket(data || []).filter((x) => String(x.status || '').toLowerCase() === 'menunggu');
+                                if (unit === 'POLIKLINIK') {
+                                    return waiting.find((x) => isPoliklinikRegulerNoAntrian(x.no_antrian)) || waiting[0] || null;
+                                }
+                                return waiting[0] || null;
+                            };
+
+                            antrianTarget = await pickRegistrationAntrian();
+                            if (!antrianTarget) {
+                                throw new Error('Belum ada antrean untuk unit ini. Silakan pasien ambil nomor dahulu, atau klik Next untuk memanggil antrean pertama.');
+                            }
+
+                            no_antrian = String(antrianTarget.no_antrian || '').trim();
+                            if (!no_antrian) {
+                                throw new Error('Nomor antrean tidak valid. Coba refresh data antrean lalu ulangi.');
+                            }
+                            if (!rowMatchesCurrentLoket(antrianTarget, true)) {
+                                throw new Error('Antrean ini sedang diproses loket lain.');
+                            }
+                        }
+
+                        const effectiveJenisPasien = isIgdRegistration
+                            ? jenis_pasien
+                            : (String(antrianTarget?.jenis_pasien || '').trim() || jenis_pasien);
 
                         const pasienPayload = {
                             no_rm,
@@ -3522,22 +3657,24 @@
                             throw new Error(insertRes.error.message);
                         }
 
-                        const currentStatus = String(antrianTarget.status || '').toLowerCase();
-                        const nextStatus = currentStatus === 'dipanggil' ? 'dipanggil' : 'terdaftar';
+                        if (!isIgdRegistration) {
+                            const currentStatus = String(antrianTarget.status || '').toLowerCase();
+                            const nextStatus = currentStatus === 'dipanggil' ? 'dipanggil' : 'terdaftar';
 
-                        const updatePayload = buildQueueProcessingPayload({ status: nextStatus, nama_pasien });
-                        let updateQuery = supabaseClient
-                            .from('antrian')
-                            .update(updatePayload)
-                            .eq('id', antrianTarget.id);
+                            const updatePayload = buildQueueProcessingPayload({ status: nextStatus, nama_pasien });
+                            let updateQuery = supabaseClient
+                                .from('antrian')
+                                .update(updatePayload)
+                                .eq('id', antrianTarget.id);
 
-                        updatePayload.poli_tujuan = poli_tujuan;
+                            updatePayload.poli_tujuan = poli_tujuan;
 
-                        const updateRes = await withTimeout(updateQuery, 15000, 'Update antrian');
+                            const updateRes = await withTimeout(updateQuery, 15000, 'Update antrian');
 
-                        if (updateRes?.error) {
-                            saveErrorEl.textContent = 'Data pasien tersimpan, tetapi gagal update antrean: ' + updateRes.error.message;
-                            saveErrorEl.classList.remove('hidden');
+                            if (updateRes?.error) {
+                                saveErrorEl.textContent = 'Data pasien tersimpan, tetapi gagal update antrean: ' + updateRes.error.message;
+                                saveErrorEl.classList.remove('hidden');
+                            }
                         }
 
                         document.getElementById('sticker_nama').textContent = nama_pasien;
@@ -3552,16 +3689,17 @@
                         this.reset();
                         await initForm();
 
-                        refreshAntrianDropdown();
-                        loadQueueControls();
-                        r_reloadToFirstPage();
-                        refreshStats();
+                        await refreshAntrianDropdown();
+                        await loadQueueControls();
+                        await r_reloadToFirstPage();
+                        await refreshStats();
                         lockRegistrationAfterSave(no_antrian);
                         appendStaffActivity('simpan_pendaftaran', {
                             no_antrian,
                             no_rm,
                             no_registrasi,
                             nama_pasien,
+                            unit,
                             poli_tujuan,
                             jenis_pasien: effectiveJenisPasien
                         });
@@ -3988,10 +4126,25 @@
 
                 async function refreshStats() {
                     const { startISO: start, endISO: end } = getTodayRangeISO();
+                    const unit = getCurrentRegistrationUnit();
+
+                    if (!usesAutomaticQueueControls()) {
+                        const { count: pasienCount } = await supabaseClient
+                            .from('pasien')
+                            .select('id', { count: 'exact', head: true })
+                            .eq('unit', unit)
+                            .gte('created_at', start)
+                            .lte('created_at', end);
+
+                        document.getElementById('statMenunggu').textContent = '-';
+                        document.getElementById('statTerdaftar').textContent = '-';
+                        document.getElementById('statPasien').textContent = String(typeof pasienCount === 'number' ? pasienCount : '-');
+                        return;
+                    }
 
                     const [{ count: pasienCount }, { data: antrianRows }] = await Promise.all([
-                        supabaseClient.from('pasien').select('id', { count: 'exact', head: true }).eq('unit', 'POLIKLINIK').gte('created_at', start).lte('created_at', end),
-                        supabaseClient.from('antrian').select('status').eq('unit', 'POLIKLINIK').gte('created_at', start).lte('created_at', end)
+                        supabaseClient.from('pasien').select('id', { count: 'exact', head: true }).eq('unit', unit).gte('created_at', start).lte('created_at', end),
+                        supabaseClient.from('antrian').select('status').eq('unit', unit).gte('created_at', start).lte('created_at', end)
                     ]);
 
                     const counts = { menunggu: 0, terdaftar: 0 };
