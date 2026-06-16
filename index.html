@@ -2536,7 +2536,7 @@
                     if (!form) return;
                     const elements = form.querySelectorAll('input,select,textarea,button');
                     elements.forEach((el) => {
-                        if (el.id === 'saveBtn') return;
+                        if (['saveBtn', 'printBarcodeBtn', 'printWristbandBtn'].includes(el.id)) return;
                         el.disabled = !enabled;
                     });
                 }
