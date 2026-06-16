@@ -354,6 +354,23 @@
                                     Simpan Data Pasien
                                 </button>
                                 <div id="saveError" class="text-sm font-semibold text-red-600 hidden"></div>
+                                <div id="printActionPanel" class="rounded-[24px] border border-slate-200 bg-slate-50 px-4 py-4">
+                                    <div class="text-xs font-extrabold uppercase tracking-[0.22em] text-slate-500">Cetak Dokumen</div>
+                                    <div id="printActionInfo" class="mt-2 text-sm font-semibold text-slate-500">
+                                        Simpan data pasien terlebih dahulu untuk mengaktifkan cetak barcode dan gelang.
+                                    </div>
+                                    <div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+                                        <button id="printBarcodeBtn" type="button" class="rounded-2xl border border-blue-200 bg-white px-4 py-3 text-sm font-bold text-blue-700 shadow-sm transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50" disabled>
+                                            Cetak Printer Barcode
+                                        </button>
+                                        <button id="printWristbandBtn" type="button" class="rounded-2xl border border-rose-200 bg-white px-4 py-3 text-sm font-bold text-rose-700 shadow-sm transition hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-50" disabled>
+                                            Cetak Printer Gelang
+                                        </button>
+                                    </div>
+                                    <div class="mt-3 text-xs font-semibold text-slate-500">
+                                        Pilih printer yang sesuai pada dialog print browser.
+                                    </div>
+                                </div>
                                 </form>
                             </div>
                         </div>
@@ -646,12 +663,27 @@
             </div>
         </div>
     </div>
+    <div id="wristbandContainer" class="hidden">
+        <div id="wristband" style="width: 90mm; height: 25mm; padding: 3mm 4mm; font-family: Arial, sans-serif; font-size: 9pt; line-height: 1.15; box-sizing: border-box;">
+            <div style="display: flex; justify-content: space-between; gap: 3mm; align-items: flex-start; height: 100%;">
+                <div style="flex: 1; min-width: 0;">
+                    <div style="font-weight: bold; font-size: 9pt;">RSUD AJI MUHAMMAD IDRIS</div>
+                    <div id="wristband_unit" style="margin-top: 1mm; font-size: 8pt; font-weight: bold;">UNIT</div>
+                    <div id="wristband_nama" style="margin-top: 2mm; font-size: 12pt; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                    <div style="margin-top: 1mm; font-size: 8pt;"><b>Tgl Lahir</b>: <span id="wristband_tgl_lahir"></span></div>
+                    <div style="margin-top: 0.5mm; font-size: 8pt;"><b>JK</b>: <span id="wristband_jk"></span> | <b>No RM</b>: <span id="wristband_no_rm"></span></div>
+                    <div style="margin-top: 0.5mm; font-size: 8pt;"><b>No Reg</b>: <span id="wristband_no_registrasi"></span> | <b>Antrian</b>: <span id="wristband_no_antrian"></span></div>
+                </div>
+                <div style="width: 24mm; text-align: center; align-self: center;">
+                    <svg id="wristband_barcode" style="width: 100%; height: 12mm;"></svg>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <style>
         @media print {
             html, body {
-                width: 50mm;
-                height: 30mm;
                 margin: 0 !important;
                 padding: 0 !important;
                 overflow: hidden !important;
@@ -659,7 +691,11 @@
             body > * {
                 display: none !important;
             }
-            #stickerContainer {
+            body[data-print-mode="barcode"] {
+                width: 50mm;
+                height: 30mm;
+            }
+            body[data-print-mode="barcode"] #stickerContainer {
                 display: block !important;
                 position: fixed;
                 left: 0;
@@ -670,13 +706,33 @@
                 padding: 0;
                 overflow: hidden;
             }
-            #sticker {
+            body[data-print-mode="barcode"] #sticker {
                 width: 50mm !important;
                 height: 30mm !important;
                 box-sizing: border-box;
                 overflow: hidden;
             }
-            @page { size: 50mm 30mm; margin: 0; }
+            body[data-print-mode="wristband"] {
+                width: 90mm;
+                height: 25mm;
+            }
+            body[data-print-mode="wristband"] #wristbandContainer {
+                display: block !important;
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 90mm;
+                height: 25mm;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            body[data-print-mode="wristband"] #wristband {
+                width: 90mm !important;
+                height: 25mm !important;
+                box-sizing: border-box;
+                overflow: hidden;
+            }
         }
 
         #globalLoadingShell.is-active {
@@ -881,6 +937,10 @@
                 const autoNoAntrianWrap = document.getElementById('autoNoAntrianWrap');
                 const manualNoAntrianWrap = document.getElementById('manualNoAntrianWrap');
                 const manualNoAntrianInput = document.getElementById('manualNoAntrianInput');
+                const printActionPanel = document.getElementById('printActionPanel');
+                const printActionInfo = document.getElementById('printActionInfo');
+                const printBarcodeBtn = document.getElementById('printBarcodeBtn');
+                const printWristbandBtn = document.getElementById('printWristbandBtn');
                 const nextFarmasiBtn = document.getElementById('nextFarmasiBtn');
                 const recallFarmasiBtn = document.getElementById('recallFarmasiBtn');
                 const skipFarmasiBtn = document.getElementById('skipFarmasiBtn');
@@ -915,9 +975,14 @@
                 let currentLoket = '';
                 let currentStaffName = '';
                 let pendingStaffResolver = null;
+                let lastRegisteredPrintPayload = null;
+                let activePrintMode = '';
 
                 const STAFF_NAME_STORAGE_PREFIX = 'simami-staff-name:';
                 const STAFF_ACTIVITY_LOG_KEY = 'simami-staff-activity-log';
+
+                const printPageStyleEl = document.createElement('style');
+                document.head.appendChild(printPageStyleEl);
 
                 function openDrawer() {
                     drawer.classList.remove('-translate-x-full');
@@ -1061,6 +1126,122 @@
                     } catch (e) {}
 
                     return entry;
+                }
+
+                function setPrintPageSize(sizeValue) {
+                    printPageStyleEl.textContent = sizeValue
+                        ? `@media print { @page { size: ${sizeValue}; margin: 0; } }`
+                        : '';
+                }
+
+                function setPrintButtonsState(enabled, message = '') {
+                    const nextEnabled = Boolean(enabled);
+                    printBarcodeBtn.disabled = !nextEnabled;
+                    printWristbandBtn.disabled = !nextEnabled;
+                    printActionPanel.classList.toggle('border-emerald-200', nextEnabled);
+                    printActionPanel.classList.toggle('bg-emerald-50/60', nextEnabled);
+                    printActionInfo.textContent = message || (nextEnabled
+                        ? 'Dokumen siap dicetak. Klik tombol sesuai printer yang akan dipakai.'
+                        : 'Simpan data pasien terlebih dahulu untuk mengaktifkan cetak barcode dan gelang.');
+                    printActionInfo.classList.toggle('text-emerald-700', nextEnabled);
+                    printActionInfo.classList.toggle('text-slate-500', !nextEnabled);
+                }
+
+                function buildPrintPayload(payload = {}) {
+                    return {
+                        nama_pasien: String(payload.nama_pasien || '').trim(),
+                        tanggal_lahir: formatDateSlash(payload.tanggal_lahir || ''),
+                        jenis_kelamin: String(payload.jenis_kelamin || '').trim(),
+                        no_rm: String(payload.no_rm || '').trim(),
+                        no_registrasi: String(payload.no_registrasi || '').trim(),
+                        unit: String(payload.unit || '').trim(),
+                        no_antrian: String(payload.no_antrian || '').trim(),
+                        waktu_daftar: payload.waktu_daftar instanceof Date
+                            ? formatLocalDateTime(payload.waktu_daftar)
+                            : String(payload.waktu_daftar || '').trim()
+                    };
+                }
+
+                function populateBarcodeTemplate(payload) {
+                    document.getElementById('sticker_nama').textContent = payload.nama_pasien || '-';
+                    document.getElementById('sticker_tgl_lahir').textContent = payload.tanggal_lahir || '-';
+                    document.getElementById('sticker_jk').textContent = payload.jenis_kelamin || '-';
+                    document.getElementById('sticker_waktu').textContent = payload.waktu_daftar || '-';
+                    document.getElementById('sticker_no_rm').textContent = payload.no_rm || '-';
+                    JsBarcode('#barcode', payload.no_rm || '-', {
+                        format: 'CODE128',
+                        width: 1,
+                        height: 20,
+                        displayValue: false
+                    });
+                }
+
+                function populateWristbandTemplate(payload) {
+                    document.getElementById('wristband_unit').textContent = payload.unit || '-';
+                    document.getElementById('wristband_nama').textContent = payload.nama_pasien || '-';
+                    document.getElementById('wristband_tgl_lahir').textContent = payload.tanggal_lahir || '-';
+                    document.getElementById('wristband_jk').textContent = payload.jenis_kelamin || '-';
+                    document.getElementById('wristband_no_rm').textContent = payload.no_rm || '-';
+                    document.getElementById('wristband_no_registrasi').textContent = payload.no_registrasi || '-';
+                    document.getElementById('wristband_no_antrian').textContent = payload.no_antrian || '-';
+                    JsBarcode('#wristband_barcode', payload.no_rm || '-', {
+                        format: 'CODE128',
+                        width: 1,
+                        height: 24,
+                        displayValue: false,
+                        margin: 0
+                    });
+                }
+
+                function updatePrintPayload(payload) {
+                    lastRegisteredPrintPayload = payload ? buildPrintPayload(payload) : null;
+                    if (!lastRegisteredPrintPayload) {
+                        setPrintButtonsState(false);
+                        return;
+                    }
+                    populateBarcodeTemplate(lastRegisteredPrintPayload);
+                    populateWristbandTemplate(lastRegisteredPrintPayload);
+                    const patientName = lastRegisteredPrintPayload.nama_pasien || 'Pasien terakhir';
+                    setPrintButtonsState(true, `Dokumen siap dicetak untuk ${patientName}. Pilih tombol sesuai printer.`);
+                }
+
+                function clearActivePrintMode() {
+                    activePrintMode = '';
+                    document.body.removeAttribute('data-print-mode');
+                    setPrintPageSize('');
+                }
+
+                async function triggerPatientPrint(mode) {
+                    if (!lastRegisteredPrintPayload) {
+                        setPrintButtonsState(false);
+                        return;
+                    }
+
+                    if (mode === 'barcode') {
+                        populateBarcodeTemplate(lastRegisteredPrintPayload);
+                        activePrintMode = 'barcode';
+                        document.body.setAttribute('data-print-mode', 'barcode');
+                        setPrintPageSize('50mm 30mm');
+                        appendStaffActivity('print_barcode', {
+                            no_rm: lastRegisteredPrintPayload.no_rm,
+                            no_registrasi: lastRegisteredPrintPayload.no_registrasi,
+                            no_antrian: lastRegisteredPrintPayload.no_antrian,
+                            unit: lastRegisteredPrintPayload.unit
+                        });
+                    } else {
+                        populateWristbandTemplate(lastRegisteredPrintPayload);
+                        activePrintMode = 'wristband';
+                        document.body.setAttribute('data-print-mode', 'wristband');
+                        setPrintPageSize('90mm 25mm');
+                        appendStaffActivity('print_gelang', {
+                            no_rm: lastRegisteredPrintPayload.no_rm,
+                            no_registrasi: lastRegisteredPrintPayload.no_registrasi,
+                            no_antrian: lastRegisteredPrintPayload.no_antrian,
+                            unit: lastRegisteredPrintPayload.unit
+                        });
+                    }
+
+                    window.setTimeout(() => window.print(), 30);
                 }
 
                 function showStaffNameError(message) {
@@ -3474,6 +3655,8 @@
                 });
                 modeBaruBtn.addEventListener('click', async () => setPatientMode('baru'));
                 modeLamaBtn.addEventListener('click', async () => setPatientMode('lama'));
+                printBarcodeBtn.addEventListener('click', async () => triggerPatientPrint('barcode'));
+                printWristbandBtn.addEventListener('click', async () => triggerPatientPrint('wristband'));
                 nextPoliklinikBtn.addEventListener('click', async () => slideNextQueue('POLIKLINIK', nextPoliklinikBtn));
                 if (recallPoliklinikBtn) {
                     recallPoliklinikBtn.addEventListener('click', async () => recallCurrentQueue('POLIKLINIK', recallPoliklinikBtn));
@@ -3500,6 +3683,10 @@
                         pasienLookupInfo.classList.add('hidden');
                     }
                 });
+                window.addEventListener('afterprint', () => {
+                    clearActivePrintMode();
+                });
+                setPrintButtonsState(false);
 
                 document.getElementById('registrationForm').addEventListener('submit', async function(e) {
                     e.preventDefault();
@@ -3692,14 +3879,16 @@
                             }
                         }
 
-                        document.getElementById('sticker_nama').textContent = nama_pasien;
-                        document.getElementById('sticker_tgl_lahir').textContent = formatDateSlash(tanggal_lahir);
-                        document.getElementById('sticker_jk').textContent = jenis_kelamin || '';
-                        document.getElementById('sticker_waktu').textContent = formatLocalDateTime(waktu_daftar);
-                        document.getElementById('sticker_no_rm').textContent = no_rm;
-                        JsBarcode("#barcode", no_rm, { format: "CODE128", width: 1, height: 20, displayValue: false });
-
-                        window.print();
+                        updatePrintPayload({
+                            nama_pasien,
+                            tanggal_lahir,
+                            jenis_kelamin,
+                            no_rm,
+                            no_registrasi,
+                            unit,
+                            no_antrian,
+                            waktu_daftar
+                        });
 
                         this.reset();
                         await initForm();
