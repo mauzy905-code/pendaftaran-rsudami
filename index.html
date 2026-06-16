@@ -1205,6 +1205,24 @@
                     setPrintButtonsState(true, `Dokumen siap dicetak untuk ${patientName}. Pilih tombol sesuai printer.`);
                 }
 
+                function resetPrintPayload() {
+                    lastRegisteredPrintPayload = null;
+                    clearActivePrintMode();
+                    document.getElementById('sticker_nama').textContent = '';
+                    document.getElementById('sticker_tgl_lahir').textContent = '';
+                    document.getElementById('sticker_jk').textContent = '';
+                    document.getElementById('sticker_waktu').textContent = '';
+                    document.getElementById('sticker_no_rm').textContent = '';
+                    document.getElementById('wristband_unit').textContent = 'UNIT';
+                    document.getElementById('wristband_nama').textContent = '-';
+                    document.getElementById('wristband_tgl_lahir').textContent = '';
+                    document.getElementById('wristband_jk').textContent = '';
+                    document.getElementById('wristband_no_rm').textContent = '';
+                    document.getElementById('wristband_no_registrasi').textContent = '';
+                    document.getElementById('wristband_no_antrian').textContent = '';
+                    setPrintButtonsState(false);
+                }
+
                 function clearActivePrintMode() {
                     activePrintMode = '';
                     document.body.removeAttribute('data-print-mode');
@@ -1607,6 +1625,7 @@
                     currentAdminRole = '';
                     currentLoket = '';
                     resetStaffIdentity();
+                    resetPrintPayload();
                     adminNameDisplay.textContent = '-';
                     adminRoleDisplay.textContent = '-';
                     adminLoketDisplay.textContent = '-';
@@ -2581,6 +2600,7 @@
                     if (!next || next === registrationLockedNoAntrian) return;
                     registrationLocked = false;
                     registrationLockedNoAntrian = '';
+                    resetPrintPayload();
                     applyRegistrationLockUI();
                     const saveErrorEl = document.getElementById('saveError');
                     if (saveErrorEl) saveErrorEl.classList.add('hidden');
