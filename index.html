@@ -543,6 +543,7 @@
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No Registrasi</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No RM</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">NIK</th>
+                                    <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No Telepon</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No BPJS</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Nama</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Riwayat</th>
@@ -4149,6 +4150,7 @@
                         const noRegistrasi = p.no_registrasi ?? '-';
                         const noRm = p.no_rm ?? '-';
                         const nik = p.nik ?? '-';
+                        const noTelepon = p.no_telepon ?? '-';
                         const nama = p.nama_pasien ?? '-';
                         const normalizedLink = normalizeExternalUrl(p.riwayat_pasien_link || '');
                         const namaButton = noRm !== '-'
@@ -4207,6 +4209,7 @@
                             <td class="px-4 py-2 font-semibold text-slate-700 whitespace-nowrap">${noRegistrasi}</td>
                             <td class="px-4 py-2 font-semibold text-blue-700 whitespace-nowrap">${noRm}</td>
                             <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${nik}</td>
+                            <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${noTelepon}</td>
                             <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${noBpjs}</td>
                             <td class="px-4 py-2 text-slate-900 whitespace-nowrap">${namaButton}</td>
                             <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${riwayatLinkCell}</td>
@@ -4298,6 +4301,7 @@
                             'No Registrasi': p.no_registrasi ?? '',
                             'No RM': p.no_rm ?? '',
                             'NIK': p.nik ?? '',
+                            'No Telepon': p.no_telepon ?? '',
                             'No BPJS': p.no_bpjs ?? '',
                             'Nama Pasien': p.nama_pasien ?? '',
                             'Riwayat Pasien (GDrive)': p.riwayat_pasien_link ?? '',
