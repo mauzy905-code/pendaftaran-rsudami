@@ -642,7 +642,8 @@
     </div>
     
     <div id="stickerContainer" class="hidden">
-        <div id="sticker" style="width: 50mm; height: 30mm; padding: 2mm; font-family: Arial, sans-serif; font-size: 7pt; line-height: 1.15;">
+        <div id="sticker" style="width: 50mm; height: 30mm; max-height: 30mm; padding: 0; margin: 0; font-family: Arial, sans-serif; font-size: 7pt; line-height: 1.15; box-sizing: border-box; overflow: hidden;">
+            <div style="width: 100%; height: 100%; max-height: 30mm; padding: 2mm; box-sizing: border-box; overflow: hidden;">
             <div style="text-align: center; font-weight: bold; font-size: 7pt;">RSUD AJI MUHAMMAD IDRIS</div>
             <div style="margin-top: 1mm;">
                 <div>
@@ -660,6 +661,7 @@
             </div>
             <div style="margin-top: 1mm;">
                 <svg id="barcode" style="width: 100%; height: 10mm;"></svg>
+            </div>
             </div>
         </div>
     </div>
@@ -687,6 +689,8 @@
                 margin: 0 !important;
                 padding: 0 !important;
                 overflow: hidden !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             body > * {
                 display: none !important;
@@ -694,6 +698,9 @@
             body[data-print-mode="barcode"] {
                 width: 50mm;
                 height: 30mm;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: hidden !important;
             }
             body[data-print-mode="barcode"] #stickerContainer {
                 display: block !important;
@@ -702,15 +709,19 @@
                 top: 0;
                 width: 50mm;
                 height: 30mm;
-                margin: 0;
-                padding: 0;
-                overflow: hidden;
+                max-height: 30mm;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: hidden !important;
             }
             body[data-print-mode="barcode"] #sticker {
                 width: 50mm !important;
                 height: 30mm !important;
-                box-sizing: border-box;
-                overflow: hidden;
+                max-height: 30mm !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-sizing: border-box !important;
+                overflow: hidden !important;
             }
             body[data-print-mode="wristband"] {
                 width: 90mm;
@@ -1130,7 +1141,7 @@
 
                 function setPrintPageSize(sizeValue) {
                     printPageStyleEl.textContent = sizeValue
-                        ? `@media print { @page { size: ${sizeValue}; margin: 0; } }`
+                        ? `@media print { @page { size: ${sizeValue}; margin: 0 !important; } html, body { margin: 0 !important; padding: 0 !important; } }`
                         : '';
                 }
 
@@ -1239,7 +1250,7 @@
                         populateBarcodeTemplate(lastRegisteredPrintPayload);
                         activePrintMode = 'barcode';
                         document.body.setAttribute('data-print-mode', 'barcode');
-                        setPrintPageSize('50mm 30mm');
+                        setPrintPageSize('50mm 30mm landscape');
                         appendStaffActivity('print_barcode', {
                             no_rm: lastRegisteredPrintPayload.no_rm,
                             no_registrasi: lastRegisteredPrintPayload.no_registrasi,
