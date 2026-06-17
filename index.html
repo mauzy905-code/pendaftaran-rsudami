@@ -3878,14 +3878,6 @@
                             throw new Error('Pilih Pasien Lama lalu cari NIK terlebih dahulu sampai data pasien ditemukan.');
                         }
 
-                        if (!no_rm) {
-                            throw new Error('Nomor rekam medis belum tersedia. Silakan cek mode pasien lalu coba lagi.');
-                        }
-
-                        if (noRegistrasiColumnAvailable && !no_registrasi) {
-                            throw new Error('Nomor registrasi belum tersedia. Silakan tunggu nomor otomatis muncul lalu coba lagi.');
-                        }
-
                         if (!nik) {
                             throw new Error('NIK wajib diisi.');
                         }
@@ -3910,6 +3902,14 @@
                             no_registrasi = reservedNoRegistrasi;
                             document.getElementById('no_registrasi').value = no_registrasi;
                             noRegistrasiPreview.textContent = no_registrasi;
+                        }
+
+                        if (!no_rm) {
+                            throw new Error('Nomor rekam medis belum tersedia. Silakan cek mode pasien lalu coba lagi.');
+                        }
+
+                        if (noRegistrasiColumnAvailable && !no_registrasi) {
+                            throw new Error('Nomor registrasi belum tersedia. Silakan tunggu nomor otomatis muncul lalu coba lagi.');
                         }
 
                         if (isIgdRegistration) {
