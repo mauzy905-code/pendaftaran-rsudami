@@ -269,6 +269,7 @@
                                         <label class="block text-slate-700 font-semibold mb-2">Unit Tujuan</label>
                                         <select id="unitSelect" class="w-full rounded-2xl border border-emerald-200 bg-slate-50 px-4 py-3 shadow-sm transition focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500" required disabled>
                                             <option value="POLIKLINIK" selected>🩺 Poliklinik</option>
+                                            <option value="FARMASI">Farmasi</option>
                                             <option value="IGD">IGD</option>
                                         </select>
                                     </div>
@@ -380,6 +381,11 @@
                                         </div>
                                     </div>
                                     </form>
+                                    <div id="farmasiControlNotice" class="hidden rounded-[24px] border border-emerald-100 bg-[linear-gradient(135deg,_#ecfdf5_0%,_#eff6ff_100%)] px-5 py-5">
+                                        <div class="text-xs font-extrabold uppercase tracking-[0.22em] text-emerald-700">Kontrol Antrean Farmasi</div>
+                                        <div class="mt-2 text-lg font-black tracking-tight text-slate-900">Dashboard ini khusus untuk mengontrol antrean Farmasi.</div>
+                                        <div class="mt-2 text-sm font-semibold text-slate-600">Gunakan panel di sebelah kanan untuk memanggil nomor berikutnya, panggil ulang pasien, atau melewati antrean Farmasi tanpa menginput data pasien.</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -395,17 +401,17 @@
                                         <div class="rounded-[24px] border border-emerald-100 bg-[linear-gradient(135deg,_#ecfdf5_0%,_#f0fdfa_100%)] p-4 shadow-sm">
                                             <div class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-emerald-700">Menunggu</div>
                                             <div id="statMenunggu" class="mt-2 text-3xl font-black tracking-tight text-emerald-800">-</div>
-                                            <div class="mt-1.5 text-sm font-semibold text-slate-500">Pasien yang belum diproses</div>
+                                            <div id="statMenungguDescription" class="mt-1.5 text-sm font-semibold text-slate-500">Pasien yang belum diproses</div>
                                         </div>
                                         <div class="rounded-[24px] border border-sky-100 bg-[linear-gradient(135deg,_#eff6ff_0%,_#f8fbff_100%)] p-4 shadow-sm">
                                             <div class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-blue-700">Terdaftar</div>
                                             <div id="statTerdaftar" class="mt-2 text-3xl font-black tracking-tight text-blue-800">-</div>
-                                            <div class="mt-1.5 text-sm font-semibold text-slate-500">Antrean yang sudah diinput</div>
+                                            <div id="statTerdaftarDescription" class="mt-1.5 text-sm font-semibold text-slate-500">Antrean yang sudah diinput</div>
                                         </div>
                                         <div class="rounded-[24px] border border-slate-200 bg-[linear-gradient(135deg,_#ffffff_0%,_#f8fafc_100%)] p-4 shadow-sm">
                                             <div class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-500">Total Hari Ini</div>
                                             <div id="statPasien" class="mt-2 text-3xl font-black tracking-tight text-slate-900">-</div>
-                                            <div class="mt-1.5 text-sm font-semibold text-slate-500">Jumlah seluruh pasien hari ini</div>
+                                            <div id="statPasienDescription" class="mt-1.5 text-sm font-semibold text-slate-500">Jumlah seluruh pasien hari ini</div>
                                         </div>
                                     </div>
                                     <div id="dashboardQuickHint" class="mt-4 rounded-[24px] border border-emerald-100 bg-emerald-50/70 px-4 py-3.5 text-sm font-semibold text-slate-600">
@@ -414,13 +420,13 @@
                                     <div id="queueControlPanel" class="mt-4 rounded-[24px] border border-blue-100 bg-[linear-gradient(135deg,_#eff6ff_0%,_#f8fbff_100%)] p-4 shadow-sm">
                                         <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                                             <div>
-                                                <div class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-blue-700">Kontrol Slide Antrean</div>
-                                                <div class="mt-1.5 text-lg font-black tracking-tight text-slate-900">Geser ke nomor berikutnya secara manual</div>
-                                                <div class="mt-1 text-sm font-semibold text-slate-500">Setelah registrasi selesai, klik tombol Next agar display berpindah ke antrean terdaftar berikutnya.</div>
+                                                <div id="queueControlEyebrow" class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-blue-700">Kontrol Slide Antrean</div>
+                                                <div id="queueControlTitle" class="mt-1.5 text-lg font-black tracking-tight text-slate-900">Geser ke nomor berikutnya secara manual</div>
+                                                <div id="queueControlDescription" class="mt-1 text-sm font-semibold text-slate-500">Setelah registrasi selesai, klik tombol Next agar display berpindah ke antrean terdaftar berikutnya.</div>
                                             </div>
                                         </div>
                                         <div class="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-1">
-                                            <div class="hidden rounded-[22px] border border-emerald-100 bg-white px-4 py-4 shadow-sm">
+                                            <div id="queueFarmasiCard" class="hidden rounded-[22px] border border-emerald-100 bg-white px-4 py-4 shadow-sm">
                                                 <div class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-emerald-700">Farmasi</div>
                                                 <div id="queueCurrentFarmasi" class="mt-2 text-2xl font-black tracking-tight text-emerald-800">-</div>
                                                 <div id="queueCurrentFarmasiMeta" class="mt-1 text-sm font-semibold text-slate-500">Belum ada antrean terdaftar.</div>
@@ -434,7 +440,7 @@
                                                 Lewati Antrean
                                             </button>
                                             </div>
-                                            <div class="rounded-[22px] border border-blue-100 bg-white px-4 py-4 shadow-sm">
+                                            <div id="queuePoliklinikCard" class="rounded-[22px] border border-blue-100 bg-white px-4 py-4 shadow-sm">
                                                 <div class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-blue-700">Poliklinik</div>
                                                 <div id="queueCurrentPoliklinik" class="mt-2 text-2xl font-black tracking-tight text-blue-800">-</div>
                                                 <div id="queueCurrentPoliklinikMeta" class="mt-1 text-sm font-semibold text-slate-500">Belum ada antrean terdaftar.</div>
@@ -945,6 +951,8 @@
                     const poliExamMessage = document.getElementById('poliExamMessage');
                     const savePoliExamBtn = document.getElementById('savePoliExamBtn');
                     const queueControlPanel = document.getElementById('queueControlPanel');
+                    const registrationForm = document.getElementById('registrationForm');
+                    const farmasiControlNotice = document.getElementById('farmasiControlNotice');
                     const autoNoAntrianWrap = document.getElementById('autoNoAntrianWrap');
                     const manualNoAntrianWrap = document.getElementById('manualNoAntrianWrap');
                     const manualNoAntrianInput = document.getElementById('manualNoAntrianInput');
@@ -964,6 +972,14 @@
                     const queueCurrentFarmasiMeta = document.getElementById('queueCurrentFarmasiMeta');
                     const queueCurrentPoliklinik = document.getElementById('queueCurrentPoliklinik');
                     const queueCurrentPoliklinikMeta = document.getElementById('queueCurrentPoliklinikMeta');
+                    const queueFarmasiCard = document.getElementById('queueFarmasiCard');
+                    const queuePoliklinikCard = document.getElementById('queuePoliklinikCard');
+                    const statMenungguDescription = document.getElementById('statMenungguDescription');
+                    const statTerdaftarDescription = document.getElementById('statTerdaftarDescription');
+                    const statPasienDescription = document.getElementById('statPasienDescription');
+                    const queueControlEyebrow = document.getElementById('queueControlEyebrow');
+                    const queueControlTitle = document.getElementById('queueControlTitle');
+                    const queueControlDescription = document.getElementById('queueControlDescription');
 
                     let patientMode = 'baru';
                     let loadedOldPatient = null;
@@ -1065,6 +1081,7 @@
                         if (value === 'admin_rme') return 'Admin RME';
                         if (value === 'admin_pendaftaran') return 'Petugas Pendaftaran';
                         if (value === 'admin_igd') return 'Petugas IGD';
+                        if (value === 'admin_farmasi' || value === 'petugas_farmasi' || value === 'petugas farmasi') return 'Petugas Farmasi';
                         if (value === 'petugas_poli' || value === 'petugas poli') return getPetugasPoliAccountLabel();
                         return value ? value.replace(/_/g, ' ') : 'Belum Diatur';
                     }
@@ -1396,6 +1413,7 @@
                         const isSupervisor = isSupervisorRole();
                         const isRme = isRmeRole();
                         const isIgd = isIgdRole();
+                        const isFarmasi = isFarmasiControlRole();
                         const isPetugasPoli = isPetugasPoliRole();
                         const petugasPoliLabel = getPetugasPoliAccountLabel();
 
@@ -1403,33 +1421,45 @@
                             ? 'bg-[linear-gradient(135deg,_#581c87_0%,_#6d28d9_42%,_#1d4ed8_100%)] px-6 py-6'
                             : (isRme
                                 ? 'bg-[linear-gradient(135deg,_#0f172a_0%,_#0f766e_42%,_#0ea5e9_100%)] px-6 py-6'
-                                : (isPetugasPoli
+                                : (isFarmasi
+                                    ? 'bg-[linear-gradient(135deg,_#064e3b_0%,_#059669_42%,_#14b8a6_100%)] px-6 py-6'
+                                    : (isPetugasPoli
                                     ? 'bg-[linear-gradient(135deg,_#0b3b2e_0%,_#047857_42%,_#0ea5e9_100%)] px-6 py-6'
                                     : (isIgd
                                         ? 'bg-[linear-gradient(135deg,_#7f1d1d_0%,_#b91c1c_42%,_#dc2626_100%)] px-6 py-6'
-                                        : 'bg-[linear-gradient(135deg,_#065f46_0%,_#0f766e_42%,_#1d4ed8_100%)] px-6 py-6')));
+                                        : 'bg-[linear-gradient(135deg,_#065f46_0%,_#0f766e_42%,_#1d4ed8_100%)] px-6 py-6'))));
                         dashboardHero.className = isSupervisor
                             ? 'bg-[linear-gradient(135deg,_#4c1d95_0%,_#6d28d9_38%,_#1d4ed8_100%)] px-5 py-5 md:px-6'
                             : (isRme
                                 ? 'bg-[linear-gradient(135deg,_#0f172a_0%,_#0f766e_38%,_#0284c7_100%)] px-5 py-5 md:px-6'
-                                : (isPetugasPoli
+                                : (isFarmasi
+                                    ? 'bg-[linear-gradient(135deg,_#065f46_0%,_#059669_38%,_#14b8a6_100%)] px-5 py-5 md:px-6'
+                                    : (isPetugasPoli
                                     ? 'bg-[linear-gradient(135deg,_#064e3b_0%,_#0f766e_38%,_#0ea5e9_100%)] px-5 py-5 md:px-6'
                                     : (isIgd
                                         ? 'bg-[linear-gradient(135deg,_#7f1d1d_0%,_#b91c1c_38%,_#dc2626_100%)] px-5 py-5 md:px-6'
-                                        : 'bg-[linear-gradient(135deg,_#065f46_0%,_#0f766e_38%,_#1d4ed8_100%)] px-5 py-5 md:px-6')));
+                                        : 'bg-[linear-gradient(135deg,_#065f46_0%,_#0f766e_38%,_#1d4ed8_100%)] px-5 py-5 md:px-6'))));
                         adminIdentityBadge.className = isSupervisor
                             ? 'hidden rounded-full border border-violet-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-violet-700 shadow-sm md:inline-flex'
                             : (isRme
                                 ? 'hidden rounded-full border border-cyan-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-700 shadow-sm md:inline-flex'
-                                : (isPetugasPoli
+                                : (isFarmasi
+                                    ? 'hidden rounded-full border border-emerald-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700 shadow-sm md:inline-flex'
+                                    : (isPetugasPoli
                                     ? 'hidden rounded-full border border-emerald-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700 shadow-sm md:inline-flex'
                                     : (isIgd
                                         ? 'hidden rounded-full border border-rose-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-rose-700 shadow-sm md:inline-flex'
-                                        : 'hidden rounded-full border border-blue-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-700 shadow-sm md:inline-flex')));
+                                        : 'hidden rounded-full border border-blue-100 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-700 shadow-sm md:inline-flex'))));
 
                         syncRoleMenuVisibility();
-                        menuRekap.textContent = isRme ? 'Rekap & Riwayat Pasien' : (isPetugasPoli ? 'Daftar Pasien Poli' : 'Rekap Pasien');
+                        menuRekap.textContent = isRme ? 'Rekap & Riwayat Pasien' : (isPetugasPoli ? 'Daftar Pasien Poli' : (isFarmasi ? 'Kontrol Antrean Farmasi' : 'Rekap Pasien'));
                         updateHistoryDriveAccess();
+                        if (queueControlEyebrow) queueControlEyebrow.textContent = 'Kontrol Slide Antrean';
+                        if (queueControlTitle) queueControlTitle.textContent = 'Geser ke nomor berikutnya secara manual';
+                        if (queueControlDescription) queueControlDescription.textContent = 'Setelah registrasi selesai, klik tombol Next agar display berpindah ke antrean terdaftar berikutnya.';
+                        if (statMenungguDescription) statMenungguDescription.textContent = 'Pasien yang belum diproses';
+                        if (statTerdaftarDescription) statTerdaftarDescription.textContent = 'Antrean yang sudah diinput';
+                        if (statPasienDescription) statPasienDescription.textContent = 'Jumlah seluruh pasien hari ini';
 
                         if (isSupervisor) {
                             supervisorMenuLinks.classList.remove('hidden');
@@ -1479,6 +1509,33 @@
                             summaryBox3Label.textContent = 'Riwayat';
                             summaryBox3Value.textContent = 'Siap Dibuka';
                             dashboardQuickHint.textContent = 'Gunakan rekap untuk melihat daftar pasien poli hari ini sesuai poli akun yang sedang login.';
+                        } else if (isFarmasi) {
+                            supervisorMenuLinks.classList.add('hidden');
+                            drawerRoleEyebrow.textContent = 'Akses Farmasi';
+                            drawerTitle.textContent = 'Menu Petugas Farmasi';
+                            drawerDescription.textContent = 'Fokus pada kontrol antrean Farmasi tanpa input data pasien.';
+                            drawerRoleNote.textContent = 'Petugas Farmasi hanya mengontrol antrean Farmasi. Form input pasien dan rekap pasien tidak ditampilkan pada akun ini.';
+                            dashboardRolePill.textContent = 'Panel Farmasi';
+                            dashboardTitle.textContent = 'Kontrol Antrean Farmasi';
+                            dashboardDescription.textContent = 'Panggil nomor antrean Farmasi berikutnya, panggil ulang, atau lewati antrean langsung dari dashboard ini.';
+                            summaryBox1Label.textContent = 'Unit';
+                            summaryBox1Value.textContent = 'FARMASI';
+                            summaryBox2Label.textContent = 'Akses';
+                            summaryBox2Value.textContent = 'Petugas Farmasi';
+                            summaryBox3Label.textContent = 'Mode';
+                            summaryBox3Value.textContent = 'Kontrol Antrean';
+                            dashboardQuickHint.textContent = 'Gunakan panel kontrol untuk memanggil nomor Farmasi, panggil ulang pasien, atau melewati antrean tanpa input data pasien.';
+                            registrationSectionEyebrow.textContent = 'Kontrol Farmasi';
+                            registrationSectionTitle.textContent = 'Dashboard Antrean Farmasi';
+                            registrationSectionDescription.textContent = 'Akun ini hanya digunakan untuk mengontrol nomor antrean Farmasi.';
+                            statsSectionTitle.textContent = 'Ringkasan Antrean Farmasi';
+                            statsSectionDescription.textContent = 'Pantau antrean Farmasi yang menunggu, sudah terdaftar, dan total antrean hari ini.';
+                            if (queueControlEyebrow) queueControlEyebrow.textContent = 'Kontrol Antrean Farmasi';
+                            if (queueControlTitle) queueControlTitle.textContent = 'Panggil, panggil ulang, atau lewati antrean Farmasi';
+                            if (queueControlDescription) queueControlDescription.textContent = 'Gunakan tombol di bawah untuk mengontrol antrean Farmasi tanpa proses input pasien.';
+                            if (statMenungguDescription) statMenungguDescription.textContent = 'Antrean Farmasi yang belum dipanggil';
+                            if (statTerdaftarDescription) statTerdaftarDescription.textContent = 'Antrean Farmasi yang siap diproses';
+                            if (statPasienDescription) statPasienDescription.textContent = 'Total antrean Farmasi hari ini';
                         } else if (isIgd) {
                             supervisorMenuLinks.classList.add('hidden');
                             drawerRoleEyebrow.textContent = 'Akses IGD';
@@ -1691,6 +1748,11 @@
                         return String(currentAdminRole || '').trim().toLowerCase() === 'admin_igd';
                     }
 
+                    function isFarmasiControlRole() {
+                        const value = String(currentAdminRole || '').trim().toLowerCase();
+                        return value === 'admin_farmasi' || value === 'petugas_farmasi' || value === 'petugas farmasi';
+                    }
+
                     function isRegistrationWorkflowRole() {
                         return isPendaftaranRole() || isIgdRole();
                     }
@@ -1713,11 +1775,11 @@
                     }
 
                     function isStaffIdentityRequired() {
-                        return isRegistrationWorkflowRole();
+                        return isRegistrationWorkflowRole() || isFarmasiControlRole();
                     }
 
                     function canAccessRekapView() {
-                        return !isRegistrationWorkflowRole();
+                        return !isRegistrationWorkflowRole() && !isFarmasiControlRole();
                     }
 
                     function getPetugasPoliAccountLabel() {
@@ -1729,15 +1791,16 @@
                     }
 
                     function canAccessPendaftaranView() {
-                        return isRegistrationWorkflowRole();
+                        return isRegistrationWorkflowRole() || isFarmasiControlRole();
                     }
 
                     function getCurrentRegistrationUnit() {
+                        if (isFarmasiControlRole()) return 'FARMASI';
                         return isIgdRole() ? 'IGD' : 'POLIKLINIK';
                     }
 
                     function usesAutomaticQueueControls() {
-                        return isPendaftaranRole();
+                        return isPendaftaranRole() || isFarmasiControlRole();
                     }
 
                     function canManagePatientDriveLink() {
@@ -2937,13 +3000,28 @@
                         const saveErrorEl = document.getElementById('saveError');
                         const unit = getCurrentRegistrationUnit();
                         const manualMode = isIgdRole();
+                        const farmasiMode = isFarmasiControlRole();
 
                         unitSelect.value = unit;
                         queueControlPanel.classList.toggle('hidden', manualMode);
-                        autoNoAntrianWrap.classList.toggle('hidden', manualMode);
+                        registrationForm.classList.toggle('hidden', farmasiMode);
+                        farmasiControlNotice.classList.toggle('hidden', !farmasiMode);
+                        printActionPanel.classList.toggle('hidden', farmasiMode);
+                        queueFarmasiCard.classList.toggle('hidden', !farmasiMode);
+                        queuePoliklinikCard.classList.toggle('hidden', farmasiMode);
+                        autoNoAntrianWrap.classList.toggle('hidden', manualMode || farmasiMode);
                         manualNoAntrianWrap.classList.toggle('hidden', !manualMode);
 
-                        if (manualMode) {
+                        if (farmasiMode) {
+                            wrap.classList.add('hidden');
+                            poliSelect.required = false;
+                            poliSelect.value = 'FARMASI';
+                            manualNoAntrianInput.required = false;
+                            manualNoAntrianInput.value = '';
+                            registrationLocked = false;
+                            registrationLockedNoAntrian = '';
+                            if (saveErrorEl) saveErrorEl.classList.add('hidden');
+                        } else if (manualMode) {
                             wrap.classList.add('hidden');
                             poliSelect.required = false;
                             poliSelect.value = 'IGD';
@@ -3006,7 +3084,9 @@
                     }
 
                     function queueControlPrefix(unit) {
-                        return unit === 'POLIKLINIK' ? 'Poliklinik' : String(unit || '');
+                        if (unit === 'POLIKLINIK') return 'Poliklinik';
+                        if (unit === 'FARMASI') return 'Farmasi';
+                        return String(unit || '');
                     }
 
                     function isPrioritasNoAntrian(noAntrian) {
@@ -3023,6 +3103,8 @@
                             return;
                         }
                         queueControlPanel.classList.remove('hidden');
+                        queueFarmasiCard.classList.toggle('hidden', !isFarmasiControlRole());
+                        queuePoliklinikCard.classList.toggle('hidden', isFarmasiControlRole());
                         const { startISO, endISO } = getTodayRangeISO();
                         const { data, error } = await supabaseClient
                             .from('antrian')
@@ -3032,12 +3114,16 @@
                             .order('created_at', { ascending: true });
 
                         if (error) {
+                            queueCurrentFarmasi.textContent = '-';
+                            queueCurrentFarmasiMeta.textContent = 'Gagal memuat kontrol antrean.';
+                            nextFarmasiBtn.disabled = true;
+                            if (recallFarmasiBtn) recallFarmasiBtn.disabled = true;
+                            skipFarmasiBtn.disabled = true;
                             queueCurrentPoliklinik.textContent = '-';
                             queueCurrentPoliklinikMeta.textContent = 'Gagal memuat kontrol antrean.';
                             nextPoliklinikBtn.disabled = true;
                             if (recallPoliklinikBtn) recallPoliklinikBtn.disabled = true;
                             skipPoliklinikBtn.disabled = true;
-                            if (recallFarmasiBtn) recallFarmasiBtn.disabled = true;
                             if (nextPrioritasBtn) {
                                 nextPrioritasBtn.disabled = true;
                                 nextPrioritasBtn.classList.add('hidden');
@@ -3047,7 +3133,8 @@
                         }
 
                         const rows = data || [];
-                        ['POLIKLINIK'].forEach((unit) => {
+                        const queueUnits = isFarmasiControlRole() ? ['FARMASI'] : ['POLIKLINIK'];
+                        queueUnits.forEach((unit) => {
                             const allUnitRows = rows.filter((item) => item.unit === unit);
                             const unitRows = filterClaimableRowsByCurrentLoket(allUnitRows);
                             const activeUnitRows = filterActiveRowsByCurrentLoket(allUnitRows);
@@ -3821,8 +3908,14 @@
                         recallPoliklinikBtn.addEventListener('click', async () => recallCurrentQueue('POLIKLINIK', recallPoliklinikBtn));
                     }
                     skipPoliklinikBtn.addEventListener('click', async () => skipCurrentQueue('POLIKLINIK', skipPoliklinikBtn));
+                    if (nextFarmasiBtn) {
+                        nextFarmasiBtn.addEventListener('click', async () => slideNextQueue('FARMASI', nextFarmasiBtn));
+                    }
                     if (recallFarmasiBtn) {
                         recallFarmasiBtn.addEventListener('click', async () => recallCurrentQueue('FARMASI', recallFarmasiBtn));
+                    }
+                    if (skipFarmasiBtn) {
+                        skipFarmasiBtn.addEventListener('click', async () => skipCurrentQueue('FARMASI', skipFarmasiBtn));
                     }
                     if (nextPrioritasBtn) {
                         nextPrioritasBtn.addEventListener('click', async () => slideNextPrioritas(nextPrioritasBtn));
@@ -4557,6 +4650,29 @@
                     async function refreshStats() {
                         const { startISO: start, endISO: end } = getTodayRangeISO();
                         const unit = getCurrentRegistrationUnit();
+                        const isFarmasi = isFarmasiControlRole();
+
+                        if (isFarmasi) {
+                            const { data: antrianRows } = await supabaseClient
+                                .from('antrian')
+                                .select('status')
+                                .eq('unit', unit)
+                                .gte('created_at', start)
+                                .lte('created_at', end);
+
+                            const counts = { menunggu: 0, terdaftar: 0, total: 0 };
+                            (antrianRows || []).forEach((r) => {
+                                const s = String(r.status || '').toLowerCase();
+                                if (s === 'menunggu') counts.menunggu += 1;
+                                if (s === 'terdaftar') counts.terdaftar += 1;
+                                counts.total += 1;
+                            });
+
+                            document.getElementById('statMenunggu').textContent = String(counts.menunggu);
+                            document.getElementById('statTerdaftar').textContent = String(counts.terdaftar);
+                            document.getElementById('statPasien').textContent = String(counts.total);
+                            return;
+                        }
 
                         if (!usesAutomaticQueueControls()) {
                             const { count: pasienCount } = await supabaseClient
