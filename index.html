@@ -991,6 +991,8 @@
                     let teleponColumnAvailable = true;
                     let riwayatLinkColumnAvailable = true;
                     let noRegistrasiColumnAvailable = true;
+                    let petugasInputColumnAvailable = true;
+                    let petugasPoliColumnAvailable = true;
                     let queueRoutingColumnsAvailable = true;
                     let queueProcessingColumnsAvailable = true;
                     let poliExamColumnsAvailable = true;
@@ -1672,6 +1674,10 @@
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No Antrian</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No Registrasi</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No RM</th>
+                                    <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Petugas Input</th>
+                                    <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Petugas Poli</th>
+                                    <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Dokter</th>
+                                    <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Diagnosa</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">NIK</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No Telepon</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No BPJS</th>
@@ -1687,6 +1693,10 @@
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Waktu Daftar</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No Antrian</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No RM</th>
+                                        <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Petugas Input</th>
+                                        <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Petugas Poli</th>
+                                        <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Dokter</th>
+                                        <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Diagnosa</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">NIK</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Nama</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Riwayat</th>
@@ -1699,7 +1709,12 @@
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No Antrian</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No Registrasi</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No RM</th>
+                                        <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Petugas Input</th>
+                                        <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Petugas Poli</th>
+                                        <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Dokter</th>
+                                        <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Diagnosa</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">NIK</th>
+                                        <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No Telepon</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No BPJS</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Nama</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Riwayat</th>
@@ -1846,7 +1861,7 @@
                     }
 
                     function canManagePoliExam() {
-                        return isPetugasPoliRole();
+                        return isPetugasPoliRole() || isIgdRole();
                     }
 
                     function updateHistoryDriveAccess() {
@@ -1904,7 +1919,7 @@
 
                         if (!canManagePoliExam()) {
                             savePoliExamBtn.disabled = true;
-                            showPoliExamMessage('Hanya Petugas Poli yang dapat mengisi dokter dan diagnosa.', 'error');
+                            showPoliExamMessage('Hanya Petugas Poli atau Petugas UGD yang dapat mengisi dokter dan diagnosa.', 'error');
                         } else if (!poliExamColumnsAvailable) {
                             savePoliExamBtn.disabled = true;
                             showPoliExamMessage('Kolom dokter/diagnosa belum ada di database Supabase. Tambahkan kolom nama_dokter dan diagnosa pada tabel pasien.', 'error');
@@ -2221,6 +2236,8 @@
                             await detectPoliExamColumns();
                             await detectAlamatColumn();
                             await detectTeleponColumn();
+                            await detectPetugasInputColumn();
+                            await detectPetugasPoliColumn();
                             await detectRiwayatLinkColumn();
                             await detectNoRegistrasiColumn();
                             showView(canAccessPendaftaranView() ? 'pendaftaran' : 'rekap');
@@ -2572,6 +2589,28 @@
                         }
                     }
 
+                    async function detectPetugasInputColumn() {
+                        const { error } = await supabaseClient
+                            .from('pasien')
+                            .select('petugas_input')
+                            .limit(1);
+
+                        if (error && /petugas_input/i.test(error.message)) {
+                            petugasInputColumnAvailable = false;
+                        }
+                    }
+
+                    async function detectPetugasPoliColumn() {
+                        const { error } = await supabaseClient
+                            .from('pasien')
+                            .select('petugas_poli')
+                            .limit(1);
+
+                        if (error && /petugas_poli/i.test(error.message)) {
+                            petugasPoliColumnAvailable = false;
+                        }
+                    }
+
                     async function detectRiwayatLinkColumn() {
                         const { error } = await supabaseClient
                             .from('pasien')
@@ -2766,7 +2805,7 @@
                     async function savePoliExam() {
                         if (!currentPoliExamVisitId) return;
                         if (!canManagePoliExam()) {
-                            showPoliExamMessage('Hanya Petugas Poli yang dapat mengisi dokter dan diagnosa.', 'error');
+                            showPoliExamMessage('Hanya Petugas Poli atau Petugas UGD yang dapat mengisi dokter dan diagnosa.', 'error');
                             return;
                         }
                         if (!poliExamColumnsAvailable) {
@@ -2781,13 +2820,17 @@
                         savePoliExamBtn.textContent = 'Menyimpan...';
 
                         try {
+                            const updatePayload = {
+                                nama_dokter: dokter || null,
+                                diagnosa: diagnosa || null
+                            };
+                            if (petugasPoliColumnAvailable) {
+                                updatePayload.petugas_poli = getCurrentOperatorName();
+                            }
                             const { error } = await withTimeout(
                                 supabaseClient
                                     .from('pasien')
-                                    .update({
-                                        nama_dokter: dokter || null,
-                                        diagnosa: diagnosa || null
-                                    })
+                                    .update(updatePayload)
                                     .eq('id', currentPoliExamVisitId),
                                 15000,
                                 'Simpan pemeriksaan poli'
@@ -4262,6 +4305,10 @@
                                 pasienPayload.no_registrasi = no_registrasi;
                             }
 
+                            if (petugasInputColumnAvailable) {
+                                pasienPayload.petugas_input = getCurrentOperatorName();
+                            }
+
                             let inserted = false;
                             for (let attempt = 0; attempt < 5; attempt += 1) {
                                 const insertRes = await withTimeout(
@@ -4536,6 +4583,16 @@
                             if (noRegistrasiColumnAvailable) {
                                 searchableFields.push(`no_registrasi.ilike.%${escaped}%`);
                             }
+                            if (petugasInputColumnAvailable) {
+                                searchableFields.push(`petugas_input.ilike.%${escaped}%`);
+                            }
+                            if (petugasPoliColumnAvailable) {
+                                searchableFields.push(`petugas_poli.ilike.%${escaped}%`);
+                            }
+                            if (poliExamColumnsAvailable) {
+                                searchableFields.push(`nama_dokter.ilike.%${escaped}%`);
+                                searchableFields.push(`diagnosa.ilike.%${escaped}%`);
+                            }
                             query = query.or(searchableFields.join(','));
                         }
 
@@ -4546,7 +4603,7 @@
                         const isRme = isRmeRole();
                         const isPetugasPoli = isPetugasPoliScopedRekap();
                         if (!items || items.length === 0) {
-                            rEls.rows.innerHTML = `<tr><td class="px-4 py-6 text-slate-500" colspan="${isRme ? 16 : (isPetugasPoli ? 6 : 15)}">Tidak ada data.</td></tr>`;
+                            rEls.rows.innerHTML = `<tr><td class="px-4 py-6 text-slate-500" colspan="${isRme ? 20 : (isPetugasPoli ? 10 : 19)}">Tidak ada data.</td></tr>`;
                             return;
                         }
                         rEls.rows.innerHTML = items.map((p) => {
@@ -4557,6 +4614,10 @@
                             const noAntrian = p.no_antrian ?? '-';
                             const noRegistrasi = p.no_registrasi ?? '-';
                             const noRm = p.no_rm ?? '-';
+                            const petugasInput = p.petugas_input ?? '-';
+                            const petugasPoli = p.petugas_poli ?? '-';
+                            const dokter = p.nama_dokter ?? '-';
+                            const diagnosa = p.diagnosa ?? '-';
                             const nik = p.nik ?? '-';
                             const noTelepon = p.no_telepon ?? '-';
                             const noBpjs = p.no_bpjs ?? '-';
@@ -4572,12 +4633,20 @@
                             const riwayatOnlyCell = noRm !== '-'
                                 ? `<button type="button" class="history-btn inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-extrabold text-slate-700 transition hover:bg-slate-50 whitespace-nowrap" data-no-rm="${escapeHtml(noRm)}" data-nama="${escapeHtml(nama)}">Lihat Riwayat</button>`
                                 : `<span class="text-xs font-semibold text-slate-500">No RM belum ada</span>`;
+                            const canEditExam = canManagePoliExam() && poliExamColumnsAvailable && String(p.id || '').trim() !== '';
+                            const examBtn = canEditExam
+                                ? `<button type="button" class="poli-exam-btn inline-flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-extrabold text-emerald-800 transition hover:bg-emerald-100 whitespace-nowrap" data-id="${escapeHtml(String(p.id || ''))}" data-no-rm="${escapeHtml(noRm)}" data-nama="${escapeHtml(nama)}" data-dokter="${escapeHtml(String(p.nama_dokter || ''))}" data-diagnosa="${escapeHtml(String(p.diagnosa || ''))}">Dokter/Diagnosa</button>`
+                                : '';
                             const riwayatLinkCell = normalizedLink
                                 ? `<div class="flex items-center gap-2 whitespace-nowrap">
+                                    ${examBtn}
                                     <a href="${escapeHtml(normalizedLink)}" target="_blank" rel="noreferrer" class="inline-flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-extrabold text-emerald-800 transition hover:bg-emerald-100">Buka GDrive</a>
                                     <button type="button" class="history-btn inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-extrabold text-slate-700 transition hover:bg-slate-50" data-no-rm="${escapeHtml(noRm)}" data-nama="${escapeHtml(nama)}">Lihat Riwayat</button>
                                 </div>`
-                                : `<button type="button" class="history-btn inline-flex items-center justify-center rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-[11px] font-extrabold text-blue-700 transition hover:bg-blue-100 whitespace-nowrap" data-no-rm="${escapeHtml(noRm)}" data-nama="${escapeHtml(nama)}">Input Link</button>`;
+                                : `<div class="flex items-center gap-2 whitespace-nowrap">
+                                    ${examBtn}
+                                    <button type="button" class="history-btn inline-flex items-center justify-center rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-[11px] font-extrabold text-blue-700 transition hover:bg-blue-100 whitespace-nowrap" data-no-rm="${escapeHtml(noRm)}" data-nama="${escapeHtml(nama)}">Input Link</button>
+                                </div>`;
                             if (isRme) {
                                 const actionCell = noRm !== '-'
                                     ? riwayatLinkCell
@@ -4590,6 +4659,10 @@
                                     <td class="px-4 py-2 font-semibold text-emerald-700 whitespace-nowrap">${noAntrian}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700 whitespace-nowrap">${noRegistrasi}</td>
                                     <td class="px-4 py-2 font-semibold text-blue-700 whitespace-nowrap">${noRm}</td>
+                                    <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${escapeHtml(String(petugasInput))}</td>
+                                    <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${escapeHtml(String(petugasPoli))}</td>
+                                    <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${escapeHtml(String(dokter))}</td>
+                                    <td class="px-4 py-2 text-slate-800 min-w-[240px] max-w-[320px] whitespace-normal break-words">${escapeHtml(String(diagnosa))}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${nik}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${noTelepon}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${noBpjs}</td>
@@ -4602,14 +4675,16 @@
                                 </tr>`;
                             }
                             if (isPetugasPoli) {
-                                const dokter = String(p.nama_dokter || '');
-                                const diagnosa = String(p.diagnosa || '');
-                                const examBtn = `<button type="button" class="poli-exam-btn inline-flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-extrabold text-emerald-800 transition hover:bg-emerald-100 whitespace-nowrap" data-id="${escapeHtml(String(p.id || ''))}" data-no-rm="${escapeHtml(noRm)}" data-nama="${escapeHtml(nama)}" data-dokter="${escapeHtml(dokter)}" data-diagnosa="${escapeHtml(diagnosa)}">Input Dokter/Diagnosa</button>`;
+                                const examBtn = `<button type="button" class="poli-exam-btn inline-flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-extrabold text-emerald-800 transition hover:bg-emerald-100 whitespace-nowrap" data-id="${escapeHtml(String(p.id || ''))}" data-no-rm="${escapeHtml(noRm)}" data-nama="${escapeHtml(nama)}" data-dokter="${escapeHtml(String(p.nama_dokter || ''))}" data-diagnosa="${escapeHtml(String(p.diagnosa || ''))}">Input Dokter/Diagnosa</button>`;
                                 const actionCell = `<div class="flex items-center gap-2 whitespace-nowrap">${examBtn}${riwayatOnlyCell}</div>`;
                                 return `<tr class="odd:bg-white even:bg-slate-50/40 hover:bg-emerald-50/60 transition">
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${waktu}</td>
                                     <td class="px-4 py-2 font-semibold text-emerald-700 whitespace-nowrap">${noAntrian}</td>
                                     <td class="px-4 py-2 font-semibold text-blue-700 whitespace-nowrap">${noRm}</td>
+                                    <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${escapeHtml(String(petugasInput))}</td>
+                                    <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${escapeHtml(String(petugasPoli))}</td>
+                                    <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${escapeHtml(String(dokter))}</td>
+                                    <td class="px-4 py-2 text-slate-800 min-w-[240px] max-w-[320px] whitespace-normal break-words">${escapeHtml(String(diagnosa))}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${nik}</td>
                                     <td class="px-4 py-2 text-slate-900 whitespace-nowrap">${namaButton}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${actionCell}</td>
@@ -4623,6 +4698,10 @@
                                 <td class="px-4 py-2 font-semibold text-emerald-700 whitespace-nowrap">${noAntrian}</td>
                                 <td class="px-4 py-2 font-semibold text-slate-700 whitespace-nowrap">${noRegistrasi}</td>
                                 <td class="px-4 py-2 font-semibold text-blue-700 whitespace-nowrap">${noRm}</td>
+                                <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${escapeHtml(String(petugasInput))}</td>
+                                <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${escapeHtml(String(petugasPoli))}</td>
+                                <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${escapeHtml(String(dokter))}</td>
+                                <td class="px-4 py-2 text-slate-800 min-w-[240px] max-w-[320px] whitespace-normal break-words">${escapeHtml(String(diagnosa))}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${nik}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${noTelepon}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${noBpjs}</td>
@@ -4715,6 +4794,10 @@
                                 'No Antrian': p.no_antrian ?? '',
                                 'No Registrasi': p.no_registrasi ?? '',
                                 'No RM': p.no_rm ?? '',
+                                'Petugas Input': p.petugas_input ?? '',
+                                'Petugas Poli': p.petugas_poli ?? '',
+                                'Dokter': p.nama_dokter ?? '',
+                                'Diagnosa': p.diagnosa ?? '',
                                 'NIK': p.nik ?? '',
                                 'No Telepon': p.no_telepon ?? '',
                                 'No BPJS': p.no_bpjs ?? '',
@@ -4873,6 +4956,8 @@
                             await detectPoliExamColumns();
                             await detectAlamatColumn();
                             await detectTeleponColumn();
+                            await detectPetugasInputColumn();
+                            await detectPetugasPoliColumn();
                             await detectRiwayatLinkColumn();
                             await detectNoRegistrasiColumn();
                             showView(canAccessPendaftaranView() ? 'pendaftaran' : 'rekap');
