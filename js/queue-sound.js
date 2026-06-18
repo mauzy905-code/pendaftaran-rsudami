@@ -341,8 +341,12 @@ class QueueSoundSystem {
     getLoketLetters(loketTujuan) {
         const raw = String(loketTujuan || '').trim().toUpperCase();
         if (!raw) return [];
+        if (raw === 'A' || raw === 'LOKET_A') return ['A'];
+        if (raw === 'B' || raw === 'LOKET_B') return ['B'];
+        if (raw === 'C' || raw === 'LOKET_C') return ['C'];
         if (raw === 'LOKET_1') return ['A'];
         if (raw === 'LOKET_2') return ['B'];
+        if (raw === 'LOKET_3') return ['C'];
         const match = raw.match(/[A-Z]+$/);
         return match ? match[0].split('') : [];
     }
