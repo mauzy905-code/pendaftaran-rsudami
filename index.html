@@ -1906,6 +1906,16 @@
                         return queueRoutingColumnsAvailable && !isSupervisorRole() && !!getCurrentLoketValue();
                     }
 
+                    function isLoketScopeMissingForQueueControl(unit = 'POLIKLINIK') {
+                        return unit === 'POLIKLINIK' && isPendaftaranRole() && queueRoutingColumnsAvailable && !getCurrentLoketValue();
+                    }
+
+                    function ensureLoketScopeForQueueControl(unit = 'POLIKLINIK') {
+                        if (isLoketScopeMissingForQueueControl(unit)) {
+                            throw new Error('Akun ini belum memiliki loket aktif. Isi loket_default dengan A, B, atau C pada admin_profiles.');
+                        }
+                    }
+
                     function normalizeLoketValue(value) {
                         return normalizeLoketCode(value);
                     }
@@ -2364,6 +2374,40 @@
                             message.includes('already exists');
                     }
 
+                    function buildMissingGeneratorError(label, rpcName) {
+                        return new Error(`${label} belum bisa dibuat otomatis karena function Supabase \`${rpcName}()\` tidak tersedia. Aktifkan generator nomor resmi di database terlebih dahulu agar nomor tidak double saat dipakai bersamaan.`);
+                    }
+
+                    function getGeneratedNumberRetryPlan(err, options = {}) {
+                        const { patientMode = 'baru', hasNoRegistrasi = false } = options || {};
+                        const message = String(err?.message || err || '').toLowerCase();
+                        if (!isUniqueViolationError(err)) {
+                            return { canRetry: false, retryNoRm: false, retryNoRegistrasi: false };
+                        }
+
+                        const retryNoRm = /(^|[^a-z])no_rm([^a-z]|$)|pasien_no_rm/i.test(message);
+                        const retryNoRegistrasi = /no_registrasi|pasien_no_registrasi|registrasi/i.test(message);
+                        const mentionsOtherUniqueField = /\bnik\b|\bno_bpjs\b|\bemail\b/.test(message);
+
+                        if (retryNoRm || retryNoRegistrasi) {
+                            return {
+                                canRetry: retryNoRm || (hasNoRegistrasi && retryNoRegistrasi),
+                                retryNoRm,
+                                retryNoRegistrasi: hasNoRegistrasi && retryNoRegistrasi
+                            };
+                        }
+
+                        if (mentionsOtherUniqueField) {
+                            return { canRetry: false, retryNoRm: false, retryNoRegistrasi: false };
+                        }
+
+                        return {
+                            canRetry: patientMode === 'baru' || hasNoRegistrasi,
+                            retryNoRm: patientMode === 'baru',
+                            retryNoRegistrasi: hasNoRegistrasi
+                        };
+                    }
+
                     async function allocateNoRmAtomic() {
                         if (noRmRpcAvailable !== false) {
                             try {
@@ -2386,7 +2430,8 @@
                                 }
                             }
                         }
-                        return await getNextSequentialNumber('no_rm');
+                        noRmRpcAvailable = false;
+                        throw buildMissingGeneratorError('Nomor RM', 'next_no_rm');
                     }
 
                     async function allocateNoRegistrasiAtomic() {
@@ -2411,7 +2456,8 @@
                                 }
                             }
                         }
-                        return await getNextSequentialNumber('no_registrasi', 'REG-');
+                        noRegistrasiRpcAvailable = false;
+                        throw buildMissingGeneratorError('Nomor registrasi', 'next_no_registrasi');
                     }
 
                     function escapeHtml(value) {
@@ -2839,6 +2885,7 @@
                     async function syncRegistrationLockWithCurrentQueue() {
                         if (!usesAutomaticQueueControls()) return;
                         if (!registrationLocked) return;
+                        if (isLoketScopeMissingForQueueControl('POLIKLINIK')) return;
 
                         const { startISO, endISO } = getTodayRangeISO();
                         const { data, error } = await withTimeout(
@@ -2948,6 +2995,16 @@
                             }
 
                             loadedOldPatient = data[0];
+                            const loadedNoRm = String(loadedOldPatient?.no_rm || '').trim();
+                            if (!loadedNoRm) {
+                                document.getElementById('no_rm').value = '';
+                                clearIdentityFields();
+                                loadedOldPatient = null;
+                                showLookupInfo('Data pasien lama ditemukan, tetapi No RM belum tersedia. Lengkapi No RM pasien tersebut di database terlebih dahulu atau daftarkan sebagai Pasien Baru.', 'error');
+                                return;
+                            }
+
+                            loadedOldPatient.no_rm = loadedNoRm;
                             document.getElementById('no_rm').value = loadedOldPatient.no_rm;
                             fillPatientFields(loadedOldPatient);
                             showLookupInfo(`Data pasien ditemukan: ${loadedOldPatient.nama_pasien}. Silakan cek data lalu simpan pendaftaran.`, 'success');
@@ -3135,6 +3192,26 @@
                         queueControlPanel.classList.remove('hidden');
                         queueFarmasiCard.classList.toggle('hidden', !isFarmasiControlRole());
                         queuePoliklinikCard.classList.toggle('hidden', isFarmasiControlRole());
+
+                        if (isLoketScopeMissingForQueueControl('POLIKLINIK')) {
+                            queueCurrentPoliklinik.textContent = '-';
+                            queueCurrentPoliklinikMeta.textContent = 'Akun ini belum memiliki loket aktif. Set loket_default menjadi A, B, atau C di admin_profiles.';
+                            nextPoliklinikBtn.disabled = true;
+                            if (recallPoliklinikBtn) recallPoliklinikBtn.disabled = true;
+                            skipPoliklinikBtn.disabled = true;
+                            if (nextPrioritasBtn) {
+                                nextPrioritasBtn.disabled = true;
+                                nextPrioritasBtn.classList.add('hidden');
+                            }
+                            callPrioritasPoliklinikBtn.disabled = true;
+                            const autoNoEl = document.getElementById('autoNoAntrian');
+                            const hiddenNoAntrian = document.getElementById('no_antrian');
+                            if (autoNoEl) autoNoEl.textContent = 'Loket belum diatur';
+                            if (hiddenNoAntrian) hiddenNoAntrian.value = '';
+                            unlockRegistrationIfQueueChanged('');
+                            return;
+                        }
+
                         const { startISO, endISO } = getTodayRangeISO();
                         const { data, error } = await supabaseClient
                             .from('antrian')
@@ -3304,6 +3381,7 @@
                         buttonEl.textContent = 'Memproses...';
 
                         try {
+                            ensureLoketScopeForQueueControl('POLIKLINIK');
                             const { startISO, endISO } = getTodayRangeISO();
 
                             const { data: activeCalled, error: calledError } = await withTimeout(
@@ -3492,6 +3570,7 @@
                         buttonEl.textContent = 'Memanggil...';
 
                         try {
+                            ensureLoketScopeForQueueControl(unit);
                             const { startISO, endISO } = getTodayRangeISO();
                             const { data, error } = await withTimeout(
                                 supabaseClient
@@ -3558,6 +3637,7 @@
                         buttonEl.textContent = 'Memproses...';
 
                         try {
+                            ensureLoketScopeForQueueControl(unit);
                             const { startISO, endISO } = getTodayRangeISO();
                             const isPoliklinik = unit === 'POLIKLINIK';
 
@@ -3718,6 +3798,7 @@
                         buttonEl.textContent = 'Memproses...';
 
                         try {
+                            ensureLoketScopeForQueueControl(unit);
                             const { startISO, endISO } = getTodayRangeISO();
                             const countPriorityWaiting = async () => {
                                 if (unit !== 'POLIKLINIK') return 0;
@@ -4029,6 +4110,11 @@
                                 throw new Error('Pilih Pasien Lama lalu cari NIK terlebih dahulu sampai data pasien ditemukan.');
                             }
 
+                            if (patientMode === 'lama') {
+                                no_rm = String(loadedOldPatient?.no_rm || no_rm).trim();
+                                document.getElementById('no_rm').value = no_rm;
+                            }
+
                             if (!nik) {
                                 throw new Error('NIK wajib diisi.');
                             }
@@ -4056,6 +4142,9 @@
                             }
 
                             if (!no_rm) {
+                                if (patientMode === 'lama') {
+                                    throw new Error('Data pasien lama ini belum memiliki No RM. Lengkapi No RM pasien lama di database terlebih dahulu atau daftarkan sebagai Pasien Baru.');
+                                }
                                 throw new Error('Nomor rekam medis belum tersedia. Silakan cek mode pasien lalu coba lagi.');
                             }
 
@@ -4178,20 +4267,33 @@
                                 }
 
                                 const msg = String(insertRes.error.message || '');
-                                const canRetry = patientMode === 'baru' && isUniqueViolationError(insertRes.error);
-                                if (!canRetry) {
+                                const retryPlan = getGeneratedNumberRetryPlan(insertRes.error, {
+                                    patientMode,
+                                    hasNoRegistrasi: noRegistrasiColumnAvailable
+                                });
+                                if (!retryPlan.canRetry) {
                                     throw new Error(msg);
                                 }
 
-                                reservedNoRm = await allocateNoRmAtomic();
-                                no_rm = reservedNoRm;
-                                pasienPayload.no_rm = no_rm;
-                                document.getElementById('no_rm').value = no_rm;
-                                noRmPreview.textContent = no_rm;
+                                if (retryPlan.retryNoRm) {
+                                    reservedNoRm = await allocateNoRmAtomic();
+                                    no_rm = reservedNoRm;
+                                    pasienPayload.no_rm = no_rm;
+                                    document.getElementById('no_rm').value = no_rm;
+                                    noRmPreview.textContent = no_rm;
+                                }
+
+                                if (retryPlan.retryNoRegistrasi) {
+                                    reservedNoRegistrasi = await allocateNoRegistrasiAtomic();
+                                    no_registrasi = reservedNoRegistrasi;
+                                    pasienPayload.no_registrasi = no_registrasi;
+                                    document.getElementById('no_registrasi').value = no_registrasi;
+                                    noRegistrasiPreview.textContent = no_registrasi;
+                                }
                             }
 
                             if (!inserted) {
-                                throw new Error('Gagal menyimpan karena nomor RM bentrok. Silakan coba lagi.');
+                                throw new Error('Gagal menyimpan karena nomor otomatis bentrok berulang. Silakan coba lagi.');
                             }
 
                             if (!isIgdRegistration) {
