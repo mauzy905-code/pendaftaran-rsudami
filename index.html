@@ -1101,7 +1101,15 @@
                         const key = getStaffStorageKey(profile);
                         if (!key) return '';
                         try {
-                            return normalizeStaffName(window.sessionStorage.getItem(key) || '');
+                            const stableValue = normalizeStaffName(window.localStorage.getItem(key) || '');
+                            if (stableValue) return stableValue;
+
+                            const legacyValue = normalizeStaffName(window.sessionStorage.getItem(key) || '');
+                            if (legacyValue) {
+                                window.localStorage.setItem(key, legacyValue);
+                                return legacyValue;
+                            }
+                            return '';
                         } catch (e) {
                             return '';
                         }
@@ -1111,7 +1119,7 @@
                         const key = getStaffStorageKey(profile);
                         if (!key) return;
                         try {
-                            window.sessionStorage.setItem(key, normalizeStaffName(name));
+                            window.localStorage.setItem(key, normalizeStaffName(name));
                         } catch (e) {}
                     }
 
@@ -1119,6 +1127,7 @@
                         const key = getStaffStorageKey(profile);
                         if (!key) return;
                         try {
+                            window.localStorage.removeItem(key);
                             window.sessionStorage.removeItem(key);
                         } catch (e) {}
                     }
