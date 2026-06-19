@@ -1707,6 +1707,7 @@
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Tgl Lahir</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">NIK</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No BPJS</th>
+                                    <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Alamat</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No Telepon</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Unit</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Jenis Pasien</th>
@@ -1718,7 +1719,6 @@
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Dokter</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Diagnosa</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Umur</th>
-                                    <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Alamat</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Riwayat & Hardfile</th>
                                 </tr>`
                                 : (scopedPetugasPoli
@@ -1742,6 +1742,7 @@
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Tgl Lahir</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">NIK</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No BPJS</th>
+                                        <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Alamat</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No Telepon</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Unit</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Jenis Pasien</th>
@@ -4636,7 +4637,7 @@
                         const isRme = isRmeRole();
                         const isPetugasPoli = isPetugasPoliScopedRekap();
                         if (!items || items.length === 0) {
-                            rEls.rows.innerHTML = `<tr><td class="px-4 py-6 text-slate-500" colspan="${isRme ? 20 : (isPetugasPoli ? 10 : 19)}">Tidak ada data.</td></tr>`;
+                            rEls.rows.innerHTML = `<tr><td class="px-4 py-6 text-slate-500" colspan="${isRme ? 20 : (isPetugasPoli ? 10 : 20)}">Tidak ada data.</td></tr>`;
                             return;
                         }
                         rEls.rows.innerHTML = items.map((p) => {
@@ -4692,6 +4693,7 @@
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${tglLahir}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${nik}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${noBpjs}</td>
+                                    <td class="px-4 py-2 text-slate-800 min-w-[220px] max-w-[320px] whitespace-normal break-words">${escapeHtml(alamat)}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${noTelepon}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${unit}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${jenisPasien}</td>
@@ -4703,7 +4705,6 @@
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${escapeHtml(String(dokter))}</td>
                                     <td class="px-4 py-2 text-slate-800 min-w-[240px] max-w-[320px] whitespace-normal break-words">${escapeHtml(String(diagnosa))}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${umur}</td>
-                                    <td class="px-4 py-2 text-slate-800 min-w-[220px] max-w-[320px] whitespace-normal break-words">${escapeHtml(alamat)}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${actionCell}</td>
                                 </tr>`;
                             }
@@ -4731,6 +4732,7 @@
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${tglLahir}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${nik}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${noBpjs}</td>
+                                <td class="px-4 py-2 text-slate-800 min-w-[220px] max-w-[320px] whitespace-normal break-words">${escapeHtml(alamat)}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${noTelepon}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${unit}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${jenisPasien}</td>
@@ -4827,6 +4829,7 @@
                                 'Tanggal Lahir': r_formatDateOnly(p.tanggal_lahir),
                                 'NIK': p.nik ?? '',
                                 'No BPJS': p.no_bpjs ?? '',
+                                'Alamat': p.alamat ?? '',
                                 'No Telepon': p.no_telepon ?? '',
                                 'Unit': r_unitLabel(p.unit),
                                 'Jenis Pasien': r_jenisPasienLabel(p.jenis_pasien),
