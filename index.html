@@ -1964,6 +1964,7 @@
                         const isRme = isRmeRole();
                         const isPetugasPoli = isPetugasPoliRole();
                         const scopedPetugasPoli = isPetugasPoliScopedRekap();
+                        const showSupervisorEditColumn = isSupervisorRole() && !isRme && !isPetugasPoli;
                         const titleEl = document.getElementById('rekapTitle');
                         const descEl = document.getElementById('rekapDescription');
                         const qLabelEl = document.getElementById('r_q_label');
@@ -2033,9 +2034,11 @@
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No RM</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">JK</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Tgl Lahir</th>
+                                    <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Umur</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">NIK</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No BPJS</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Alamat</th>
+                                    <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Riwayat & Hardfile</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No Telepon</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Unit</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Jenis Pasien</th>
@@ -2046,8 +2049,6 @@
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Petugas Poli</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Dokter</th>
                                     <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Diagnosa</th>
-                                    <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Umur</th>
-                                    <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Riwayat & Hardfile</th>
                                 </tr>`
                                 : (scopedPetugasPoli
                                     ? `<tr class="text-emerald-900">
@@ -2063,14 +2064,17 @@
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Riwayat</th>
                                     </tr>`
                                     : `<tr class="text-emerald-900">
+                                        ${showSupervisorEditColumn ? '<th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Edit Data</th>' : ''}
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Waktu Daftar</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Nama</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No RM</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">JK</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Tgl Lahir</th>
+                                        <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Umur</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">NIK</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No BPJS</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Alamat</th>
+                                        <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Riwayat</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">No Telepon</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Unit</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Jenis Pasien</th>
@@ -2081,8 +2085,6 @@
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Petugas Poli</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Dokter</th>
                                         <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Diagnosa</th>
-                                        <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Riwayat</th>
-                                        <th class="px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900/90 whitespace-nowrap">Umur</th>
                                     </tr>`);
                         }
                     }
@@ -5105,8 +5107,10 @@
                     function r_renderRows(items) {
                         const isRme = isRmeRole();
                         const isPetugasPoli = isPetugasPoliScopedRekap();
+                        const showSupervisorEditColumn = isSupervisorRole() && !isRme && !isPetugasPoli;
                         if (!items || items.length === 0) {
-                            rEls.rows.innerHTML = `<tr><td class="px-4 py-6 text-slate-500" colspan="${isRme ? 20 : (isPetugasPoli ? 10 : 20)}">Tidak ada data.</td></tr>`;
+                            const emptyColspan = isRme ? 20 : (isPetugasPoli ? 10 : (showSupervisorEditColumn ? 21 : 20));
+                            rEls.rows.innerHTML = `<tr><td class="px-4 py-6 text-slate-500" colspan="${emptyColspan}">Tidak ada data.</td></tr>`;
                             return;
                         }
                         rEls.rows.innerHTML = items.map((p) => {
@@ -5144,16 +5148,15 @@
                             const patientEditBtn = canEditPatientIdentity
                                 ? `<button type="button" class="patient-edit-btn inline-flex items-center justify-center rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-[11px] font-extrabold text-indigo-700 transition hover:bg-indigo-100 whitespace-nowrap" data-id="${escapeHtml(String(p.id || ''))}" data-no-rm="${escapeHtml(noRm)}" data-no-registrasi="${escapeHtml(noRegistrasi)}" data-nama="${escapeHtml(String(p.nama_pasien || ''))}" data-nik="${escapeHtml(String(p.nik || ''))}" data-bpjs="${escapeHtml(String(p.no_bpjs || ''))}" data-telepon="${escapeHtml(String(p.no_telepon || ''))}" data-jk="${escapeHtml(String(p.jenis_kelamin || ''))}" data-tanggal-lahir="${escapeHtml(String(p.tanggal_lahir || ''))}" data-alamat="${escapeHtml(String(p.alamat || ''))}">Edit Data</button>`
                                 : '';
+                            const editIdentityCell = patientEditBtn || `<span class="text-xs font-semibold text-slate-400">-</span>`;
                             const riwayatLinkCell = normalizedLink
                                 ? `<div class="flex items-center gap-2 whitespace-nowrap">
                                     ${examBtn}
-                                    ${patientEditBtn}
                                     <a href="${escapeHtml(normalizedLink)}" target="_blank" rel="noreferrer" class="inline-flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-extrabold text-emerald-800 transition hover:bg-emerald-100">Buka GDrive</a>
                                     <button type="button" class="history-btn inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-extrabold text-slate-700 transition hover:bg-slate-50" data-no-rm="${escapeHtml(noRm)}" data-nama="${escapeHtml(nama)}">Lihat Riwayat</button>
                                 </div>`
                                 : `<div class="flex items-center gap-2 whitespace-nowrap">
                                     ${examBtn}
-                                    ${patientEditBtn}
                                     <button type="button" class="history-btn inline-flex items-center justify-center rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-[11px] font-extrabold text-blue-700 transition hover:bg-blue-100 whitespace-nowrap" data-no-rm="${escapeHtml(noRm)}" data-nama="${escapeHtml(nama)}">Input Link</button>
                                 </div>`;
                             if (isRme) {
@@ -5166,9 +5169,11 @@
                                     <td class="px-4 py-2 font-semibold text-blue-700 whitespace-nowrap">${noRm}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${jk}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${tglLahir}</td>
+                                    <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${umur}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${nik}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${noBpjs}</td>
                                     <td class="px-4 py-2 text-slate-800 min-w-[220px] max-w-[320px] whitespace-normal break-words">${escapeHtml(alamat)}</td>
+                                    <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${actionCell}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${noTelepon}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${unit}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${jenisPasien}</td>
@@ -5179,8 +5184,6 @@
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${escapeHtml(String(petugasPoli))}</td>
                                     <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${escapeHtml(String(dokter))}</td>
                                     <td class="px-4 py-2 text-slate-800 min-w-[240px] max-w-[320px] whitespace-normal break-words">${escapeHtml(String(diagnosa))}</td>
-                                    <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${umur}</td>
-                                    <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${actionCell}</td>
                                 </tr>`;
                             }
                             if (isPetugasPoli) {
@@ -5200,14 +5203,17 @@
                                 </tr>`;
                             }
                             return `<tr class="odd:bg-white even:bg-slate-50/40 hover:bg-emerald-50/60 transition">
+                                ${showSupervisorEditColumn ? `<td class="px-4 py-2 text-slate-800 whitespace-nowrap">${editIdentityCell}</td>` : ''}
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${waktu}</td>
                                 <td class="px-4 py-2 text-slate-900 whitespace-nowrap">${namaButton}</td>
                                 <td class="px-4 py-2 font-semibold text-blue-700 whitespace-nowrap">${noRm}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${jk}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${tglLahir}</td>
+                                <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${umur}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${nik}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${noBpjs}</td>
                                 <td class="px-4 py-2 text-slate-800 min-w-[220px] max-w-[320px] whitespace-normal break-words">${escapeHtml(alamat)}</td>
+                                <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${riwayatLinkCell}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${noTelepon}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${unit}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${jenisPasien}</td>
@@ -5218,8 +5224,6 @@
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${escapeHtml(String(petugasPoli))}</td>
                                 <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${escapeHtml(String(dokter))}</td>
                                 <td class="px-4 py-2 text-slate-800 min-w-[240px] max-w-[320px] whitespace-normal break-words">${escapeHtml(String(diagnosa))}</td>
-                                <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${riwayatLinkCell}</td>
-                                <td class="px-4 py-2 text-slate-800 whitespace-nowrap">${umur}</td>
                             </tr>`;
                         }).join('');
                     }
