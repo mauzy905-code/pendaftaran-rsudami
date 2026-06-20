@@ -5110,6 +5110,18 @@
                     });
 
                     let realtimeStatsTimer = null;
+                    let realtimeRefreshInFlight = false;
+                    let realtimeRefreshPending = false;
+
+                    async function refreshVisibleDashboardSections() {
+                        await refreshStats();
+                        if (!viewPendaftaran.classList.contains('hidden') && !isSupervisorRole()) {
+                            await loadQueueControls();
+                        }
+                        if (!viewRekap.classList.contains('hidden')) {
+                            await r_loadPage(r_currentPage);
+                        }
+                    }
 
                     function scheduleRealtimeDashboardRefresh() {
                         if (realtimeStatsTimer) {
@@ -5117,18 +5129,26 @@
                         }
 
                         realtimeStatsTimer = window.setTimeout(async () => {
+                            if (document.hidden) return;
+                            if (realtimeRefreshInFlight) {
+                                realtimeRefreshPending = true;
+                                return;
+                            }
+                            realtimeRefreshInFlight = true;
                             try {
-                                await refreshStats();
-                                await loadQueueControls();
-                                if (!viewRekap.classList.contains('hidden')) {
-                                    await r_loadPage(r_currentPage);
-                                }
+                                await refreshVisibleDashboardSections();
                             } catch (err) {
                                 if (!viewRekap.classList.contains('hidden') && rEls?.meta) {
                                     rEls.meta.textContent = 'Gagal memuat data realtime: ' + (err?.message || String(err));
                                 }
+                            } finally {
+                                realtimeRefreshInFlight = false;
+                                if (realtimeRefreshPending) {
+                                    realtimeRefreshPending = false;
+                                    scheduleRealtimeDashboardRefresh();
+                                }
                             }
-                        }, 250);
+                        }, 500);
                     }
 
                     // Subscribe realtime untuk update antrian, status hari ini, dan rekap pasien
@@ -5148,7 +5168,7 @@
 
                     window.setInterval(() => {
                         scheduleRealtimeDashboardRefresh();
-                    }, 2000);
+                    }, 15000);
 
                     window.addEventListener('focus', () => {
                         scheduleRealtimeDashboardRefresh();
