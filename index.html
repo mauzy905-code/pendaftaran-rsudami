@@ -6558,8 +6558,8 @@
                                             <div class="gc-section-title">V. KEBUTUHAN PRIVASI PASIEN DAN HARAPAN PASIEN</div>
                                             <div class="gc-plain-paragraph">Saya memberikan ijin kepada RSUD Aji Muhammad Idris menjaga privasi pada saat wawancara, pemeriksaan, perawatan dan saat dipindahkan.</div>
                                             <div class="gc-line-row"><span>a. Harapan :</span><input id="gc_harapan_input" type="text" class="gc-input gc-line-entry" placeholder="................................................................................................................"></div>
-                                            <div class="gc-line-row"><span>b.</span><input id="gc_b_privasi_input" type="text" class="gc-input gc-line-entry" placeholder="................................................................................................................"></div>
-                                            <div class="gc-line-row"><span>c.</span><input id="gc_c_privasi_input" type="text" class="gc-input gc-line-entry" placeholder="................................................................................................................"></div>
+                                            <div class="gc-line-row gc-line-row-compact"><span>b.</span><input id="gc_b_privasi_input" type="text" class="gc-input gc-line-entry" placeholder="................................................................................................................"></div>
+                                            <div class="gc-line-row gc-line-row-compact"><span>c.</span><input id="gc_c_privasi_input" type="text" class="gc-input gc-line-entry" placeholder="................................................................................................................"></div>
                                         </div>
 
                                         <div class="gc-section">
@@ -6631,24 +6631,24 @@
                 }
                 .gc-header-box {
                     display: grid;
-                    grid-template-columns: 1fr 52mm;
-                    gap: 3mm;
+                    grid-template-columns: 1fr 49mm;
+                    gap: 2mm;
                     align-items: stretch;
                     border: 1.5px solid #111111;
-                    padding: 4mm 4mm 3.5mm;
+                    padding: 3.6mm 3.2mm 3.2mm;
                     margin-bottom: 3.2mm;
                 }
                 .gc-patient-col {
                     border-left: 1.5px solid #111111;
-                    padding-left: 2mm;
+                    padding-left: 1.4mm;
                     display: flex;
                     justify-content: flex-end;
                     align-items: flex-start;
                 }
                 .gc-header-left {
                     display: grid;
-                    grid-template-columns: 22mm 1fr;
-                    gap: 4mm;
+                    grid-template-columns: 19mm 1fr;
+                    gap: 3mm;
                     align-items: start;
                     padding-top: 1.5mm;
                 }
@@ -6659,12 +6659,13 @@
                     padding-top: 1mm;
                 }
                 .gc-logo {
-                    width: 18mm;
+                    width: 15.5mm;
                     height: auto;
                 }
                 .gc-header-center {
                     text-align: center;
                     line-height: 1.2;
+                    padding-right: 1mm;
                 }
                 .gc-header-line {
                     font-size: 10pt;
@@ -6686,9 +6687,11 @@
                 .gc-patient-box {
                     border: 1.5px solid #111111;
                     border-radius: 5mm;
-                    padding: 2.6mm 2.8mm;
+                    width: 47.5mm;
+                    padding: 2.2mm 2.1mm;
                     align-self: start;
                     margin-left: 0;
+                    box-sizing: border-box;
                 }
                 .gc-patient-meta,
                 .gc-identity-table,
@@ -6697,18 +6700,21 @@
                     width: 100%;
                     border-collapse: collapse;
                 }
+                .gc-patient-meta {
+                    table-layout: fixed;
+                }
                 .gc-patient-meta td {
-                    font-size: 8.6pt;
+                    font-size: 8.2pt;
                     padding: 0.3mm 0;
                     vertical-align: top;
                 }
                 .gc-patient-meta td:first-child {
-                    width: 22mm;
+                    width: 18.5mm;
                     font-weight: 700;
                     white-space: nowrap;
                 }
                 .gc-patient-meta td:nth-child(2) {
-                    width: 3mm;
+                    width: 2.5mm;
                 }
                 #gc_jk {
                     white-space: nowrap;
@@ -6832,6 +6838,10 @@
                     margin-top: 1.8mm;
                     margin-left: 6mm;
                 }
+                .gc-line-row-compact {
+                    grid-template-columns: 4mm 1fr;
+                    gap: 1mm;
+                }
                 .gc-line-fill {
                     display: block;
                     min-height: 5.5mm;
@@ -6941,13 +6951,13 @@
                         margin: 0;
                         width: auto;
                         min-height: auto;
-                        padding: 5mm 8mm 5mm;
+                    padding: 4mm 6mm 4mm;
                         box-shadow: none;
                         break-after: auto;
                         page-break-after: auto;
                     }
                     body[data-print-mode="general-consent"] .gc-sheet-break {
-                        padding-top: 4mm;
+                    padding-top: 2.5mm;
                     }
                     body[data-print-mode="general-consent"] .gc-body-box-second {
                         min-height: auto;
@@ -6961,11 +6971,39 @@
                         break-inside: avoid;
                         page-break-inside: avoid;
                     }
+                body[data-print-mode="general-consent"] .gc-body-box {
+                    padding: 2.3mm 2.8mm 2.5mm;
+                    font-size: 10pt;
+                    line-height: 1.28;
+                }
+                body[data-print-mode="general-consent"] .gc-section {
+                    margin-top: 1.6mm;
+                }
+                body[data-print-mode="general-consent"] .gc-section-title,
+                body[data-print-mode="general-consent"] .gc-paragraph,
+                body[data-print-mode="general-consent"] .gc-plain-paragraph {
+                    margin-bottom: 0.8mm;
+                }
                     body[data-print-mode="general-consent"] .gc-witness-input {
                         display: none !important;
                     }
                     body[data-print-mode="general-consent"] .gc-sign-space {
-                        height: 18mm;
+                    height: 12mm;
+                }
+                body[data-print-mode="general-consent"] .gc-sign-subrole {
+                    min-height: 4mm;
+                }
+                body[data-print-mode="general-consent"] .gc-signature-copy {
+                    margin-bottom: 4mm;
+                }
+                body[data-print-mode="general-consent"] .gc-signature-date {
+                    margin-bottom: 2.5mm;
+                }
+                body[data-print-mode="general-consent"] .gc-notes-label {
+                    margin-top: 4mm;
+                }
+                body[data-print-mode="general-consent"] .gc-note-line {
+                    min-height: 4.2mm;
                     }
                     body[data-print-mode="general-consent"] .gc-input {
                         -webkit-appearance: none;
