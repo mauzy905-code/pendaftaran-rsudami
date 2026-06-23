@@ -560,6 +560,9 @@
                                                 Cetak Printer Gelang
                                             </button>
                                         </div>
+                                        <button id="printGeneralConsentFromFormBtn" type="button" class="mt-4 w-full rounded-2xl border border-emerald-200 bg-white px-4 py-3 text-sm font-bold text-emerald-700 shadow-sm transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-50" disabled>
+                                            📝 Cetak General Consent
+                                        </button>
                                         <div class="mt-3 text-xs font-semibold text-slate-500">
                                             Pilih printer yang sesuai pada dialog print browser.
                                         </div>
@@ -2097,6 +2100,11 @@
                             registrationSectionDescription.textContent = '';
                             statsSectionTitle.textContent = 'Ringkasan Aktivitas UGD';
                             statsSectionDescription.textContent = 'Pantau status dan jumlah pasien UGD yang sudah masuk pada hari ini.';
+                            // Show General Consent button for UGD
+                            const gcBtn = document.getElementById('printGeneralConsentFromFormBtn');
+                            if (gcBtn) {
+                                gcBtn.parentElement.style.display = 'block';
+                            }
                         } else {
                             supervisorMenuLinks.classList.add('hidden');
                             drawerRoleEyebrow.textContent = 'SIM-AMI';
@@ -2118,6 +2126,11 @@
                             registrationSectionDescription.textContent = 'Lengkapi jenis pasien, poli tujuan, nomor antrean Poliklinik, lalu isi identitas pasien dengan cepat.';
                             statsSectionTitle.textContent = 'Ringkasan Aktivitas Poliklinik';
                             statsSectionDescription.textContent = 'Pantau status antrean Poliklinik dan jumlah pasien yang sudah masuk pada hari ini.';
+                            // Hide General Consent button for non-UGD
+                            const gcBtnNonUgd = document.getElementById('printGeneralConsentFromFormBtn');
+                            if (gcBtnNonUgd) {
+                                gcBtnNonUgd.parentElement.style.display = 'none';
+                            }
                         }
                         applyRekapRolePresentation();
                     }
@@ -5178,6 +5191,25 @@
                                 waktu_daftar
                             });
 
+                            // Save patient data for General Consent
+                            currentSavedPatientData = {
+                                nama_pasien,
+                                tanggal_lahir,
+                                jenis_kelamin,
+                                no_rm,
+                                no_registrasi,
+                                unit,
+                                no_antrian,
+                                alamat,
+                                no_telepon
+                            };
+
+                            // Enable General Consent button
+                            const gcBtn = document.getElementById('printGeneralConsentFromFormBtn');
+                            if (gcBtn) {
+                                gcBtn.disabled = false;
+                            }
+
                             if (patientMode === 'baru') {
                                 reservedNoRm = '';
                             }
@@ -5460,14 +5492,29 @@
                                 ? `<button type="button" class="patient-edit-btn inline-flex items-center justify-center rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-[11px] font-extrabold text-indigo-700 transition hover:bg-indigo-100 whitespace-nowrap" data-id="${escapeHtml(String(p.id || ''))}" data-no-rm="${escapeHtml(noRm)}" data-no-registrasi="${escapeHtml(noRegistrasi)}" data-nama="${escapeHtml(String(p.nama_pasien || ''))}" data-nik="${escapeHtml(String(p.nik || ''))}" data-bpjs="${escapeHtml(String(p.no_bpjs || ''))}" data-telepon="${escapeHtml(String(p.no_telepon || ''))}" data-jk="${escapeHtml(String(p.jenis_kelamin || ''))}" data-tanggal-lahir="${escapeHtml(String(p.tanggal_lahir || ''))}" data-alamat="${escapeHtml(String(p.alamat || ''))}">Edit Data</button>`
                                 : '';
                             const editIdentityCell = patientEditBtn || `<span class="text-xs font-semibold text-slate-400">-</span>`;
+                            const gcBtnRekap = isIgd
+                                ? `<button type="button" class="gc-btn inline-flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-extrabold text-emerald-800 transition hover:bg-emerald-100 whitespace-nowrap" data-patient='${escapeHtml(JSON.stringify({
+                                    nama_pasien: p.nama_pasien,
+                                    tanggal_lahir: p.tanggal_lahir,
+                                    jenis_kelamin: p.jenis_kelamin,
+                                    no_rm: p.no_rm,
+                                    no_registrasi: p.no_registrasi,
+                                    unit: p.unit,
+                                    no_antrian: p.no_antrian,
+                                    alamat: p.alamat,
+                                    no_telepon: p.no_telepon
+                                }))}'>General Consent</button>`
+                                : '';
                             const riwayatLinkCell = normalizedLink
                                 ? `<div class="flex items-center gap-2 whitespace-nowrap">
                                     ${examBtn}
+                                    ${gcBtnRekap}
                                     <a href="${escapeHtml(normalizedLink)}" target="_blank" rel="noreferrer" class="inline-flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-extrabold text-emerald-800 transition hover:bg-emerald-100">Buka GDrive</a>
                                     <button type="button" class="history-btn inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-extrabold text-slate-700 transition hover:bg-slate-50" data-no-rm="${escapeHtml(noRm)}" data-nama="${escapeHtml(nama)}">Lihat Riwayat</button>
                                 </div>`
                                 : `<div class="flex items-center gap-2 whitespace-nowrap">
                                     ${examBtn}
+                                    ${gcBtnRekap}
                                     <button type="button" class="history-btn inline-flex items-center justify-center rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-[11px] font-extrabold text-blue-700 transition hover:bg-blue-100 whitespace-nowrap" data-no-rm="${escapeHtml(noRm)}" data-nama="${escapeHtml(nama)}">${canManageDriveLink ? 'Input Link' : 'Lihat Riwayat'}</button>
                                 </div>`;
                             if (isRme) {
@@ -6069,6 +6116,187 @@
                         document.getElementById('statPasien').textContent = String(typeof pasienCount === 'number' ? pasienCount : '-');
                     }
 
+                    // General Consent Functions
+                    let currentPatientForConsent = null;
+
+                    function formatGeneralConsentDate(value) {
+                        if (!value) return '';
+                        const date = new Date(value);
+                        if (Number.isNaN(date.getTime())) return String(value);
+                        const dd = String(date.getDate()).padStart(2, '0');
+                        const mm = String(date.getMonth() + 1).padStart(2, '0');
+                        const yyyy = date.getFullYear();
+                        return `${dd}-${mm}-${yyyy}`;
+                    }
+
+                    function sanitizePhoneDigits(value) {
+                        return String(value || '').replace(/\D+/g, '');
+                    }
+
+                    function showGeneralConsentValidation(message = '') {
+                        const box = document.getElementById('gcValidationMessage');
+                        if (!box) return;
+                        if (!message) {
+                            box.textContent = '';
+                            box.classList.add('hidden');
+                            return;
+                        }
+                        box.textContent = message;
+                        box.classList.remove('hidden');
+                    }
+
+                    function validateGeneralConsentAuthorizers() {
+                        const auth1Name = String(document.getElementById('gc_auth1_name')?.value || '').trim();
+                        const auth1Relation = String(document.getElementById('gc_auth1_relation')?.value || '').trim();
+                        const auth1Phone = sanitizePhoneDigits(document.getElementById('gc_auth1_phone')?.value || '');
+                        const auth1HasAnyValue = Boolean(auth1Name || auth1Relation || auth1Phone);
+                        const auth1Complete = Boolean(auth1Name && auth1Relation && auth1Phone);
+                        const auth2Name = String(document.getElementById('gc_auth2_name')?.value || '').trim();
+                        const auth2Relation = String(document.getElementById('gc_auth2_relation')?.value || '').trim();
+                        const auth2Phone = sanitizePhoneDigits(document.getElementById('gc_auth2_phone')?.value || '');
+                        const auth2HasAnyValue = Boolean(auth2Name || auth2Relation || auth2Phone);
+                        const auth2Complete = Boolean(auth2Name && auth2Relation && auth2Phone);
+                        if (auth1HasAnyValue && !auth1Complete) {
+                            showGeneralConsentValidation('Jika pemberi wewenang 1 diisi, nama, hubungan, dan nomor telepon harus dilengkapi semua.');
+                            return false;
+                        }
+                        if (auth2HasAnyValue && !auth2Complete) {
+                            showGeneralConsentValidation('Jika pemberi wewenang 2 diisi, nama, hubungan, dan nomor telepon harus dilengkapi semua.');
+                            return false;
+                        }
+                        showGeneralConsentValidation('');
+                        return true;
+                    }
+
+                    function updateGeneralConsentAuthorizers() {
+                        const patientName = currentPatientForConsent?.nama_pasien || '';
+                        const auth1Name = String(document.getElementById('gc_auth1_name')?.value || '').trim();
+                        const auth1Relation = String(document.getElementById('gc_auth1_relation')?.value || '').trim();
+                        const auth1PhoneInput = document.getElementById('gc_auth1_phone');
+                        const auth2PhoneInput = document.getElementById('gc_auth2_phone');
+                        const auth1Phone = sanitizePhoneDigits(auth1PhoneInput?.value || '');
+                        const auth2Name = String(document.getElementById('gc_auth2_name')?.value || '').trim();
+                        const auth2Relation = String(document.getElementById('gc_auth2_relation')?.value || '').trim();
+                        const auth2Phone = sanitizePhoneDigits(auth2PhoneInput?.value || '');
+                        const hubunganSelect = document.getElementById('gc_hubungan_select');
+                        if (auth1PhoneInput && auth1PhoneInput.value !== auth1Phone) auth1PhoneInput.value = auth1Phone;
+                        if (auth2PhoneInput && auth2PhoneInput.value !== auth2Phone) auth2PhoneInput.value = auth2Phone;
+
+                        document.getElementById('gc_keluarga_1').textContent = auth1Name;
+                        document.getElementById('gc_hubungan_1').textContent = auth1Relation;
+                        document.getElementById('gc_telp_1').textContent = auth1Phone;
+                        document.getElementById('gc_keluarga_2').textContent = auth2Name;
+                        document.getElementById('gc_hubungan_2').textContent = auth2Relation;
+                        document.getElementById('gc_telp_2').textContent = auth2Phone;
+                        document.getElementById('gc_sign_primary_name').textContent = auth1Name || patientName || '';
+                        document.getElementById('gc_sign_witness_name').textContent = auth2Name || '';
+                        document.getElementById('gc_sign_admin_name').textContent = getCurrentOperatorName() || '';
+                        document.getElementById('gc_sign_admin_label').textContent = getCurrentOperatorName() || '-';
+
+                        if (hubunganSelect) {
+                            hubunganSelect.value = auth1Relation || '';
+                        }
+                        validateGeneralConsentAuthorizers();
+                    }
+
+                    function fillGeneralConsentForm(patientData) {
+                        currentPatientForConsent = patientData;
+                        const formattedBirthDate = formatGeneralConsentDate(patientData.tanggal_lahir || '');
+                        
+                        // Header data
+                        document.getElementById('gc_no_rm').textContent = patientData.no_rm || '';
+                        document.getElementById('gc_nama').textContent = patientData.nama_pasien || '';
+                        document.getElementById('gc_jk').textContent = patientData.jenis_kelamin || '';
+                        document.getElementById('gc_tgl_lahir').textContent = formattedBirthDate;
+                        
+                        // Tanda tangan section (same as patient for now)
+                        document.getElementById('gc_nama_ttd').textContent = patientData.nama_pasien || '';
+                        document.getElementById('gc_tgl_lahir_ttd').textContent = formattedBirthDate;
+                        document.getElementById('gc_alamat_ttd').textContent = patientData.alamat || '';
+                        document.getElementById('gc_telepon_ttd').textContent = patientData.no_telepon || '';
+                        const hubunganSelect = document.getElementById('gc_hubungan_select');
+                        if (hubunganSelect) hubunganSelect.value = '';
+                        const auth1NameInput = document.getElementById('gc_auth1_name');
+                        const auth1RelationInput = document.getElementById('gc_auth1_relation');
+                        const auth1PhoneInput = document.getElementById('gc_auth1_phone');
+                        const auth2NameInput = document.getElementById('gc_auth2_name');
+                        const auth2RelationInput = document.getElementById('gc_auth2_relation');
+                        const auth2PhoneInput = document.getElementById('gc_auth2_phone');
+                        if (auth1NameInput) auth1NameInput.value = '';
+                        if (auth1RelationInput) auth1RelationInput.value = '';
+                        if (auth1PhoneInput) auth1PhoneInput.value = '';
+                        if (auth2NameInput) auth2NameInput.value = '';
+                        if (auth2RelationInput) auth2RelationInput.value = '';
+                        if (auth2PhoneInput) auth2PhoneInput.value = '';
+                        showGeneralConsentValidation('');
+                        updateGeneralConsentAuthorizers();
+                        
+                        // Tanggal
+                        const today = new Date();
+                        const dd = String(today.getDate()).padStart(2, '0');
+                        const mm = String(today.getMonth() + 1).padStart(2, '0');
+                        const yyyy = today.getFullYear();
+                        document.getElementById('gc_tanggal').textContent = `${dd} ${mm} ${yyyy}`;
+                    }
+
+                    function openGeneralConsentModal(patientData) {
+                        fillGeneralConsentForm(patientData);
+                        document.getElementById('generalConsentModal').classList.remove('hidden');
+                    }
+
+                    function closeGeneralConsentModal() {
+                        document.getElementById('generalConsentModal').classList.add('hidden');
+                        currentPatientForConsent = null;
+                    }
+
+                    function printGeneralConsent() {
+                        if (!validateGeneralConsentAuthorizers()) return;
+                        window.print();
+                    }
+
+                    // Event listeners for General Consent
+                    document.getElementById('closeGeneralConsentModal').addEventListener('click', closeGeneralConsentModal);
+                    document.getElementById('printGeneralConsentBtn').addEventListener('click', printGeneralConsent);
+
+                    ['gc_auth1_name', 'gc_auth1_relation', 'gc_auth1_phone', 'gc_auth2_name', 'gc_auth2_relation', 'gc_auth2_phone'].forEach((id) => {
+                        const el = document.getElementById(id);
+                        if (!el) return;
+                        el.addEventListener('input', updateGeneralConsentAuthorizers);
+                        el.addEventListener('change', updateGeneralConsentAuthorizers);
+                    });
+
+                    // Button from form
+                    document.getElementById('printGeneralConsentFromFormBtn').addEventListener('click', function() {
+                        if (!isIgdRole()) return;
+                        if (currentSavedPatientData) {
+                            openGeneralConsentModal(currentSavedPatientData);
+                        }
+                    });
+
+                    // Close modal when clicking outside
+                    document.getElementById('generalConsentModal').addEventListener('click', function(e) {
+                        if (e.target === this || e.target.classList.contains('bg-slate-900')) {
+                            closeGeneralConsentModal();
+                        }
+                    });
+
+                    // Event listener for General Consent buttons in rekap table
+                    document.getElementById('r_rows').addEventListener('click', function(e) {
+                        const btn = e.target.closest('.gc-btn');
+                        if (btn) {
+                            if (!isIgdRole()) return;
+                            try {
+                                const patientData = JSON.parse(btn.dataset.patient);
+                                openGeneralConsentModal(patientData);
+                            } catch (err) {
+                                console.error('Error parsing patient data:', err);
+                            }
+                        }
+                    });
+
+                    // Store last saved patient data
+                    let currentSavedPatientData = null;
+
                     (async function bootstrap() {
                         await withPageLoading('Menyiapkan Dashboard...', async () => {
                             const session = await requireSession();
@@ -6096,5 +6324,535 @@
                 }
             });
         </script>
+
+        <!-- General Consent Template -->
+        <div id="generalConsentModal" class="fixed inset-0 z-[100] hidden">
+            <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm"></div>
+            <div class="relative min-h-full flex items-center justify-center p-4">
+                <div class="w-full max-w-4xl max-h-[90vh] overflow-auto bg-white rounded-[28px] shadow-2xl">
+                    <div class="sticky top-0 bg-white border-b border-slate-200 p-4 flex items-center justify-between">
+                        <div>
+                            <div class="text-sm font-extrabold uppercase tracking-[0.22em] text-emerald-700">General Consent</div>
+                            <div class="text-lg font-black text-slate-900">Formulir Persetujuan Umum</div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button id="printGeneralConsentBtn" type="button" class="rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-black text-white shadow-sm transition hover:bg-emerald-700">
+                                🖨️ Cetak
+                            </button>
+                            <button id="closeGeneralConsentModal" type="button" class="rounded-2xl border border-slate-300 bg-white px-4 py-2 text-sm font-black text-slate-700 shadow-sm transition hover:bg-slate-50">
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 bg-slate-100">
+                        <div id="gcValidationMessage" class="mb-4 hidden rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800"></div>
+                        <div id="generalConsentForm" class="gc-document">
+                            <section class="gc-sheet">
+                                <div class="gc-vertical-label">PERSETUJUAN UMUM / GENERAL CONSENT</div>
+                                <div class="gc-header-box">
+                                    <div class="gc-header-left">
+                                        <div class="gc-logo-wrap">
+                                            <img src="assets/image/logo-rsud.png" alt="Logo RSUD" class="gc-logo">
+                                        </div>
+                                        <div class="gc-header-center">
+                                            <div class="gc-header-line">PEMERINTAH KABUPATEN KUTAI KARTANEGARA</div>
+                                            <div class="gc-header-line gc-header-strong">DINAS KESEHATAN</div>
+                                            <div class="gc-header-line gc-header-strong">UNIT ORGANISASI BERSIFAT KHUSUS</div>
+                                            <div class="gc-header-title">RUMAH SAKIT UMUM DAERAH AJI MUHAMMAD IDRIS</div>
+                                            <div class="gc-header-address">Jalan Pramuka Muara Badak-Mangkujoyo, RT 02 Sambutan Jembatan, Desa Tanjung Limau</div>
+                                            <div class="gc-header-address">Kecamatan Muara Badak, Kode Pos 75382, Pos-el: rsudajimuhammadidris@gmail.com</div>
+                                        </div>
+                                    </div>
+                                    <div class="gc-patient-box">
+                                        <table class="gc-patient-meta">
+                                            <tr><td>Nomor RM</td><td>:</td><td id="gc_no_rm"></td></tr>
+                                            <tr><td>Nama</td><td>:</td><td id="gc_nama"></td></tr>
+                                            <tr><td>Jenis Kelamin</td><td>:</td><td id="gc_jk"></td></tr>
+                                            <tr><td>Tanggal Lahir</td><td>:</td><td id="gc_tgl_lahir"></td></tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="gc-title-box">PERSETUJUAN UMUM / GENERAL CONSENT RAWAT JALAN</div>
+                                <div class="gc-subtitle">PASIEN DAN ATAU WALI DIMINTA MEMBACA, MEMAHAMI DAN MENGERTI PERNYATAAN BERIKUT</div>
+
+                                <div class="gc-body-box">
+                                    <table class="gc-identity-table">
+                                        <tr><td class="gc-label-wide">Yang bertanda tangan dibawah ini</td><td class="gc-colon">:</td><td></td></tr>
+                                        <tr><td>Nama</td><td class="gc-colon">:</td><td id="gc_nama_ttd"></td></tr>
+                                        <tr><td>Tanggal lahir</td><td class="gc-colon">:</td><td id="gc_tgl_lahir_ttd"></td></tr>
+                                        <tr><td>Alamat</td><td class="gc-colon gc-align-top">:</td><td id="gc_alamat_ttd"></td></tr>
+                                        <tr><td>Telepon</td><td class="gc-colon">:</td><td id="gc_telepon_ttd"></td></tr>
+                                        <tr>
+                                            <td>Hubungan</td>
+                                            <td class="gc-colon">:</td>
+                                            <td>
+                                                <select id="gc_hubungan_select" class="gc-input gc-input-inline">
+                                                    <option value="">Pilih Hubungan</option>
+                                                    <option value="Suami">Suami</option>
+                                                    <option value="Istri">Istri</option>
+                                                    <option value="Anak">Anak</option>
+                                                    <option value="Orang Tua">Orang Tua</option>
+                                                    <option value="Wali">Wali</option>
+                                                    <option value="Keluarga">Keluarga</option>
+                                                    <option value="Pasien Sendiri">Pasien Sendiri</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <div class="gc-section">
+                                        <div class="gc-section-title">I. PERSETUJUAN UNTUK PERAWATAN DAN PENGOBATAN</div>
+                                        <div class="gc-paragraph"><span class="gc-bullet">a.</span>Saya mengetahui bahwa saya membutuhkan pengobatan, saya memberi izin kepada RSUD Aji Muhammad Idris, dokter dan profesi kesehatan lainnya untuk melakukan prosedur diagnostik dan untuk memberikan pengobatan medis yang diperlukan untuk penilaian secara profesional. Prosedur diagnostik dan perawatan medis termasuk tetapi tidak terbatas pada ECG, X-Ray, pemeriksaan laboratorium atau pemeriksaan patologi, terapi fisik, pemberian dan penyuntikan produk farmasi dan obat-obatan, pemasangan alat keseharian (kecuali yang membutuhkan persetujuan khusus).</div>
+                                        <div class="gc-paragraph"><span class="gc-bullet">b.</span>Saya mengerti dan memahami bahwa :</div>
+                                        <div class="gc-number-row"><span>1.</span><span>Saya memberikan izin kepada Pegawai Magang / Orientasi yang ada di RSUD Aji Muhammad Idris untuk berpartisipasi dalam pemberian asuhan sebagai bagian dari pendidikan / pelatihan dengan pengawasan atau supervisi.</span></div>
+                                        <div class="gc-number-row"><span>2.</span><span>Saya telah mendapat penjelasan dari dokter tentang rencana asuhan dan hasil asuhan yang diharapkan.</span></div>
+                                    </div>
+
+                                    <div class="gc-section">
+                                        <div class="gc-section-title">II. BARANG-BARANG MILIK PASIEN</div>
+                                        <div class="gc-paragraph"><span class="gc-bullet">a.</span>Saya telah memahami bahwa rumah sakit tidak bertanggung jawab atas semua kehilangan barang-barang milik saya, dan saya secara pribadi bertanggung jawab terhadap barang berharga yang saya miliki diantaranya uang, perhiasan, buku cek, <i>handphone</i>, kartu kredit serta barang-barang lainnya. Dan apabila saya membutuhkan maka saya dapat menitipkan barang-barang saya kepada rumah sakit.</div>
+                                        <div class="gc-paragraph"><span class="gc-bullet">b.</span>Saya juga mengerti bahwa saya harus memberitahu/menitipkan pada rumah sakit jika saya memiliki gigi palsu, kaca mata, lensa kontak, <i>prosthetic</i>, atau barang lainnya yang perlu diamankan.</div>
+                                    </div>
+
+                                    <div class="gc-section">
+                                        <div class="gc-section-title">III. PERSETUJUAN PELEPASAN INFORMASI MEDIS</div>
+                                        <div class="gc-paragraph"><span class="gc-bullet">a.</span>Saya memberi wewenang kepada rumah sakit untuk memberikan informasi tentang diagnosa, hasil pelayanan kesehatan dan pengobatan saya bila diperlukan untuk memproses klaim asuransi / BPJS / perusahaan / perorangan atau lembaga lain yang bertanggung jawab atas biaya pelayanan kesehatan saya dan atau lembaga pemerintah yang berwenang.</div>
+                                        <div class="gc-paragraph"><span class="gc-bullet">b.</span>Saya memberi wewenang kepada rumah sakit untuk memberi informasi tentang diagnosa, hasil pelayanan kesehatan dan pengobatan saya kepada anggota keluarga saya, yaitu kepada :</div>
+                                        <table class="gc-family-table">
+                                            <tr>
+                                                <td>1.</td>
+                                                <td><input id="gc_auth1_name" type="text" class="gc-input gc-line-input" placeholder="Nama pemberi wewenang 1"></td>
+                                                <td>
+                                                    <select id="gc_auth1_relation" class="gc-input gc-line-input">
+                                                        <option value="">Pilih hubungan</option>
+                                                        <option value="Suami">Suami</option>
+                                                        <option value="Istri">Istri</option>
+                                                        <option value="Anak">Anak</option>
+                                                        <option value="Orang Tua">Orang Tua</option>
+                                                        <option value="Wali">Wali</option>
+                                                        <option value="Keluarga">Keluarga</option>
+                                                        <option value="Pasien Sendiri">Pasien Sendiri</option>
+                                                    </select>
+                                                </td>
+                                                <td><input id="gc_auth1_phone" type="text" inputmode="tel" class="gc-input gc-line-input" placeholder="No Telp"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>2.</td>
+                                                <td><input id="gc_auth2_name" type="text" class="gc-input gc-line-input" placeholder="Nama pemberi wewenang 2"></td>
+                                                <td>
+                                                    <select id="gc_auth2_relation" class="gc-input gc-line-input">
+                                                        <option value="">Pilih hubungan</option>
+                                                        <option value="Suami">Suami</option>
+                                                        <option value="Istri">Istri</option>
+                                                        <option value="Anak">Anak</option>
+                                                        <option value="Orang Tua">Orang Tua</option>
+                                                        <option value="Wali">Wali</option>
+                                                        <option value="Keluarga">Keluarga</option>
+                                                        <option value="Pasien Sendiri">Pasien Sendiri</option>
+                                                    </select>
+                                                </td>
+                                                <td><input id="gc_auth2_phone" type="text" inputmode="tel" class="gc-input gc-line-input" placeholder="No Telp"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="gc-sheet gc-sheet-break">
+                                <div class="gc-body-box gc-body-box-second">
+                                    <div class="gc-section">
+                                        <div class="gc-section-title">IV. HAK DAN KEWAJIBAN PASIEN</div>
+                                        <div class="gc-paragraph"><span class="gc-bullet">a.</span>Saya memiliki hak untuk mengambil bagian dalam keputusan mengenai penyakit saya dan dalam hal perawatan medis dan rencana pengobatan.</div>
+                                        <div class="gc-paragraph"><span class="gc-bullet">b.</span>Saya telah mendapat informasi tentang Hak dan Kewajiban pasien di RSUD Aji Muhammad Idris melalui <i>leaflet</i> dan <i>banner</i> yang disediakan oleh petugas.</div>
+                                    </div>
+
+                                    <div class="gc-section">
+                                        <div class="gc-section-title">V. KEBUTUHAN PRIVASI PASIEN DAN HARAPAN PASIEN</div>
+                                        <div class="gc-plain-paragraph">Saya memberikan ijin kepada RSUD Aji Muhammad Idris menjaga privasi pada saat wawancara, pemeriksaan, perawatan dan saat dipindahkan.</div>
+                                        <div class="gc-line-row"><span>a. Harapan :</span><span class="gc-line-fill" id="gc_harapan"></span></div>
+                                        <div class="gc-line-row"><span>b.</span><span class="gc-line-fill" id="gc_b_privasi"></span></div>
+                                        <div class="gc-line-row"><span>c.</span><span class="gc-line-fill" id="gc_c_privasi"></span></div>
+                                    </div>
+
+                                    <div class="gc-section">
+                                        <div class="gc-section-title">VI. INFORMASI BIAYA</div>
+                                        <div class="gc-plain-paragraph">Saya memahami tentang informasi biaya pengobatan atau biaya tindakan medis yang dijelaskan oleh petugas rumah sakit maka saya wajib untuk membayar total biaya perawatan yang diberikan sesuai acuan biaya dan ketentuan RSUD Aji Muhammad Idris dengan jaminan atau pribadi.</div>
+                                    </div>
+
+                                    <div class="gc-signature-block">
+                                        <div class="gc-signature-title">TANDA TANGAN</div>
+                                        <div class="gc-signature-copy">Dengan tanda tangan saya dibawah ini, saya menyatakan bahwa saya telah membaca dan memahami yang tercantum pada persetujuan umum/<i>General consent</i> :</div>
+                                        <div class="gc-signature-date">Muara Badak, <span id="gc_tanggal"></span></div>
+
+                                        <table class="gc-sign-table">
+                                            <tr>
+                                                <td>
+                                                    <div class="gc-sign-role">Yang menyatakan:</div>
+                                                    <div class="gc-sign-subrole">Pasien/Wali. Hub.Keluarga .....</div>
+                                                    <div class="gc-sign-space"></div>
+                                                    <div class="gc-sign-line">(<span id="gc_sign_primary_name"></span>)</div>
+                                                    <div class="gc-sign-note">Nama Lengkap Dan Tanda tangan</div>
+                                                </td>
+                                                <td>
+                                                    <div class="gc-sign-role">Saksi I</div>
+                                                    <div class="gc-sign-subrole">Keluarga pasien</div>
+                                                    <div class="gc-sign-space"></div>
+                                                    <div class="gc-sign-line">(<span id="gc_sign_witness_name"></span>)</div>
+                                                    <div class="gc-sign-note">Nama Lengkap Dan Tanda tangan</div>
+                                                </td>
+                                                <td>
+                                                    <div class="gc-sign-role">Petugas Admisi</div>
+                                                    <div class="gc-sign-subrole">Petugas aktif: <span id="gc_sign_admin_label"></span></div>
+                                                    <div class="gc-sign-space"></div>
+                                                    <div class="gc-sign-line">(<span id="gc_sign_admin_name"></span>)</div>
+                                                    <div class="gc-sign-note">Nama Lengkap Dan Tanda tangan</div>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <div class="gc-notes-label">Catatan :</div>
+                                        <div class="gc-note-line"></div>
+                                        <div class="gc-note-line"></div>
+                                        <div class="gc-note-line"></div>
+                                        <div class="gc-note-line"></div>
+                                        <div class="gc-note-line"></div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .gc-document {
+                font-family: "Times New Roman", serif;
+                color: #111827;
+            }
+            .gc-sheet {
+                position: relative;
+                width: 210mm;
+                min-height: 297mm;
+                margin: 0 auto 12mm;
+                padding: 14mm 11mm 12mm;
+                background: #ffffff;
+                box-shadow: 0 18px 50px -24px rgba(15, 23, 42, 0.35);
+                box-sizing: border-box;
+            }
+            .gc-sheet-break {
+                padding-top: 10mm;
+            }
+            .gc-vertical-label {
+                position: absolute;
+                right: -7mm;
+                top: 110mm;
+                transform: rotate(90deg);
+                transform-origin: top right;
+                font-size: 11pt;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+                white-space: nowrap;
+                color: #111111;
+            }
+            .gc-header-box {
+                display: grid;
+                grid-template-columns: 1fr 62mm;
+                gap: 6mm;
+                align-items: stretch;
+                border: 1.5px solid #111111;
+                padding: 4mm 4mm 3.5mm;
+                margin-bottom: 5mm;
+            }
+            .gc-header-left {
+                display: grid;
+                grid-template-columns: 22mm 1fr;
+                gap: 4mm;
+                align-items: start;
+            }
+            .gc-logo-wrap {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding-top: 2mm;
+            }
+            .gc-logo {
+                width: 18mm;
+                height: auto;
+            }
+            .gc-header-center {
+                text-align: center;
+                line-height: 1.2;
+            }
+            .gc-header-line {
+                font-size: 10pt;
+            }
+            .gc-header-strong {
+                font-weight: 700;
+            }
+            .gc-header-title {
+                font-size: 12pt;
+                font-weight: 700;
+                margin-top: 1mm;
+            }
+            .gc-header-address {
+                font-size: 7.8pt;
+                margin-top: 0.6mm;
+            }
+            .gc-patient-box {
+                border: 1.5px solid #111111;
+                border-radius: 5mm;
+                padding: 3.2mm 3.5mm;
+                align-self: start;
+            }
+            .gc-patient-meta,
+            .gc-identity-table,
+            .gc-family-table,
+            .gc-sign-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .gc-patient-meta td {
+                font-size: 9.2pt;
+                padding: 0.4mm 0;
+                vertical-align: top;
+            }
+            .gc-patient-meta td:first-child {
+                width: 23mm;
+                font-weight: 700;
+            }
+            .gc-patient-meta td:nth-child(2) {
+                width: 3mm;
+            }
+            .gc-title-box {
+                border: 1.5px solid #111111;
+                text-align: center;
+                padding: 3.2mm 3mm;
+                font-size: 13pt;
+                font-weight: 700;
+                margin-bottom: 1.8mm;
+            }
+            .gc-subtitle {
+                text-align: center;
+                font-size: 11.2pt;
+                font-weight: 700;
+                margin-bottom: 1.4mm;
+                text-transform: uppercase;
+                line-height: 1.2;
+            }
+            .gc-body-box {
+                border: 1.5px solid #111111;
+                padding: 3.5mm 4mm 4mm;
+                font-size: 11pt;
+                line-height: 1.45;
+            }
+            .gc-body-box-second {
+                min-height: 260mm;
+            }
+            .gc-identity-table {
+                margin-bottom: 2.4mm;
+            }
+            .gc-identity-table td {
+                padding: 0.8mm 0;
+                vertical-align: top;
+            }
+            .gc-label-wide {
+                width: 43mm;
+            }
+            .gc-colon {
+                width: 4mm;
+                text-align: center;
+            }
+            .gc-align-top {
+                vertical-align: top;
+            }
+            .gc-input-inline {
+                width: 58mm;
+                font: inherit;
+                border: none;
+                border-bottom: 1px dotted #111111;
+                background: transparent;
+                padding: 0;
+                outline: none;
+            }
+            .gc-section {
+                margin-top: 3.2mm;
+            }
+            .gc-section-title {
+                font-weight: 700;
+                margin-bottom: 1.2mm;
+            }
+            .gc-paragraph,
+            .gc-plain-paragraph {
+                text-align: justify;
+                margin-bottom: 1.4mm;
+            }
+            .gc-paragraph {
+                padding-left: 5.5mm;
+                text-indent: -4.3mm;
+            }
+            .gc-bullet {
+                display: inline-block;
+                width: 4.3mm;
+                font-weight: 700;
+            }
+            .gc-number-row {
+                display: grid;
+                grid-template-columns: 6mm 1fr;
+                gap: 1mm;
+                margin-left: 8mm;
+                margin-bottom: 1.1mm;
+                text-align: justify;
+            }
+            .gc-family-table {
+                margin-top: 1.2mm;
+                margin-left: 7mm;
+                font-size: 10.8pt;
+            }
+            .gc-family-table td {
+                padding: 0.7mm 1mm 0.7mm 0;
+                vertical-align: top;
+            }
+            .gc-family-table td:first-child {
+                width: 6mm;
+            }
+            .gc-line-input {
+                width: 100%;
+                font: inherit;
+                border: none;
+                border-bottom: 1px dotted #111111;
+                background: transparent;
+                padding: 0 0 0.4mm;
+                outline: none;
+            }
+            select.gc-line-input {
+                cursor: pointer;
+            }
+            .gc-line-row {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                gap: 2mm;
+                align-items: end;
+                margin-top: 1.8mm;
+                margin-left: 6mm;
+            }
+            .gc-line-fill {
+                display: block;
+                min-height: 5.5mm;
+                border-bottom: 1px dotted #111111;
+            }
+            .gc-signature-block {
+                margin-top: 7mm;
+            }
+            .gc-signature-title {
+                font-weight: 700;
+                margin-bottom: 1.4mm;
+            }
+            .gc-signature-copy {
+                margin-bottom: 8mm;
+            }
+            .gc-signature-date {
+                margin-bottom: 5mm;
+            }
+            .gc-sign-table td {
+                width: 33.33%;
+                text-align: center;
+                vertical-align: top;
+                padding: 0 2mm;
+            }
+            .gc-sign-role {
+                font-size: 11pt;
+            }
+            .gc-sign-subrole {
+                font-size: 10.5pt;
+                min-height: 10mm;
+            }
+            .gc-sign-space {
+                height: 24mm;
+            }
+            .gc-sign-line {
+                font-size: 11pt;
+                white-space: nowrap;
+                min-height: 5mm;
+            }
+            .gc-sign-note {
+                font-size: 8.5pt;
+                margin-top: 1mm;
+            }
+            .gc-notes-label {
+                font-size: 9.5pt;
+                margin-top: 8mm;
+                margin-bottom: 1mm;
+            }
+            .gc-note-line {
+                border-bottom: 1px dotted #111111;
+                min-height: 7mm;
+            }
+            @media print {
+                @page {
+                    size: A4 portrait;
+                    margin: 0;
+                }
+                body * {
+                    visibility: hidden;
+                }
+                #generalConsentModal, #generalConsentModal * {
+                    visibility: visible;
+                }
+                #generalConsentModal {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: auto;
+                    background: white !important;
+                }
+                #generalConsentModal > div:first-child {
+                    display: none;
+                }
+                #generalConsentModal > div:last-child > div:first-child {
+                    display: none;
+                }
+                #generalConsentModal > div:last-child,
+                #generalConsentModal > div:last-child > div {
+                    display: block;
+                    min-height: auto;
+                    max-height: none;
+                    overflow: visible;
+                    box-shadow: none;
+                    border-radius: 0;
+                    background: white;
+                }
+                #generalConsentModal .sticky {
+                    display: none !important;
+                }
+                #generalConsentModal .p-6 {
+                    padding: 0 !important;
+                    background: white !important;
+                }
+                #gcValidationMessage {
+                    display: none !important;
+                }
+                .gc-sheet {
+                    margin: 0;
+                    box-shadow: none;
+                    page-break-after: always;
+                }
+                .gc-sheet:last-child {
+                    page-break-after: auto;
+                }
+                .gc-input {
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    border: none !important;
+                    background: transparent !important;
+                }
+                select.gc-input {
+                    pointer-events: none;
+                }
+            }
+        </style>
     </body>
-    </html>
+</html>
