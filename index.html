@@ -6367,13 +6367,15 @@
                                             <div class="gc-header-address">Kec. Muara Badak, Kode Pos 75382, Pos-el: rsudajimuhammadidris@gmail.com</div>
                                         </div>
                                     </div>
-                                    <div class="gc-patient-box">
-                                        <table class="gc-patient-meta">
-                                            <tr><td>Nomor RM</td><td>:</td><td id="gc_no_rm"></td></tr>
-                                            <tr><td>Nama</td><td>:</td><td id="gc_nama"></td></tr>
-                                            <tr><td>Jenis Kelamin</td><td>:</td><td id="gc_jk"></td></tr>
-                                            <tr><td>Tanggal Lahir</td><td>:</td><td id="gc_tgl_lahir"></td></tr>
-                                        </table>
+                                    <div class="gc-patient-col">
+                                        <div class="gc-patient-box">
+                                            <table class="gc-patient-meta">
+                                                <tr><td>Nomor RM</td><td>:</td><td id="gc_no_rm"></td></tr>
+                                                <tr><td>Nama</td><td>:</td><td id="gc_nama"></td></tr>
+                                                <tr><td>Jenis Kelamin</td><td>:</td><td id="gc_jk"></td></tr>
+                                                <tr><td>Tanggal Lahir</td><td>:</td><td id="gc_tgl_lahir"></td></tr>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -6532,7 +6534,7 @@
 
         <style>
             .gc-document {
-                font-family: "Times New Roman", serif;
+                font-family: Arial, sans-serif;
                 color: #111827;
             }
             .gc-sheet {
@@ -6562,12 +6564,19 @@
             }
             .gc-header-box {
                 display: grid;
-                grid-template-columns: 1fr 62mm;
-                gap: 6mm;
+                grid-template-columns: 1fr 54mm;
+                gap: 0;
                 align-items: stretch;
                 border: 1.5px solid #111111;
                 padding: 4mm 4mm 3.5mm;
                 margin-bottom: 5mm;
+            }
+            .gc-patient-col {
+                border-left: 1.5px solid #111111;
+                padding-left: 4mm;
+                display: flex;
+                justify-content: flex-end;
+                align-items: flex-start;
             }
             .gc-header-left {
                 display: grid;
@@ -6596,21 +6605,22 @@
                 font-weight: 700;
             }
             .gc-header-title {
-                font-size: 11.5pt;
+                font-size: 11pt;
                 font-weight: 700;
                 margin-top: 1mm;
                 white-space: nowrap;
             }
             .gc-header-address {
-                font-size: 7.2pt;
-                margin-top: 0.6mm;
+                font-size: 7pt;
+                margin-top: 0.4mm;
                 white-space: nowrap;
             }
             .gc-patient-box {
                 border: 1.5px solid #111111;
                 border-radius: 5mm;
-                padding: 3.2mm 3.5mm;
+                padding: 2.6mm 2.8mm;
                 align-self: start;
+                margin-left: 0;
             }
             .gc-patient-meta,
             .gc-identity-table,
@@ -6620,12 +6630,12 @@
                 border-collapse: collapse;
             }
             .gc-patient-meta td {
-                font-size: 9.2pt;
-                padding: 0.4mm 0;
+                font-size: 8.6pt;
+                padding: 0.3mm 0;
                 vertical-align: top;
             }
             .gc-patient-meta td:first-child {
-                width: 23mm;
+                width: 20mm;
                 font-weight: 700;
             }
             .gc-patient-meta td:nth-child(2) {
@@ -6822,9 +6832,6 @@
                     background: white !important;
                 }
                 body[data-print-mode="general-consent"] #generalConsentModal > div:first-child {
-                    display: none;
-                }
-                body[data-print-mode="general-consent"] #generalConsentModal > div:last-child > div:first-child {
                     display: none;
                 }
                 body[data-print-mode="general-consent"] #generalConsentModal > div:last-child,
