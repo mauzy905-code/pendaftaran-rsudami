@@ -6389,7 +6389,7 @@
                             if (!validateGeneralConsentAuthorizers()) return;
                             activePrintMode = 'general-consent';
                             document.body.setAttribute('data-print-mode', 'general-consent');
-                            setPrintPageSize('A4');
+                            setPrintPageSize('210mm 330mm');
                             window.setTimeout(() => window.print(), 30);
                         }
 
@@ -6692,7 +6692,7 @@
                 .gc-sheet {
                     position: relative;
                     width: 210mm;
-                    min-height: 297mm;
+                    min-height: 330mm;
                     margin: 0 auto 12mm;
                     padding: 7.5mm 11mm 7mm;
                     background: #ffffff;
