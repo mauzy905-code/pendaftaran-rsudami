@@ -443,7 +443,7 @@
                                                     </button>
                                                 </div>
                                             </div>
-                                            <div id="pasienLookupInfo" class="hidden rounded-2xl border px-4 py-3 text-sm font-semibold"></div>
+                                            <div id="pasienLookupInfo" class="hidden whitespace-pre-line rounded-2xl border px-4 py-3 text-sm font-semibold"></div>
                                         </div>
 
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -3768,7 +3768,7 @@
                                 loadedOldPatient.no_rm = loadedNoRm;
                                 document.getElementById('no_rm').value = loadedOldPatient.no_rm;
                                 fillPatientFields(loadedOldPatient);
-                                showLookupInfo(`Data pasien ditemukan: ${loadedOldPatient.nama_pasien}. Silakan cek data lalu simpan pendaftaran.`, 'success');
+                                showLookupInfo(`Data pasien ditemukan.\nNama: ${loadedOldPatient.nama_pasien}\nNo RM: ${loadedOldPatient.no_rm}\nSilakan cek data lalu simpan pendaftaran.`, 'success');
                             } catch (err) {
                                 showLookupInfo('Gagal mencari data pasien lama: ' + (err?.message || String(err)), 'error');
                             } finally {
