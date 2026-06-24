@@ -5606,6 +5606,7 @@
                                 .from('pasien')
                                 .select('*', { count: 'exact' })
                                 .order('created_at', { ascending: false })
+                                .order('id', { ascending: false })
                                 .range(from, to)
                             );
 
@@ -5652,6 +5653,7 @@
                                         .from('pasien')
                                         .select('*')
                                         .order('created_at', { ascending: false })
+                                        .order('id', { ascending: false })
                                 );
 
                                 if (error) {
