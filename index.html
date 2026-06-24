@@ -6126,6 +6126,17 @@
 
                         // General Consent Functions
                         let currentPatientForConsent = null;
+                    const GENERAL_CONSENT_ADMIN_NAME_OPTIONS = [
+                        'Filotia Natasya Tjow',
+                        'Nurhalisa',
+                        'Anggie Kharimatul Khazanah',
+                        'Nur Asiah',
+                        'Muliati',
+                        'Meri Andani',
+                        'Ivadra Friesta Sondakh',
+                        'El Ghoiena Nadhifa Futri',
+                        'Andi Heppi Wahyuni'
+                    ];
 
                         function formatGeneralConsentDate(value) {
                             if (!value) return '';
@@ -6144,6 +6155,61 @@
                         function isGeneralConsentPatientSelfRelation(value) {
                             return String(value || '').trim().toLowerCase() === 'pasien sendiri';
                         }
+
+                    function buildGeneralConsentAdminNameOptions() {
+                        const select = document.getElementById('gc_admin_name_select');
+                        if (!select) return;
+
+                        const activeName = String(getCurrentOperatorName() || '').trim();
+                        const extraNames = Array.isArray(GENERAL_CONSENT_ADMIN_NAME_OPTIONS) ? GENERAL_CONSENT_ADMIN_NAME_OPTIONS : [];
+                        const candidateNames = [activeName, ...extraNames]
+                            .map((x) => String(x || '').trim())
+                            .filter(Boolean);
+
+                        const uniqueNames = [];
+                        const seen = new Set();
+                        for (const name of candidateNames) {
+                            const key = name.toLowerCase();
+                            if (seen.has(key)) continue;
+                            seen.add(key);
+                            uniqueNames.push(name);
+                        }
+
+                        const previousValue = String(select.value || '').trim();
+                        select.innerHTML = '';
+
+                        if (uniqueNames.length === 0) {
+                            const opt = document.createElement('option');
+                            opt.value = '';
+                            opt.textContent = 'Pilih Petugas';
+                            select.appendChild(opt);
+                            select.value = '';
+                            return;
+                        }
+
+                        for (const name of uniqueNames) {
+                            const opt = document.createElement('option');
+                            opt.value = name;
+                            opt.textContent = name;
+                            select.appendChild(opt);
+                        }
+
+                        if (previousValue && uniqueNames.some((x) => x.toLowerCase() === previousValue.toLowerCase())) {
+                            const preserved = uniqueNames.find((x) => x.toLowerCase() === previousValue.toLowerCase());
+                            select.value = preserved;
+                        } else if (activeName && uniqueNames.some((x) => x.toLowerCase() === activeName.toLowerCase())) {
+                            const matched = uniqueNames.find((x) => x.toLowerCase() === activeName.toLowerCase());
+                            select.value = matched;
+                        } else {
+                            select.value = uniqueNames[0];
+                        }
+                    }
+
+                    function getSelectedGeneralConsentAdminName() {
+                        const select = document.getElementById('gc_admin_name_select');
+                        const picked = String(select?.value || '').trim();
+                        return picked || String(getCurrentOperatorName() || '').trim();
+                    }
 
                         function showGeneralConsentValidation(message = '') {
                             const box = document.getElementById('gcValidationMessage');
@@ -6266,7 +6332,7 @@
                             if (signerPhoneInput && signerPhoneInput.value !== signerPhone) signerPhoneInput.value = signerPhone;
                             document.getElementById('gc_sign_primary_name').textContent = signerName || currentPatientForConsent?.nama_pasien || '';
                             document.getElementById('gc_sign_witness_name').textContent = witnessName || '';
-                            document.getElementById('gc_sign_admin_name').textContent = getCurrentOperatorName() || '';
+                        document.getElementById('gc_sign_admin_name').textContent = getSelectedGeneralConsentAdminName();
                             validateGeneralConsentAuthorizers();
                         }
 
@@ -6290,6 +6356,7 @@
                             const auth2RelationInput = document.getElementById('gc_auth2_relation');
                             const auth2PhoneInput = document.getElementById('gc_auth2_phone');
                             const witnessInput = document.getElementById('gc_saksi_manual');
+                        buildGeneralConsentAdminNameOptions();
                             if (auth1NameInput) auth1NameInput.value = '';
                             if (auth1RelationInput) auth1RelationInput.value = '';
                             if (auth1PhoneInput) auth1PhoneInput.value = '';
@@ -6348,6 +6415,7 @@
                         });
                         document.getElementById('gc_saksi_manual')?.addEventListener('input', updateGeneralConsentAuthorizers);
                         document.getElementById('gc_saksi_manual')?.addEventListener('change', updateGeneralConsentAuthorizers);
+                    document.getElementById('gc_admin_name_select')?.addEventListener('change', updateGeneralConsentAuthorizers);
 
                         // Button from form
                         document.getElementById('printGeneralConsentFromFormBtn').addEventListener('click', function() {
@@ -6591,7 +6659,9 @@
                                                     </td>
                                                     <td>
                                                         <div class="gc-sign-role">Petugas Admisi</div>
-                                                        <div class="gc-sign-subrole">&nbsp;</div>
+                                                        <div class="gc-sign-subrole">
+                                                            <select id="gc_admin_name_select" class="gc-input gc-line-input gc-signer-input gc-admin-select"></select>
+                                                        </div>
                                                         <div class="gc-sign-space"></div>
                                                         <div class="gc-sign-line">(<span id="gc_sign_admin_name"></span>)</div>
                                                         <div class="gc-sign-note">Nama Lengkap Dan Tanda tangan</div>
@@ -6779,6 +6849,10 @@
                 }
                 .gc-witness-input {
                     margin-top: 1.4mm;
+                }
+                .gc-admin-select {
+                    width: 100%;
+                    text-align: center;
                 }
                 .gc-section {
                     margin-top: 2.4mm;
@@ -6975,6 +7049,9 @@
                         page-break-inside: avoid;
                     }
                     body[data-print-mode="general-consent"] .gc-witness-input {
+                        display: none !important;
+                    }
+                    body[data-print-mode="general-consent"] .gc-admin-select {
                         display: none !important;
                     }
                     body[data-print-mode="general-consent"] .gc-input {
