@@ -7104,7 +7104,10 @@
                                         <div class="triage-p1-section triage-p1-section-border">
                                             <div class="triage-neuro-bar">
                                                 <div class="triage-neuro-title">Status Neurologi (D)</div>
-                                                <div class="triage-neuro-total">Total skor GCS (Glasgow Coma Scale) : <span class="triage-neuro-line"></span></div>
+                                                <div class="triage-neuro-total-line">
+                                                    <span class="triage-neuro-total-label">Total skor GCS (Glasgow Coma Scale) :</span>
+                                                    <input id="t_gcs_total_manual" type="text" class="triage-input triage-neuro-total-input" placeholder="">
+                                                </div>
                                             </div>
                                             <div class="triage-gcs-grid">
                                                 <div class="triage-gcs-col">
@@ -7999,30 +8002,32 @@
                 .triage-neuro-bar {
                     border: 1.5px solid #111111;
                     border-top: none;
-                    display: grid;
-                    grid-template-columns: 1fr 1.2fr;
+                    display: flex;
+                    flex-direction: column;
                     align-items: center;
-                    padding: 0.8mm 1.2mm;
-                    gap: 1.2mm;
+                    justify-content: center;
+                    padding: 0.9mm 1.2mm;
+                    gap: 0.55mm;
                 }
                 .triage-neuro-title {
                     font-weight: 400;
                     text-align: center;
                     font-size: 9pt;
                 }
-                .triage-neuro-total {
-                    font-weight: 700 !important;
+                .triage-neuro-total-line {
                     font-size: 9pt;
                     display: inline-flex;
                     align-items: baseline;
                     gap: 1mm;
                     white-space: nowrap;
                 }
-                .triage-neuro-line {
-                    flex: 1;
-                    border-bottom: 1px dotted #111111;
-                    height: 0;
-                    margin-left: 0.6mm;
+                .triage-neuro-total-label {
+                    font-weight: 700 !important;
+                }
+                .triage-neuro-total-input {
+                    width: 44mm;
+                    padding-bottom: 0.3mm;
+                    text-align: left;
                 }
                 .triage-gcs-grid {
                     border: 1.5px solid #111111;
