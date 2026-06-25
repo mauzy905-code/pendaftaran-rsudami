@@ -6515,12 +6515,12 @@
                             if (flaccCryScore) flaccCryScore.textContent = '';
                             const flaccConsolabilityScore = document.getElementById('t_flacc_consolability_score');
                             if (flaccConsolabilityScore) flaccConsolabilityScore.textContent = '';
-                            document.getElementById('t_wb_score').textContent = '0';
+                            document.getElementById('t_wb_score').textContent = '';
                             document.getElementById('t_morse_total').textContent = '0';
                             const morseDup = document.getElementById('t_morse_total_dup');
                             if (morseDup) morseDup.textContent = '0';
                             applyTriaseMorseRisk(0);
-                            applyTriaseWongBakerSelection(0);
+                            applyTriaseWongBakerSelection(null);
                         }
 
                         function getCheckedRadioValue(name) {
@@ -6546,24 +6546,52 @@
                             if (flaccCryScore) flaccCryScore.textContent = cry ? String(cry) : '';
                             const flaccConsolabilityScore = document.getElementById('t_flacc_consolability_score');
                             if (flaccConsolabilityScore) flaccConsolabilityScore.textContent = consolability ? String(consolability) : '';
-                            applyTriaseWongBakerFromFlacc(total);
                             return total;
                         }
 
-                        function mapFlaccToWongBakerScore(total) {
-                            return Math.max(0, Math.min(10, Number(total) || 0));
+                        function normalizeTriaseWongBakerScore(score) {
+                            const n = Number(score);
+                            if (!Number.isFinite(n)) return 0;
+                            return Math.max(0, Math.min(10, Math.round(n)));
                         }
 
                         function applyTriaseWongBakerSelection(score) {
-                            const normalized = mapFlaccToWongBakerScore(score);
+                            if (score === null || score === undefined || score === '') {
+                                document.querySelectorAll('#triageUgdForm [data-wb-ind]').forEach((el) => {
+                                    el.classList.remove('triage-wb-ind-active');
+                                });
+                                document.getElementById('t_wb_score').textContent = '';
+                                return;
+                            }
+                            const normalized = normalizeTriaseWongBakerScore(score);
                             document.querySelectorAll('#triageUgdForm [data-wb-ind]').forEach((el) => {
                                 el.classList.toggle('triage-wb-ind-active', Number(el.dataset.wbInd) === normalized);
                             });
                             document.getElementById('t_wb_score').textContent = String(normalized);
                         }
 
-                        function applyTriaseWongBakerFromFlacc(total) {
-                            applyTriaseWongBakerSelection(mapFlaccToWongBakerScore(total));
+                        function setTriaseWongBakerScore(score) {
+                            const normalized = normalizeTriaseWongBakerScore(score);
+                            const currentText = String(document.getElementById('t_wb_score')?.textContent || '').trim();
+                            const current = currentText === '' ? null : normalizeTriaseWongBakerScore(currentText);
+                            if (current !== null && current === normalized && normalized !== 0) {
+                                applyTriaseWongBakerSelection(null);
+                                return;
+                            }
+                            applyTriaseWongBakerSelection(normalized);
+                        }
+
+                        function initTriaseWongBakerPicker() {
+                            document.querySelectorAll('#triageUgdForm [data-wb-score]').forEach((el) => {
+                                el.addEventListener('click', () => {
+                                    setTriaseWongBakerScore(el.dataset.wbScore);
+                                });
+                            });
+                            document.querySelectorAll('#triageUgdForm [data-wb-ind]').forEach((el) => {
+                                el.addEventListener('click', () => {
+                                    setTriaseWongBakerScore(el.dataset.wbInd);
+                                });
+                            });
                         }
 
                         function computeTriaseMorseTotal() {
@@ -6727,6 +6755,7 @@
                         });
                         initTriaseToggleableRadios();
                         initTriaseExclusiveChecks();
+                        initTriaseWongBakerPicker();
 
                         // Store last saved patient data
                         let currentSavedPatientData = null;
@@ -8617,6 +8646,7 @@
                 .triage-page2 .triage-wb-face {
                     padding: 0.7mm 0.6mm 0.5mm;
                     text-align: center;
+                    cursor: pointer;
                 }
                 .triage-page2 .triage-wb-svg {
                     height: 10mm;
@@ -8644,6 +8674,7 @@
                     height: 6mm;
                     border-right: 1px solid #111111;
                     color: #111111;
+                    cursor: pointer;
                 }
                 .triage-page2 .triage-wb-ind:last-child {
                     border-right: none;
