@@ -6981,7 +6981,7 @@
                                                 <span class="triage-p1-label">Jam datang</span>
                                                 <span>:</span>
                                                 <input id="t_jam_datang" type="text" class="triage-input triage-p1-input-time" placeholder="..........................">
-                                                <span>WITA</span>
+                                                <span class="triage-p1-wita">WITA</span>
                                             </div>
                                         </div>
 
@@ -7134,6 +7134,7 @@
                                             </div>
                                             <div class="triage-p1-sign">
                                                 <div class="triage-p1-sign-title">Tanda Tangan Petugas Triase</div>
+                                                <input id="t_petugas_triase" type="text" class="triage-input triage-p1-sign-input" placeholder="Nama petugas triase">
                                                 <div class="triage-p1-sign-line"></div>
                                             </div>
                                         </div>
@@ -7807,47 +7808,50 @@
                 .triage-p1-datetime {
                     display: grid;
                     grid-template-columns: 1fr 1fr;
-                    gap: 4mm;
-                    padding: 2mm 2.5mm;
+                    gap: 2.5mm;
+                    padding: 1.5mm 2mm;
                     border-bottom: 1.5px solid #111111;
-                    font-size: 10.5pt;
-                    font-weight: 700;
+                    font-size: 10pt;
+                    font-weight: 400;
                 }
                 .triage-p1-line {
                     display: inline-flex;
                     align-items: baseline;
-                    gap: 1.6mm;
+                    gap: 0.9mm;
                     white-space: nowrap;
                 }
                 .triage-p1-label {
-                    font-weight: 800;
+                    font-weight: 400;
                 }
                 .triage-p1-input-date {
-                    width: 80mm;
+                    width: 76mm;
                 }
                 .triage-p1-input-time {
-                    width: 55mm;
+                    width: 42mm;
+                }
+                .triage-p1-wita {
+                    margin-left: -0.2mm;
                 }
                 .triage-p1-section {
-                    padding: 2.2mm 2.5mm 2.6mm;
+                    padding: 1.5mm 2mm 1.8mm;
                 }
                 .triage-p1-section-border {
                     border-top: 1.5px solid #111111;
                 }
                 .triage-p1-section-last {
-                    padding-bottom: 3.2mm;
+                    padding-bottom: 1.8mm;
                 }
                 .triage-p1-vital-title {
-                    font-weight: 900;
-                    font-size: 10.5pt;
-                    margin-bottom: 1.4mm;
+                    font-weight: 400;
+                    font-size: 10pt;
+                    margin-bottom: 0.8mm;
                 }
                 .triage-p1-vital-grid {
                     display: grid;
                     grid-template-columns: repeat(4, 1fr);
-                    gap: 1.4mm 4mm;
-                    font-size: 10.3pt;
-                    font-weight: 700;
+                    gap: 0.8mm 3mm;
+                    font-size: 9.7pt;
+                    font-weight: 400;
                 }
                 .triage-p1-vital-item {
                     display: inline-flex;
@@ -7858,37 +7862,37 @@
                 .triage-p1-vital-label {
                     width: 10mm;
                     display: inline-block;
-                    font-weight: 800;
+                    font-weight: 400;
                 }
                 .triage-p1-vital-input {
-                    width: 20mm;
+                    width: 17mm;
                 }
                 .triage-p1-subtitle {
-                    margin-top: 2.4mm;
-                    font-weight: 900;
-                    font-size: 10.5pt;
+                    margin-top: 1.6mm;
+                    font-weight: 400;
+                    font-size: 10pt;
                 }
                 .triage-p1-ph-grid {
-                    margin-top: 1.6mm;
+                    margin-top: 0.8mm;
                     display: grid;
                     grid-template-columns: 1.1fr 1fr 1fr;
-                    gap: 3mm;
+                    gap: 2mm;
                 }
                 .triage-p1-ph-col {
                     display: grid;
-                    gap: 1.2mm;
+                    gap: 0.7mm;
                 }
                 .triage-p1-check {
-                    font-size: 10.2pt;
-                    font-weight: 700;
+                    font-size: 9.6pt;
+                    font-weight: 400;
                 }
                 .triage-p1-ph-other {
                     display: grid;
-                    gap: 1mm;
+                    gap: 0.6mm;
                 }
                 .triage-p1-ph-lines {
                     display: grid;
-                    gap: 1mm;
+                    gap: 0.6mm;
                     padding-left: 5mm;
                 }
                 .triage-p1-ph-line {
@@ -7900,16 +7904,16 @@
                     border: 1.5px solid #111111;
                 }
                 .triage-abc-cell {
-                    padding: 2mm 2mm;
+                    padding: 1.4mm 1.6mm;
                     border-right: 1.5px solid #111111;
-                    min-height: 22mm;
+                    min-height: 18mm;
                 }
                 .triage-abc-cell:nth-child(5n) {
                     border-right: none;
                 }
                 .triage-abc-label {
-                    font-weight: 900;
-                    font-size: 10.2pt;
+                    font-weight: 400;
+                    font-size: 9.8pt;
                     text-align: center;
                     display: flex;
                     align-items: center;
@@ -7917,12 +7921,12 @@
                     line-height: 1.1;
                 }
                 .triage-abc-mini-title {
-                    font-weight: 900;
-                    margin-bottom: 1mm;
-                    font-size: 10.2pt;
+                    font-weight: 400;
+                    margin-bottom: 0.6mm;
+                    font-size: 9.7pt;
                 }
                 .triage-abc-mini-title-spaced {
-                    margin-top: 1.6mm;
+                    margin-top: 1mm;
                 }
                 .triage-abc-border-top {
                     border-top: 1.5px solid #111111;
@@ -7938,7 +7942,7 @@
                     height: 100%;
                 }
                 .triage-abc-subcol {
-                    padding: 2mm 2mm;
+                    padding: 1.4mm 1.6mm;
                 }
                 .triage-abc-subcol-border {
                     border-left: 1.5px solid #111111;
@@ -7949,17 +7953,17 @@
                     display: grid;
                     grid-template-columns: 1fr 1.2fr;
                     align-items: center;
-                    padding: 1.6mm 2mm;
+                    padding: 1.2mm 1.6mm;
                     gap: 2mm;
                 }
                 .triage-neuro-title {
-                    font-weight: 900;
+                    font-weight: 400;
                     text-align: center;
-                    font-size: 10.5pt;
+                    font-size: 10pt;
                 }
                 .triage-neuro-total {
-                    font-weight: 800;
-                    font-size: 10.3pt;
+                    font-weight: 400;
+                    font-size: 9.8pt;
                     display: inline-flex;
                     align-items: baseline;
                     gap: 1mm;
@@ -7978,18 +7982,18 @@
                     grid-template-columns: 1fr 1fr 1fr;
                 }
                 .triage-gcs-col {
-                    padding: 1.8mm 2mm 2.2mm;
+                    padding: 1.2mm 1.6mm 1.4mm;
                     border-right: 1.5px solid #111111;
                 }
                 .triage-gcs-col:last-child {
                     border-right: none;
                 }
                 .triage-gcs-head {
-                    font-weight: 900;
+                    font-weight: 400;
                     text-decoration: underline;
                     text-underline-offset: 2px;
-                    font-size: 10.2pt;
-                    margin-bottom: 1.2mm;
+                    font-size: 9.7pt;
+                    margin-bottom: 0.6mm;
                     text-align: center;
                 }
                 .triage-triase-grid {
@@ -7998,15 +8002,15 @@
                     border: 1.5px solid #111111;
                 }
                 .triage-triase-label {
-                    font-weight: 900;
+                    font-weight: 400;
                     text-align: center;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     border-right: 1.5px solid #111111;
-                    font-size: 10.5pt;
+                    font-size: 9.9pt;
                     line-height: 1.2;
-                    padding: 2mm 1mm;
+                    padding: 1.4mm 1mm;
                 }
                 .triage-triase-table {
                     display: grid;
@@ -8015,7 +8019,7 @@
                     display: grid;
                     grid-template-columns: 10mm 14mm 1fr;
                     border-bottom: 1.5px solid #111111;
-                    min-height: 14mm;
+                    min-height: 11mm;
                 }
                 .triage-triase-row:last-child {
                     border-bottom: none;
@@ -8030,14 +8034,14 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-weight: 900;
+                    font-weight: 400;
                     border-right: 1.5px solid #111111;
                 }
                 .triage-triase-desc {
-                    padding: 1.6mm 2mm;
-                    font-size: 9.8pt;
-                    font-weight: 700;
-                    line-height: 1.25;
+                    padding: 1mm 1.6mm;
+                    font-size: 9.2pt;
+                    font-weight: 400;
+                    line-height: 1.18;
                 }
                 .triage-triase-p1 {
                     background: #ef4444;
@@ -8056,13 +8060,18 @@
                     color: #ffffff;
                 }
                 .triage-p1-sign {
-                    margin-top: 4mm;
+                    margin-top: 2mm;
                     text-align: center;
                 }
                 .triage-p1-sign-title {
-                    font-weight: 900;
-                    font-size: 10.5pt;
-                    margin-bottom: 10mm;
+                    font-weight: 400;
+                    font-size: 9.8pt;
+                    margin-bottom: 2.5mm;
+                }
+                .triage-p1-sign-input {
+                    width: 60mm;
+                    margin: 0 auto 6mm;
+                    display: block;
                 }
                 .triage-p1-sign-line {
                     width: 60mm;
