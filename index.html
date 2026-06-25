@@ -6475,15 +6475,35 @@
                             document.getElementById('t_tgl_lahir').textContent = formattedBirthDate;
                         }
 
+                        function formatTriaseDate(date = new Date()) {
+                            const d = date instanceof Date ? date : new Date();
+                            if (Number.isNaN(d.getTime())) return '';
+                            const dd = String(d.getDate()).padStart(2, '0');
+                            const mm = String(d.getMonth() + 1).padStart(2, '0');
+                            const yyyy = d.getFullYear();
+                            return `${dd}-${mm}-${yyyy}`;
+                        }
+
+                        function formatTriaseTime(date = new Date()) {
+                            const d = date instanceof Date ? date : new Date();
+                            if (Number.isNaN(d.getTime())) return '';
+                            const hh = String(d.getHours()).padStart(2, '0');
+                            const min = String(d.getMinutes()).padStart(2, '0');
+                            return `${hh}:${min}`;
+                        }
+
                         function resetTriaseUgdForm() {
-                            document.getElementById('t_tanggal_pemeriksaan').value = '';
-                            document.getElementById('t_jam_datang').value = '';
+                            const now = new Date();
+                            document.getElementById('t_tanggal_pemeriksaan').value = formatTriaseDate(now);
+                            document.getElementById('t_jam_datang').value = formatTriaseTime(now);
                             document.querySelectorAll('#triageUgdForm input[type="checkbox"], #triageUgdForm input[type="radio"]').forEach((el) => {
                                 el.checked = false;
                             });
                             document.querySelectorAll('#triageUgdForm input[type="text"], #triageUgdForm input[type="number"], #triageUgdForm textarea').forEach((el) => {
                                 el.value = '';
                             });
+                            document.getElementById('t_tanggal_pemeriksaan').value = formatTriaseDate(now);
+                            document.getElementById('t_jam_datang').value = formatTriaseTime(now);
                             document.getElementById('t_flacc_total').textContent = '0';
                             document.getElementById('t_wb_score').textContent = '0';
                             document.getElementById('t_morse_total').textContent = '0';
@@ -8048,6 +8068,30 @@
                     width: 60mm;
                     margin: 0 auto;
                     border-bottom: 1.2px solid #111111;
+                }
+                .triage-sheet .gc-header-left {
+                    grid-template-columns: 22mm 1fr;
+                    gap: 2mm;
+                }
+                .triage-sheet .gc-logo-wrap {
+                    justify-content: flex-end;
+                    padding-top: 1.6mm;
+                }
+                .triage-sheet .gc-logo {
+                    width: 19mm;
+                }
+                .triage-sheet .gc-header-center {
+                    padding-right: 0;
+                    padding-left: 1mm;
+                }
+                .triage-sheet .gc-header-line {
+                    font-size: 10.8pt;
+                }
+                .triage-sheet .gc-header-title {
+                    font-size: 12.2pt;
+                }
+                .triage-sheet .gc-header-address {
+                    font-size: 7.6pt;
                 }
                 .triage-section-title {
                     font-weight: 800;
