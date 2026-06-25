@@ -6609,6 +6609,19 @@
                             window.setTimeout(() => window.print(), 30);
                         }
 
+                        function initTriaseToggleableRadios() {
+                            document.querySelectorAll('#triageUgdForm input[type="radio"]').forEach((el) => {
+                                el.addEventListener('mousedown', function() {
+                                    this.dataset.wasChecked = this.checked ? '1' : '0';
+                                });
+                                el.addEventListener('click', function() {
+                                    if (this.dataset.wasChecked !== '1') return;
+                                    this.checked = false;
+                                    this.dispatchEvent(new Event('change', { bubbles: true }));
+                                });
+                            });
+                        }
+
                         // Event listeners for General Consent
                         document.getElementById('closeGeneralConsentModal').addEventListener('click', closeGeneralConsentModal);
                         document.getElementById('printGeneralConsentBtn').addEventListener('click', printGeneralConsent);
@@ -6684,6 +6697,7 @@
                         document.querySelectorAll('#triageUgdForm input[name^="morse_"]').forEach((el) => {
                             el.addEventListener('change', computeTriaseMorseTotal);
                         });
+                        initTriaseToggleableRadios();
 
                         // Store last saved patient data
                         let currentSavedPatientData = null;
@@ -6975,12 +6989,12 @@
                                             <div class="triage-p1-line">
                                                 <span class="triage-p1-label">Tanggal Pemeriksaan</span>
                                                 <span>:</span>
-                                                <input id="t_tanggal_pemeriksaan" type="text" class="triage-input triage-p1-input-date" placeholder="........................................">
+                                                <input id="t_tanggal_pemeriksaan" type="text" class="triage-input triage-p1-input-date" placeholder="">
                                             </div>
                                             <div class="triage-p1-line">
                                                 <span class="triage-p1-label">Jam datang</span>
                                                 <span>:</span>
-                                                <input id="t_jam_datang" type="text" class="triage-input triage-p1-input-time" placeholder="..........................">
+                                                <input id="t_jam_datang" type="text" class="triage-input triage-p1-input-time" placeholder="">
                                                 <span class="triage-p1-wita">WITA</span>
                                             </div>
                                         </div>
@@ -7805,6 +7819,7 @@
                 .triage-p1-frame {
                     border: 1.5px solid #111111;
                     font-weight: 400;
+                    font-size: 9pt;
                 }
                 .triage-p1-frame * {
                     font-weight: 400 !important;
@@ -7815,7 +7830,7 @@
                     gap: 2.5mm;
                     padding: 1.5mm 2mm;
                     border-bottom: 1.5px solid #111111;
-                    font-size: 10pt;
+                    font-size: 9pt;
                     font-weight: 400;
                 }
                 .triage-p1-line {
@@ -7858,14 +7873,14 @@
                 }
                 .triage-p1-vital-title {
                     font-weight: 400;
-                    font-size: 10pt;
+                    font-size: 9pt;
                     margin-bottom: 0.8mm;
                 }
                 .triage-p1-vital-grid {
                     display: grid;
                     grid-template-columns: repeat(4, 1fr);
                     gap: 0.8mm 3mm;
-                    font-size: 9.7pt;
+                    font-size: 9pt;
                     font-weight: 400;
                 }
                 .triage-p1-vital-item {
@@ -7885,7 +7900,7 @@
                 .triage-p1-subtitle {
                     margin-top: 1.6mm;
                     font-weight: 400;
-                    font-size: 10pt;
+                    font-size: 9pt;
                 }
                 .triage-p1-ph-grid {
                     margin-top: 0.8mm;
@@ -7898,7 +7913,7 @@
                     gap: 0.7mm;
                 }
                 .triage-p1-check {
-                    font-size: 9.6pt;
+                    font-size: 9pt;
                     font-weight: 400;
                 }
                 .triage-p1-ph-other {
@@ -7928,7 +7943,7 @@
                 }
                 .triage-abc-label {
                     font-weight: 400;
-                    font-size: 9.8pt;
+                    font-size: 9pt;
                     text-align: center;
                     display: flex;
                     align-items: center;
@@ -7938,7 +7953,7 @@
                 .triage-abc-mini-title {
                     font-weight: 400;
                     margin-bottom: 0.6mm;
-                    font-size: 9.7pt;
+                    font-size: 9pt;
                 }
                 .triage-abc-mini-title-spaced {
                     margin-top: 1mm;
@@ -7974,11 +7989,11 @@
                 .triage-neuro-title {
                     font-weight: 400;
                     text-align: center;
-                    font-size: 10pt;
+                    font-size: 9pt;
                 }
                 .triage-neuro-total {
                     font-weight: 400;
-                    font-size: 9.8pt;
+                    font-size: 9pt;
                     display: inline-flex;
                     align-items: baseline;
                     gap: 1mm;
@@ -7994,7 +8009,7 @@
                     border: 1.5px solid #111111;
                     border-top: none;
                     display: grid;
-                    grid-template-columns: 1fr 1fr 1fr;
+                    grid-template-columns: 1.06fr 1.16fr 1.12fr;
                 }
                 .triage-gcs-col {
                     padding: 1.2mm 1.6mm 1.4mm;
@@ -8007,9 +8022,18 @@
                     font-weight: 400;
                     text-decoration: underline;
                     text-underline-offset: 2px;
-                    font-size: 9.7pt;
+                    font-size: 9pt;
                     margin-bottom: 0.6mm;
                     text-align: center;
+                }
+                .triage-gcs-col .triage-check-item {
+                    align-items: flex-start;
+                    line-height: 1.18;
+                    font-size: 9pt;
+                }
+                .triage-gcs-col .triage-check {
+                    margin-top: 0.35mm;
+                    flex: 0 0 auto;
                 }
                 .triage-triase-grid {
                     display: grid;
@@ -8023,7 +8047,7 @@
                     align-items: center;
                     justify-content: center;
                     border-right: 1.5px solid #111111;
-                    font-size: 9.9pt;
+                    font-size: 9pt;
                     line-height: 1.2;
                     padding: 1.4mm 1mm;
                 }
@@ -8054,7 +8078,7 @@
                 }
                 .triage-triase-desc {
                     padding: 1mm 1.6mm;
-                    font-size: 9.2pt;
+                    font-size: 9pt;
                     font-weight: 400;
                     line-height: 1.18;
                 }
@@ -8083,7 +8107,7 @@
                 }
                 .triage-p1-sign-title {
                     font-weight: 400;
-                    font-size: 9.8pt;
+                    font-size: 9pt;
                     margin-bottom: 2.5mm;
                 }
                 .triage-p1-sign-input {
