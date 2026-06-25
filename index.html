@@ -6515,6 +6515,11 @@
                             if (flaccCryScore) flaccCryScore.textContent = '';
                             const flaccConsolabilityScore = document.getElementById('t_flacc_consolability_score');
                             if (flaccConsolabilityScore) flaccConsolabilityScore.textContent = '';
+                            const gcsTotal = document.getElementById('t_gcs_total_manual');
+                            if (gcsTotal) {
+                                gcsTotal.value = '';
+                                gcsTotal.dataset.gcsManual = '0';
+                            }
                             document.getElementById('t_wb_score').textContent = '';
                             document.getElementById('t_morse_total').textContent = '0';
                             const morseDup = document.getElementById('t_morse_total_dup');
@@ -6546,6 +6551,21 @@
                             if (flaccCryScore) flaccCryScore.textContent = cry ? String(cry) : '';
                             const flaccConsolabilityScore = document.getElementById('t_flacc_consolability_score');
                             if (flaccConsolabilityScore) flaccConsolabilityScore.textContent = consolability ? String(consolability) : '';
+                            return total;
+                        }
+
+                        function computeTriaseGcsTotal() {
+                            const e = Number(document.querySelector('#triageUgdForm input[name="gcs_e"][data-exclusive-check]:checked')?.value || 0);
+                            const v = Number(document.querySelector('#triageUgdForm input[name="gcs_v"][data-exclusive-check]:checked')?.value || 0);
+                            const m = Number(document.querySelector('#triageUgdForm input[name="gcs_m"][data-exclusive-check]:checked')?.value || 0);
+                            const total = e + v + m;
+                            const input = document.getElementById('t_gcs_total_manual');
+                            if (!input) return total;
+
+                            const hasOverride = input.dataset.gcsManual === '1';
+                            if (!hasOverride || String(input.value || '').trim() === '') {
+                                input.value = total ? String(total) : '';
+                            }
                             return total;
                         }
 
@@ -6674,6 +6694,9 @@
                                     document.querySelectorAll(`#triageUgdForm input[name="${CSS.escape(groupName)}"][data-exclusive-check]`).forEach((other) => {
                                         if (other !== this) other.checked = false;
                                     });
+                                    if (groupName === 'gcs_e' || groupName === 'gcs_v' || groupName === 'gcs_m') {
+                                        computeTriaseGcsTotal();
+                                    }
                                 });
                             });
                         }
@@ -6749,6 +6772,14 @@
                         document.getElementById('printTriaseUgdBtn')?.addEventListener('click', printTriaseUgd);
                         document.querySelectorAll('#triageUgdForm input[name^="flacc_"]').forEach((el) => {
                             el.addEventListener('change', computeTriaseFlaccTotal);
+                        });
+                        document.querySelectorAll('#triageUgdForm input[name="gcs_e"][data-exclusive-check], #triageUgdForm input[name="gcs_v"][data-exclusive-check], #triageUgdForm input[name="gcs_m"][data-exclusive-check]').forEach((el) => {
+                            el.addEventListener('change', computeTriaseGcsTotal);
+                        });
+                        document.getElementById('t_gcs_total_manual')?.addEventListener('input', (e) => {
+                            const input = e.target;
+                            const v = String(input.value || '').trim();
+                            input.dataset.gcsManual = v === '' ? '0' : '1';
                         });
                         document.querySelectorAll('#triageUgdForm input[name^="morse_"]').forEach((el) => {
                             el.addEventListener('change', computeTriaseMorseTotal);
@@ -7277,7 +7308,7 @@
                                                             <td class="triage-td triage-td-left triage-flacc-cat triage-flacc-legs">Legs</td>
                                                             <td class="triage-td triage-flacc-desc"><label class="triage-flacc-choice"><input type="radio" class="triage-radio" name="flacc_legs" value="0"><span>Posisi normal/relaks</span></label></td>
                                                             <td class="triage-td triage-flacc-desc"><label class="triage-flacc-choice"><input type="radio" class="triage-radio" name="flacc_legs" value="1"><span>Tidak tenang, gelisah, tegang</span></label></td>
-                                                            <td class="triage-td triage-flacc-desc"><label class="triage-flacc-choice"><input type="radio" class="triage-radio" name="flacc_legs" value="2"><span>Menendang, mengangkat kaki</span></label></td>
+                                                            <td class="triage-td triage-flacc-desc"><label class="triage-flacc-choice"><input type="radio" class="triage-radio" name="flacc_legs" value="2"><span>Menendang mengangkat kaki</span></label></td>
                                                             <td class="triage-td triage-center triage-flacc-score"><span id="t_flacc_legs_score"></span></td>
                                                         </tr>
                                                         <tr>
