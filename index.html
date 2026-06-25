@@ -8046,13 +8046,16 @@
                     text-align: center;
                 }
                 .triage-gcs-col .triage-check-item {
-                    align-items: flex-start;
+                    display: grid;
+                    grid-template-columns: 4.2mm minmax(0, 1fr);
+                    align-items: start;
                     line-height: 1.08;
                     font-size: 9pt;
-                    gap: 1.2mm;
+                    gap: 0.8mm;
+                    width: 100%;
                 }
                 .triage-gcs-col .triage-check {
-                    margin-top: 0.2mm;
+                    margin-top: 0.1mm;
                     flex: 0 0 auto;
                 }
                 .triage-triase-grid {
@@ -8140,7 +8143,7 @@
                 }
                 .triage-p1-sign-line {
                     width: 60mm;
-                    height: 7mm;
+                    height: 9mm;
                     margin: 0;
                     order: 1;
                 }
@@ -8218,6 +8221,7 @@
                     justify-content: center;
                     box-sizing: border-box;
                     position: relative;
+                    flex: 0 0 3.6mm;
                 }
                 .triage-check {
                     border-radius: 0.7mm;
@@ -8227,18 +8231,20 @@
                 }
                 .triage-check::after,
                 .triage-radio::after {
-                    content: '';
+                    content: '✓';
                     display: block;
+                    width: 3.1mm;
+                    text-align: center;
                     line-height: 1;
+                    font-size: 3.1mm;
+                    font-weight: 700;
+                    color: transparent;
                 }
                 .triage-check:checked {
                     background: #ffffff;
                     box-shadow: none;
                 }
                 .triage-check:checked::after {
-                    content: '✓';
-                    font-size: 3.1mm;
-                    font-weight: 700;
                     color: #111111;
                 }
                 .triage-radio:checked {
