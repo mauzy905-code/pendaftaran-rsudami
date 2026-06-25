@@ -6514,7 +6514,7 @@
                         }
 
                         function getCheckedRadioValue(name) {
-                            const el = document.querySelector(`#triageUgdForm input[type="radio"][name="${CSS.escape(String(name || ''))}"]:checked`);
+                            const el = document.querySelector(`#triageUgdForm input[name="${CSS.escape(String(name || ''))}"]:checked`);
                             return el ? Number(el.value) : 0;
                         }
 
@@ -6622,6 +6622,19 @@
                             });
                         }
 
+                        function initTriaseExclusiveChecks() {
+                            document.querySelectorAll('#triageUgdForm input[data-exclusive-check]').forEach((el) => {
+                                el.addEventListener('change', function() {
+                                    if (!this.checked) return;
+                                    const groupName = String(this.name || this.dataset.exclusiveCheck || '').trim();
+                                    if (!groupName) return;
+                                    document.querySelectorAll(`#triageUgdForm input[name="${CSS.escape(groupName)}"][data-exclusive-check]`).forEach((other) => {
+                                        if (other !== this) other.checked = false;
+                                    });
+                                });
+                            });
+                        }
+
                         // Event listeners for General Consent
                         document.getElementById('closeGeneralConsentModal').addEventListener('click', closeGeneralConsentModal);
                         document.getElementById('printGeneralConsentBtn').addEventListener('click', printGeneralConsent);
@@ -6698,6 +6711,7 @@
                             el.addEventListener('change', computeTriaseMorseTotal);
                         });
                         initTriaseToggleableRadios();
+                        initTriaseExclusiveChecks();
 
                         // Store last saved patient data
                         let currentSavedPatientData = null;
@@ -7095,27 +7109,27 @@
                                             <div class="triage-gcs-grid">
                                                 <div class="triage-gcs-col">
                                                     <div class="triage-gcs-head">Membuka Mata/Eye (E)</div>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_e" value="4"> 4. Spontan</label>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_e" value="3"> 3. Dengan perintah</label>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_e" value="2"> 2. Rangsang nyeri</label>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_e" value="1"> 1. Tidak respon</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_e" value="4" data-exclusive-check="gcs_e"> 4. Spontan</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_e" value="3" data-exclusive-check="gcs_e"> 3. Dengan perintah</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_e" value="2" data-exclusive-check="gcs_e"> 2. Rangsang nyeri</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_e" value="1" data-exclusive-check="gcs_e"> 1. Tidak respon</label>
                                                 </div>
                                                 <div class="triage-gcs-col">
                                                     <div class="triage-gcs-head">Respon Verbal (V)</div>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_v" value="5"> 5. Mampu menjawab dengan benar, orientasi sempurna</label>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_v" value="4"> 4. Disorientasi, bingung</label>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_v" value="3"> 3. Kata-kata tidak dapat dimengerti/tidak bermakna</label>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_v" value="2"> 2. Suara tidak jelas/hanya mengerang</label>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_v" value="1"> 1. Tidak berespon</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_v" value="5" data-exclusive-check="gcs_v"> 5. Mampu menjawab dengan benar, orientasi sempurna</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_v" value="4" data-exclusive-check="gcs_v"> 4. Disorientasi, bingung</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_v" value="3" data-exclusive-check="gcs_v"> 3. Kata-kata tidak dapat dimengerti/tidak bermakna</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_v" value="2" data-exclusive-check="gcs_v"> 2. Suara tidak jelas/hanya mengerang</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_v" value="1" data-exclusive-check="gcs_v"> 1. Tidak berespon</label>
                                                 </div>
                                                 <div class="triage-gcs-col">
                                                     <div class="triage-gcs-head">Respon Motorik (M)</div>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_m" value="6"> 6. Gerakan sesuai instruksi</label>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_m" value="5"> 5. Mampu melokalisir nyeri</label>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_m" value="4"> 4. Menghindar sumber nyeri</label>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_m" value="3"> 3. Gerakan fleksi abnormal (decortikasi)</label>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_m" value="2"> 2. Gerakan ekstensi abnormal (decerebrasi)</label>
-                                                    <label class="triage-check-item triage-p1-check"><input type="radio" class="triage-check" name="gcs_m" value="1"> 1. Tidak berespon</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_m" value="6" data-exclusive-check="gcs_m"> 6. Gerakan sesuai instruksi</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_m" value="5" data-exclusive-check="gcs_m"> 5. Mampu melokalisir nyeri</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_m" value="4" data-exclusive-check="gcs_m"> 4. Menghindar sumber nyeri</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_m" value="3" data-exclusive-check="gcs_m"> 3. Gerakan fleksi abnormal (decortikasi)</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_m" value="2" data-exclusive-check="gcs_m"> 2. Gerakan ekstensi abnormal (decerebrasi)</label>
+                                                    <label class="triage-check-item triage-p1-check"><input type="checkbox" class="triage-check" name="gcs_m" value="1" data-exclusive-check="gcs_m"> 1. Tidak berespon</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -7775,9 +7789,9 @@
                     font-weight: 800;
                     letter-spacing: 0.02em;
                     border: 1.5px solid #111111;
-                    padding: 2.2mm 2mm;
-                    margin-top: 3mm;
-                    margin-bottom: 4mm;
+                    padding: 1.8mm 2mm;
+                    margin-top: 2.2mm;
+                    margin-bottom: 2.6mm;
                     font-size: 14pt;
                 }
                 .triage-row {
@@ -7827,8 +7841,8 @@
                 .triage-p1-datetime {
                     display: grid;
                     grid-template-columns: 1fr 1fr;
-                    gap: 2.5mm;
-                    padding: 1.5mm 2mm;
+                    gap: 1.6mm;
+                    padding: 1.1mm 1.4mm;
                     border-bottom: 1.5px solid #111111;
                     font-size: 9pt;
                     font-weight: 400;
@@ -7836,7 +7850,7 @@
                 .triage-p1-line {
                     display: inline-flex;
                     align-items: baseline;
-                    gap: 0.9mm;
+                    gap: 0.6mm;
                     white-space: nowrap;
                 }
                 .triage-p1-label {
@@ -7857,36 +7871,36 @@
                     flex: 0 0 auto;
                 }
                 .triage-p1-line .triage-p1-input-date {
-                    width: 76mm !important;
+                    width: 72mm !important;
                 }
                 .triage-p1-line .triage-p1-input-time {
-                    width: 28mm !important;
+                    width: 24mm !important;
                 }
                 .triage-p1-section {
-                    padding: 1.5mm 2mm 1.8mm;
+                    padding: 1.1mm 1.4mm 1.2mm;
                 }
                 .triage-p1-section-border {
                     border-top: 1.5px solid #111111;
                 }
                 .triage-p1-section-last {
-                    padding-bottom: 1.8mm;
+                    padding-bottom: 1.1mm;
                 }
                 .triage-p1-vital-title {
                     font-weight: 400;
                     font-size: 9pt;
-                    margin-bottom: 0.8mm;
+                    margin-bottom: 0.45mm;
                 }
                 .triage-p1-vital-grid {
                     display: grid;
                     grid-template-columns: repeat(4, 1fr);
-                    gap: 0.8mm 3mm;
+                    gap: 0.35mm 2.1mm;
                     font-size: 9pt;
                     font-weight: 400;
                 }
                 .triage-p1-vital-item {
                     display: inline-flex;
                     align-items: baseline;
-                    gap: 1.4mm;
+                    gap: 0.8mm;
                     min-width: 0;
                 }
                 .triage-p1-vital-label {
@@ -7895,22 +7909,22 @@
                     font-weight: 400;
                 }
                 .triage-p1-vital-input {
-                    width: 17mm;
+                    width: 14mm;
                 }
                 .triage-p1-subtitle {
-                    margin-top: 1.6mm;
+                    margin-top: 0.9mm;
                     font-weight: 400;
                     font-size: 9pt;
                 }
                 .triage-p1-ph-grid {
-                    margin-top: 0.8mm;
+                    margin-top: 0.45mm;
                     display: grid;
                     grid-template-columns: 1.1fr 1fr 1fr;
-                    gap: 2mm;
+                    gap: 1.4mm;
                 }
                 .triage-p1-ph-col {
                     display: grid;
-                    gap: 0.7mm;
+                    gap: 0.35mm;
                 }
                 .triage-p1-check {
                     font-size: 9pt;
@@ -7918,25 +7932,25 @@
                 }
                 .triage-p1-ph-other {
                     display: grid;
-                    gap: 0.6mm;
+                    gap: 0.35mm;
                 }
                 .triage-p1-ph-lines {
                     display: grid;
-                    gap: 0.6mm;
-                    padding-left: 5mm;
+                    gap: 0.3mm;
+                    padding-left: 3.5mm;
                 }
                 .triage-p1-ph-line {
                     width: 100%;
                 }
                 .triage-abc-grid {
                     display: grid;
-                    grid-template-columns: 22mm 1fr 22mm 1fr 34mm;
+                    grid-template-columns: 20mm 1fr 20mm 1fr 31mm;
                     border: 1.5px solid #111111;
                 }
                 .triage-abc-cell {
-                    padding: 1.4mm 1.6mm;
+                    padding: 0.9mm 1.2mm;
                     border-right: 1.5px solid #111111;
-                    min-height: 18mm;
+                    min-height: 15.5mm;
                 }
                 .triage-abc-cell:nth-child(5n) {
                     border-right: none;
@@ -7948,15 +7962,15 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    line-height: 1.1;
+                    line-height: 1.02;
                 }
                 .triage-abc-mini-title {
                     font-weight: 400;
-                    margin-bottom: 0.6mm;
+                    margin-bottom: 0.35mm;
                     font-size: 9pt;
                 }
                 .triage-abc-mini-title-spaced {
-                    margin-top: 1mm;
+                    margin-top: 0.5mm;
                 }
                 .triage-abc-border-top {
                     border-top: 1.5px solid #111111;
@@ -7972,7 +7986,7 @@
                     height: 100%;
                 }
                 .triage-abc-subcol {
-                    padding: 1.4mm 1.6mm;
+                    padding: 0.9mm 1.2mm;
                 }
                 .triage-abc-subcol-border {
                     border-left: 1.5px solid #111111;
@@ -7983,8 +7997,8 @@
                     display: grid;
                     grid-template-columns: 1fr 1.2fr;
                     align-items: center;
-                    padding: 1.2mm 1.6mm;
-                    gap: 2mm;
+                    padding: 0.8mm 1.2mm;
+                    gap: 1.2mm;
                 }
                 .triage-neuro-title {
                     font-weight: 400;
@@ -8003,7 +8017,7 @@
                     flex: 1;
                     border-bottom: 1px dotted #111111;
                     height: 0;
-                    margin-left: 1mm;
+                    margin-left: 0.6mm;
                 }
                 .triage-gcs-grid {
                     border: 1.5px solid #111111;
@@ -8012,7 +8026,7 @@
                     grid-template-columns: 1.06fr 1.16fr 1.12fr;
                 }
                 .triage-gcs-col {
-                    padding: 1.2mm 1.6mm 1.4mm;
+                    padding: 0.8mm 1.1mm 0.9mm;
                     border-right: 1.5px solid #111111;
                 }
                 .triage-gcs-col:last-child {
@@ -8023,16 +8037,17 @@
                     text-decoration: underline;
                     text-underline-offset: 2px;
                     font-size: 9pt;
-                    margin-bottom: 0.6mm;
+                    margin-bottom: 0.35mm;
                     text-align: center;
                 }
                 .triage-gcs-col .triage-check-item {
                     align-items: flex-start;
-                    line-height: 1.18;
+                    line-height: 1.08;
                     font-size: 9pt;
+                    gap: 1.2mm;
                 }
                 .triage-gcs-col .triage-check {
-                    margin-top: 0.35mm;
+                    margin-top: 0.2mm;
                     flex: 0 0 auto;
                 }
                 .triage-triase-grid {
@@ -8049,7 +8064,7 @@
                     border-right: 1.5px solid #111111;
                     font-size: 9pt;
                     line-height: 1.2;
-                    padding: 1.4mm 1mm;
+                    padding: 0.9mm 0.8mm;
                 }
                 .triage-triase-table {
                     display: grid;
@@ -8058,7 +8073,7 @@
                     display: grid;
                     grid-template-columns: 10mm 14mm 1fr;
                     border-bottom: 1.5px solid #111111;
-                    min-height: 11mm;
+                    min-height: 9.5mm;
                 }
                 .triage-triase-row:last-child {
                     border-bottom: none;
@@ -8077,10 +8092,10 @@
                     border-right: 1.5px solid #111111;
                 }
                 .triage-triase-desc {
-                    padding: 1mm 1.6mm;
+                    padding: 0.65mm 1.1mm;
                     font-size: 9pt;
                     font-weight: 400;
-                    line-height: 1.18;
+                    line-height: 1.08;
                 }
                 .triage-triase-p1 {
                     background: #ef4444;
@@ -8099,7 +8114,7 @@
                     color: #ffffff;
                 }
                 .triage-p1-sign {
-                    margin-top: 2mm;
+                    margin-top: 1.2mm;
                     text-align: center;
                     display: flex;
                     flex-direction: column;
@@ -8108,7 +8123,7 @@
                 .triage-p1-sign-title {
                     font-weight: 400;
                     font-size: 9pt;
-                    margin-bottom: 2.5mm;
+                    margin-bottom: 1.2mm;
                 }
                 .triage-p1-sign-input {
                     width: 60mm;
@@ -8120,7 +8135,7 @@
                 }
                 .triage-p1-sign-line {
                     width: 60mm;
-                    height: 10mm;
+                    height: 7mm;
                     margin: 0;
                     order: 1;
                 }
