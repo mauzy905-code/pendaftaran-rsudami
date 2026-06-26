@@ -7383,7 +7383,13 @@
                                         </div>
 
                                         <div class="triage-p1-section">
-                                            <div class="triage-p1-ku"><span class="triage-p1-ku-label">Keluhan Utama</span><span>:</span><input id="t_keluhan_utama" type="text" class="triage-input triage-p1-ku-input" placeholder=""></div>
+                                            <div class="triage-p1-ku">
+                                                <span class="triage-p1-ku-label">Keluhan Utama (KU)</span><span>:</span>
+                                                <div class="triage-p1-ku-lines">
+                                                    <input id="t_keluhan_utama" type="text" class="triage-input triage-p1-ku-line" placeholder="">
+                                                    <input id="t_keluhan_utama_2" type="text" class="triage-input triage-p1-ku-line" placeholder="">
+                                                </div>
+                                            </div>
                                             <div class="triage-p1-vital-title">Tanda Vital</div>
                                             <div class="triage-p1-vital-grid">
                                                 <div class="triage-p1-vital-item"><span class="triage-p1-vital-label">TD</span><input type="text" class="triage-input triage-p1-vital-input" placeholder="........"><span>MmHg</span></div>
@@ -7637,7 +7643,7 @@
                                         </div>
                                         <div class="triage-pain-right">
                                             <div class="triage-wb-title">SKALA NYERI WONG BAKER</div>
-                                            <div class="triage-wb-sub">(LINGKARI ANGKA DIBAWAH INI)</div>
+                                            <div class="triage-wb-sub">(TANDAI ANGKA DIBAWAH INI)</div>
                                             <div class="triage-wb-faces">
                                                 <div class="triage-wb-face" data-wb-score="0">
                                                     <div class="triage-wb-svg triage-wb-color-0">
@@ -8455,17 +8461,25 @@
                 }
                 .triage-p1-ku {
                     display: flex;
-                    align-items: baseline;
+                    align-items: flex-start;
                     gap: 1.2mm;
                     font-size: 9pt;
                     margin-bottom: 0.6mm;
                 }
                 .triage-p1-ku-label {
                     font-weight: 700;
+                    white-space: nowrap;
                 }
-                .triage-p1-ku-input {
+                .triage-p1-ku-lines {
                     flex: 1 1 auto;
                     min-width: 0;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.9mm;
+                    padding-top: 0.2mm;
+                }
+                .triage-p1-ku-line {
+                    width: 100%;
                 }
                 .triage-p1-section-border {
                     border-top: 1.5px solid #111111;
