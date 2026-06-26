@@ -9361,10 +9361,30 @@
                 }
                 .triage-p3-hd-risk-table {
                     width: 100%;
+                    table-layout: fixed;
+                }
+                .triage-p3-hd-risk-table th:nth-child(1),
+                .triage-p3-hd-risk-table td:nth-child(1) {
+                    width: 20%;
+                }
+                .triage-p3-hd-risk-table th:nth-child(2),
+                .triage-p3-hd-risk-table td:nth-child(2) {
+                    width: 26%;
+                }
+                .triage-p3-hd-risk-table th:nth-child(3),
+                .triage-p3-hd-risk-table td:nth-child(3) {
+                    width: 54%;
                 }
                 .triage-p3-hd-risk-table tr.triage-risk-active td {
                     outline: none;
-                    box-shadow: inset 0 0 0 2px #ffffff, inset 0 0 0 6px #111111;
+                    box-shadow: inset 0 0 0 1.5px #111111;
+                    background: #f8fafc;
+                }
+                .triage-p3-hd-risk-table tr.triage-risk-active td:nth-child(2) {
+                    font-weight: 900;
+                }
+                .triage-p3-hd-risk-table tr.triage-risk-active td:nth-child(3) {
+                    font-weight: 700;
                 }
                 @media print {
                     body[data-print-mode="general-consent"] * {
