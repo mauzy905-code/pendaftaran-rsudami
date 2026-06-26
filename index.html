@@ -7373,6 +7373,7 @@
                                         </div>
 
                                         <div class="triage-p1-section">
+                                            <div class="triage-p1-ku"><span class="triage-p1-ku-label">Keluhan Utama KU</span><span>:</span><input id="t_keluhan_utama" type="text" class="triage-input triage-p1-ku-input" placeholder=""></div>
                                             <div class="triage-p1-vital-title">Tanda Vital</div>
                                             <div class="triage-p1-vital-grid">
                                                 <div class="triage-p1-vital-item"><span class="triage-p1-vital-label">TD</span><input type="text" class="triage-input triage-p1-vital-input" placeholder="........"><span>MmHg</span></div>
@@ -8441,6 +8442,20 @@
                 }
                 .triage-p1-section {
                     padding: 1.1mm 1.4mm 1.2mm;
+                }
+                .triage-p1-ku {
+                    display: flex;
+                    align-items: baseline;
+                    gap: 1.2mm;
+                    font-size: 9pt;
+                    margin-bottom: 0.6mm;
+                }
+                .triage-p1-ku-label {
+                    font-weight: 700;
+                }
+                .triage-p1-ku-input {
+                    flex: 1 1 auto;
+                    min-width: 0;
                 }
                 .triage-p1-section-border {
                     border-top: 1.5px solid #111111;
