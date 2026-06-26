@@ -1309,6 +1309,7 @@
                         let noRegistrasiColumnAvailable = true;
                         let petugasInputColumnAvailable = true;
                         let petugasPoliColumnAvailable = true;
+                        let triaseDraftColumnAvailable = true;
                         let queueRoutingColumnsAvailable = true;
                         let queueProcessingColumnsAvailable = true;
                         let poliExamColumnsAvailable = true;
@@ -2893,6 +2894,7 @@
                                 await detectPetugasPoliColumn();
                                 await detectRiwayatLinkColumn();
                                 await detectNoRegistrasiColumn();
+                                await detectTriaseDraftColumn();
                                 showView(canAccessPendaftaranView() ? 'pendaftaran' : 'rekap');
                                 await initForm();
                                 await loadQueueControls();
@@ -3290,6 +3292,23 @@
                                 noRegistrasiPreview.textContent = 'TAMBAH KOLOM';
                                 noRegistrasiPreview.classList.remove('text-blue-700');
                                 noRegistrasiPreview.classList.add('text-red-600');
+                            }
+                        }
+
+                        async function detectTriaseDraftColumn() {
+                            try {
+                                const { error } = await supabaseClient
+                                    .from('pasien')
+                                    .select('triase_ugd_data')
+                                    .limit(1);
+
+                                if (error && /triase_ugd_data/i.test(error.message || '')) {
+                                    triaseDraftColumnAvailable = false;
+                                } else {
+                                    triaseDraftColumnAvailable = true;
+                                }
+                            } catch (err) {
+                                triaseDraftColumnAvailable = false;
                             }
                         }
 
@@ -5550,6 +5569,7 @@
                                     : '';
                                 const triaseBtnRekap = (canTriase && String(p.unit || '').toUpperCase() === 'UGD')
                                     ? `<button type="button" class="triage-btn inline-flex items-center justify-center rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-[11px] font-extrabold text-rose-800 transition hover:bg-rose-100 whitespace-nowrap" data-patient='${escapeHtml(JSON.stringify({
+                                        id: p.id,
                                         nama_pasien: p.nama_pasien,
                                         tanggal_lahir: p.tanggal_lahir,
                                         jenis_kelamin: p.jenis_kelamin,
@@ -6475,6 +6495,110 @@
                             document.getElementById('t_tgl_lahir').textContent = formattedBirthDate;
                         }
 
+                        function showTriaseUgdMessage(message, tone = 'info') {
+                            const el = document.getElementById('triageUgdMessage');
+                            if (!el) return;
+                            el.textContent = message;
+                            el.classList.remove('hidden', 'border-red-200', 'bg-red-50', 'text-red-700', 'border-emerald-200', 'bg-emerald-50', 'text-emerald-700', 'border-blue-200', 'bg-blue-50', 'text-blue-700');
+                            if (tone === 'success') {
+                                el.classList.add('border-emerald-200', 'bg-emerald-50', 'text-emerald-700');
+                            } else if (tone === 'error') {
+                                el.classList.add('border-red-200', 'bg-red-50', 'text-red-700');
+                            } else {
+                                el.classList.add('border-blue-200', 'bg-blue-50', 'text-blue-700');
+                            }
+                            el.classList.remove('hidden');
+                        }
+
+                        function clearTriaseUgdMessage() {
+                            const el = document.getElementById('triageUgdMessage');
+                            if (!el) return;
+                            el.classList.add('hidden');
+                            el.textContent = '';
+                        }
+
+                        function getTriaseDraftStorageKey(patientData = currentPatientForTriage) {
+                            const patientId = String(patientData?.id || '').trim();
+                            if (patientId) return `triase-ugd-draft:${patientId}`;
+                            const noRegistrasi = String(patientData?.no_registrasi || '').trim();
+                            if (noRegistrasi) return `triase-ugd-draft:reg:${noRegistrasi}`;
+                            const noRm = String(patientData?.no_rm || '').trim();
+                            if (noRm) return `triase-ugd-draft:rm:${noRm}`;
+                            return '';
+                        }
+
+                        function getTriaseSerializableControls() {
+                            return Array.from(document.querySelectorAll('#triageUgdForm input, #triageUgdForm textarea, #triageUgdForm select')).filter((el) => {
+                                const type = String(el.type || '').toLowerCase();
+                                return type !== 'button' && type !== 'submit' && type !== 'reset';
+                            });
+                        }
+
+                        function buildTriaseDraftPayload() {
+                            const controls = getTriaseSerializableControls().map((el, index) => ({
+                                index,
+                                id: el.id || '',
+                                tag: String(el.tagName || '').toLowerCase(),
+                                type: String(el.type || '').toLowerCase(),
+                                value: String(el.value ?? ''),
+                                checked: !!el.checked,
+                                gcsManual: el.id === 't_gcs_total_manual' ? String(el.dataset.gcsManual || '0') : ''
+                            }));
+                            return {
+                                version: 1,
+                                savedAt: new Date().toISOString(),
+                                wongBakerScore: String(document.getElementById('t_wb_score')?.textContent || '').trim(),
+                                controls
+                            };
+                        }
+
+                        function normalizeTriaseDraftPayload(rawDraft) {
+                            if (!rawDraft) return null;
+                            let payload = rawDraft;
+                            if (typeof payload === 'string') {
+                                try {
+                                    payload = JSON.parse(payload);
+                                } catch (err) {
+                                    return null;
+                                }
+                            }
+                            if (!payload || typeof payload !== 'object' || !Array.isArray(payload.controls)) {
+                                return null;
+                            }
+                            return payload;
+                        }
+
+                        function applyTriaseDraftPayload(rawDraft) {
+                            const payload = normalizeTriaseDraftPayload(rawDraft);
+                            if (!payload) return false;
+                            const controls = getTriaseSerializableControls();
+                            payload.controls.forEach((item) => {
+                                let target = null;
+                                if (item?.id) {
+                                    target = document.getElementById(item.id);
+                                }
+                                if (!target && Number.isInteger(item?.index)) {
+                                    target = controls[item.index] || null;
+                                }
+                                if (!target) return;
+                                const type = String(target.type || '').toLowerCase();
+                                if (type === 'checkbox' || type === 'radio') {
+                                    target.checked = !!item.checked;
+                                } else {
+                                    target.value = String(item.value ?? '');
+                                }
+                                if (target.id === 't_gcs_total_manual') {
+                                    target.dataset.gcsManual = String(item.gcsManual || '0');
+                                }
+                            });
+                            computeTriaseFlaccTotal();
+                            computeTriaseGcsTotal();
+                            computeTriaseMorseTotal();
+                            computeTriaseHumptyTotal();
+                            applyTriaseWongBakerSelection(payload.wongBakerScore);
+                            return true;
+                        }
+
                         function formatTriaseDate(date = new Date()) {
                             const d = date instanceof Date ? date : new Date();
                             if (Number.isNaN(d.getTime())) return '';
@@ -6668,19 +6792,138 @@
                             return 'rendah';
                         }
 
-                        function openTriaseUgdModal(patientData) {
+                        async function loadTriaseUgdDraft(patientData = currentPatientForTriage) {
+                            let payload = null;
+                            if (triageDraftColumnAvailable && String(patientData?.id || '').trim()) {
+                                const { data, error } = await withTimeout(
+                                    supabaseClient
+                                        .from('pasien')
+                                        .select('triase_ugd_data')
+                                        .eq('id', patientData.id)
+                                        .maybeSingle(),
+                                    15000,
+                                    'Muat draft triase'
+                                );
+                                if (error) {
+                                    throw new Error(error.message);
+                                }
+                                payload = normalizeTriaseDraftPayload(data?.triase_ugd_data || null);
+                            }
+
+                            if (!payload) {
+                                const storageKey = getTriaseDraftStorageKey(patientData);
+                                if (storageKey) {
+                                    try {
+                                        payload = normalizeTriaseDraftPayload(window.localStorage.getItem(storageKey));
+                                    } catch (err) {
+                                        payload = null;
+                                    }
+                                }
+                            }
+
+                            if (!payload) {
+                                clearTriaseUgdMessage();
+                                return false;
+                            }
+
+                            const applied = applyTriaseDraftPayload(payload);
+                            if (applied) {
+                                const savedAt = payload.savedAt ? new Date(payload.savedAt) : null;
+                                const savedInfo = savedAt && !Number.isNaN(savedAt.getTime())
+                                    ? ` Draft terakhir dimuat (${formatTriaseDate(savedAt)} ${formatTriaseTime(savedAt)}).`
+                                    : '';
+                                const sourceLabel = triageDraftColumnAvailable && String(patientData?.id || '').trim()
+                                    ? 'Data triase tersimpan berhasil dimuat.'
+                                    : 'Draft triase lokal berhasil dimuat.';
+                                showTriaseUgdMessage(sourceLabel + savedInfo, 'success');
+                            }
+                            return applied;
+                        }
+
+                        async function saveTriaseUgdDraft() {
+                            if (!canAccessTriaseUgd()) return;
+                            if (!currentPatientForTriage) {
+                                showTriaseUgdMessage('Data pasien triase belum dipilih.', 'error');
+                                return;
+                            }
+                            const saveBtn = document.getElementById('saveTriaseUgdBtn');
+                            const originalLabel = saveBtn?.textContent || 'Simpan Triase';
+                            if (saveBtn) {
+                                saveBtn.disabled = true;
+                                saveBtn.textContent = 'Menyimpan...';
+                            }
+
+                            try {
+                                const payload = buildTriaseDraftPayload();
+                                const storageKey = getTriaseDraftStorageKey(currentPatientForTriage);
+                                if (storageKey) {
+                                    try {
+                                        window.localStorage.setItem(storageKey, JSON.stringify(payload));
+                                    } catch (err) {
+                                        console.warn('Gagal menyimpan draft triase ke localStorage:', err);
+                                    }
+                                }
+
+                                if (triageDraftColumnAvailable && String(currentPatientForTriage?.id || '').trim()) {
+                                    let updatePayload = { triase_ugd_data: payload };
+                                    let updateRes = await withTimeout(
+                                        supabaseClient
+                                            .from('pasien')
+                                            .update(updatePayload)
+                                            .eq('id', currentPatientForTriage.id),
+                                        15000,
+                                        'Simpan triase'
+                                    );
+
+                                    if (updateRes?.error) {
+                                        updatePayload = { triase_ugd_data: JSON.stringify(payload) };
+                                        updateRes = await withTimeout(
+                                            supabaseClient
+                                                .from('pasien')
+                                                .update(updatePayload)
+                                                .eq('id', currentPatientForTriage.id),
+                                            15000,
+                                            'Simpan triase fallback'
+                                        );
+                                    }
+
+                                    if (updateRes?.error) {
+                                        throw new Error(updateRes.error.message);
+                                    }
+                                    showTriaseUgdMessage('Triase berhasil disimpan. Saat dibuka lagi, data terakhir akan otomatis dimuat.', 'success');
+                                } else {
+                                    showTriaseUgdMessage('Triase berhasil disimpan di browser ini. Jika ingin tersimpan lintas perangkat, tambahkan kolom `triase_ugd_data` di Supabase.', 'info');
+                                }
+                            } catch (err) {
+                                showTriaseUgdMessage('Gagal menyimpan triase: ' + (err?.message || String(err)), 'error');
+                            } finally {
+                                if (saveBtn) {
+                                    saveBtn.disabled = false;
+                                    saveBtn.textContent = originalLabel;
+                                }
+                            }
+                        }
+
+                        async function openTriaseUgdModal(patientData) {
                             if (!canAccessTriaseUgd()) {
                                 alert('Hanya akun perawat2026@rsudami.com yang dapat mengisi Triase UGD.');
                                 return;
                             }
                             fillTriaseUgdHeader(patientData);
                             resetTriaseUgdForm();
+                            clearTriaseUgdMessage();
                             document.getElementById('triageUgdModal').classList.remove('hidden');
+                            try {
+                                await loadTriaseUgdDraft(patientData);
+                            } catch (err) {
+                                showTriaseUgdMessage('Draft triase belum bisa dimuat: ' + (err?.message || String(err)), 'error');
+                            }
                         }
 
                         function closeTriaseUgdModal() {
                             document.getElementById('triageUgdModal').classList.add('hidden');
                             currentPatientForTriage = null;
+                            clearTriaseUgdMessage();
                         }
 
                         function printTriaseUgd() {
@@ -6788,6 +7031,7 @@
                         });
 
                         document.getElementById('closeTriaseUgdModal')?.addEventListener('click', closeTriaseUgdModal);
+                        document.getElementById('saveTriaseUgdBtn')?.addEventListener('click', saveTriaseUgdDraft);
                         document.getElementById('printTriaseUgdBtn')?.addEventListener('click', printTriaseUgd);
                         document.querySelectorAll('#triageUgdForm input[name^="flacc_"]').forEach((el) => {
                             el.addEventListener('change', computeTriaseFlaccTotal);
@@ -6831,6 +7075,7 @@
                                 await detectPetugasPoliColumn();
                                 await detectRiwayatLinkColumn();
                                 await detectNoRegistrasiColumn();
+                                await detectTriaseDraftColumn();
                                 showView(canAccessPendaftaranView() ? 'pendaftaran' : 'rekap');
                                 await initForm();
                                 await loadQueueControls();
@@ -7060,6 +7305,9 @@
                                 <div class="text-lg font-black text-slate-900">Form Triase</div>
                             </div>
                             <div class="flex gap-2">
+                                <button id="saveTriaseUgdBtn" type="button" class="rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-black text-white shadow-sm transition hover:bg-emerald-700">
+                                    Simpan Triase
+                                </button>
                                 <button id="printTriaseUgdBtn" type="button" class="rounded-2xl bg-rose-600 px-4 py-2 text-sm font-black text-white shadow-sm transition hover:bg-rose-700">
                                     🖨️ Cetak
                                 </button>
@@ -7068,6 +7316,7 @@
                                 </button>
                             </div>
                         </div>
+                        <div id="triageUgdMessage" class="mx-6 mt-4 hidden rounded-2xl border px-4 py-3 text-sm font-semibold"></div>
                         <div class="p-6 bg-slate-100">
                             <div id="triageUgdForm" class="triage-document">
                                 <section class="triage-sheet">
