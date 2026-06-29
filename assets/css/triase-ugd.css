@@ -1,0 +1,1091 @@
+﻿                .triage-document {
+                    font-family: Arial, sans-serif;
+                    color: #111111;
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+                .triage-sheet {
+                    position: relative;
+                    width: 210mm;
+                    min-height: 330mm;
+                    margin: 0 auto 12mm;
+                    padding: 5mm 6mm 5mm;
+                    background: #ffffff;
+                    box-shadow: 0 18px 50px -24px rgba(15, 23, 42, 0.35);
+                    box-sizing: border-box;
+                }
+                .triage-sheet-break {
+                    padding-top: 10mm;
+                }
+                .triage-title {
+                    text-align: center;
+                    font-weight: 800;
+                    letter-spacing: 0.02em;
+                    border: 1.5px solid #111111;
+                    padding: 1.8mm 2mm;
+                    margin-top: 2.2mm;
+                    margin-bottom: 2.6mm;
+                    font-size: 14pt;
+                }
+                .triage-row {
+                    display: grid;
+                    gap: 4mm;
+                }
+                .triage-row-2 {
+                    grid-template-columns: 1fr 1fr;
+                }
+                .triage-field-label {
+                    font-size: 10.5pt;
+                    font-weight: 700;
+                    margin-bottom: 1mm;
+                }
+                .triage-input {
+                    width: 100%;
+                    font: inherit;
+                    border: none;
+                    border-bottom: 1px dotted #111111;
+                    background: transparent;
+                    padding: 0 0 0.6mm;
+                    outline: none;
+                }
+                .triage-input-inline {
+                    width: 70mm;
+                }
+                .triage-input-full {
+                    grid-column: 1 / -1;
+                    margin-left: 5mm;
+                    margin-top: -1mm;
+                }
+                .triage-note {
+                    margin-top: 6mm;
+                    font-size: 10pt;
+                    color: #475569;
+                    border: 1px dashed #cbd5e1;
+                    padding: 3mm 3.2mm;
+                }
+                .triage-p1-frame {
+                    border: 1.5px solid #111111;
+                    font-weight: 400;
+                    font-size: 9pt;
+                }
+                .triage-p1-frame * {
+                    font-weight: 400 !important;
+                }
+                .triage-p1-datetime {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 1.6mm;
+                    padding: 1.1mm 1.4mm;
+                    border-bottom: 1.5px solid #111111;
+                    font-size: 9pt;
+                    font-weight: 400;
+                }
+                .triage-p1-line {
+                    display: inline-flex;
+                    align-items: baseline;
+                    gap: 0.6mm;
+                    white-space: nowrap;
+                }
+                .triage-p1-label {
+                    font-weight: 400;
+                }
+                .triage-p1-input-date {
+                    width: 76mm;
+                }
+                .triage-p1-input-time {
+                    width: 42mm;
+                }
+                .triage-p1-wita {
+                    margin-left: 0.6mm;
+                }
+                .triage-p1-line .triage-p1-input-date,
+                .triage-p1-line .triage-p1-input-time {
+                    width: auto;
+                    flex: 0 0 auto;
+                }
+                .triage-p1-line .triage-p1-input-date {
+                    width: 72mm !important;
+                }
+                .triage-p1-line .triage-p1-input-time {
+                    width: 24mm !important;
+                }
+                .triage-p1-section {
+                    padding: 1.1mm 1.4mm 1.2mm;
+                }
+                .triage-p1-ku {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 1.2mm;
+                    font-size: 9pt;
+                    margin-bottom: 0.6mm;
+                }
+                .triage-p1-ku-label {
+                    font-weight: 700;
+                    white-space: nowrap;
+                }
+                .triage-p1-ku-lines {
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.9mm;
+                    padding-top: 0.2mm;
+                }
+                .triage-p1-ku-line {
+                    width: 100%;
+                }
+                .triage-p1-section-border {
+                    border-top: 1.5px solid #111111;
+                }
+                .triage-p1-section-last {
+                    padding-bottom: 1.1mm;
+                }
+                .triage-p1-vital-title {
+                    font-weight: 700 !important;
+                    font-size: 9pt;
+                    margin-bottom: 0.45mm;
+                }
+                .triage-p1-vital-grid {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 0.35mm 2.1mm;
+                    font-size: 9pt;
+                    font-weight: 400;
+                }
+                .triage-p1-vital-item {
+                    display: inline-flex;
+                    align-items: baseline;
+                    gap: 0.8mm;
+                    min-width: 0;
+                }
+                .triage-p1-vital-label {
+                    width: 10mm;
+                    display: inline-block;
+                    font-weight: 400;
+                }
+                .triage-p1-vital-input {
+                    width: 14mm;
+                }
+                .triage-p1-subtitle {
+                    margin-top: 0.9mm;
+                    font-weight: 400;
+                    font-size: 9pt;
+                }
+                .triage-p1-ph-grid {
+                    margin-top: 0.45mm;
+                    display: grid;
+                    grid-template-columns: 1.1fr 1fr 1fr;
+                    gap: 1.4mm;
+                }
+                .triage-p1-ph-col {
+                    display: grid;
+                    gap: 0.35mm;
+                }
+                .triage-p1-check {
+                    font-size: 9pt;
+                    font-weight: 400;
+                }
+                .triage-p1-frame .triage-check-item,
+                .triage-p1-frame .triage-input,
+                .triage-p1-frame .triage-input::placeholder {
+                    font-size: 9pt !important;
+                }
+                .triage-p1-ph-other {
+                    display: grid;
+                    gap: 0.35mm;
+                }
+                .triage-p1-ph-lines {
+                    display: grid;
+                    gap: 0.3mm;
+                    padding-left: 3.5mm;
+                }
+                .triage-p1-ph-line {
+                    width: 100%;
+                }
+                .triage-abc-grid {
+                    display: grid;
+                    grid-template-columns: 20mm 1fr 20mm 1fr 31mm;
+                    border: 1.5px solid #111111;
+                }
+                .triage-abc-cell {
+                    padding: 0.9mm 1.2mm;
+                    border-right: 1.5px solid #111111;
+                    min-height: 15.5mm;
+                }
+                .triage-abc-cell:nth-child(5n) {
+                    border-right: none;
+                }
+                .triage-abc-label {
+                    font-weight: 400;
+                    font-size: 9pt;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    line-height: 1.02;
+                }
+                .triage-abc-mini-title {
+                    font-weight: 400;
+                    margin-bottom: 0.35mm;
+                    font-size: 9pt;
+                }
+                .triage-abc-mini-title-spaced {
+                    margin-top: 0.5mm;
+                }
+                .triage-abc-border-top {
+                    border-top: 1.5px solid #111111;
+                }
+                .triage-abc-span4 {
+                    grid-column: 2 / 6;
+                    border-right: none;
+                    padding: 0;
+                }
+                .triage-abc-subgrid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    height: 100%;
+                }
+                .triage-abc-subcol {
+                    padding: 0.9mm 1.2mm;
+                }
+                .triage-abc-subcol-border {
+                    border-left: 1.5px solid #111111;
+                }
+                .triage-neuro-bar {
+                    border: 1.5px solid #111111;
+                    border-top: none;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0.9mm 1.2mm;
+                    gap: 0.55mm;
+                }
+                .triage-neuro-title {
+                    font-weight: 400;
+                    text-align: center;
+                    font-size: 9pt;
+                }
+                .triage-neuro-total-line {
+                    font-size: 9pt;
+                    display: inline-flex;
+                    align-items: baseline;
+                    gap: 1mm;
+                    white-space: nowrap;
+                }
+                .triage-neuro-total-label {
+                    font-weight: 700 !important;
+                }
+                .triage-neuro-total-input {
+                    width: 44mm;
+                    padding-bottom: 0.3mm;
+                    text-align: left;
+                }
+                .triage-gcs-grid {
+                    border: 1.5px solid #111111;
+                    border-top: none;
+                    display: grid;
+                    grid-template-columns: 1.06fr 1.16fr 1.12fr;
+                }
+                .triage-gcs-col {
+                    padding: 1mm 1.4mm 1.2mm;
+                    border-right: 1.5px solid #111111;
+                }
+                .triage-gcs-col:last-child {
+                    border-right: none;
+                }
+                .triage-gcs-head {
+                    font-weight: 400;
+                    text-decoration: underline;
+                    text-underline-offset: 2px;
+                    font-size: 9pt;
+                    margin-bottom: 0.7mm;
+                    text-align: center;
+                }
+                .triage-gcs-col .triage-check-item {
+                    display: grid;
+                    grid-template-columns: 4.8mm minmax(0, 1fr);
+                    align-items: start;
+                    line-height: 1.16;
+                    font-size: 9pt;
+                    gap: 1.3mm;
+                    width: 100%;
+                    margin-bottom: 0.45mm;
+                }
+                .triage-gcs-col .triage-check-item:last-child {
+                    margin-bottom: 0;
+                }
+                .triage-gcs-col .triage-check {
+                    margin-top: 0.2mm;
+                    flex: 0 0 auto;
+                }
+                .triage-triase-grid {
+                    display: grid;
+                    grid-template-columns: 26mm 1fr;
+                    border: 1.5px solid #111111;
+                }
+                .triage-triase-label {
+                    font-weight: 400;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-right: 1.5px solid #111111;
+                    font-size: 9pt;
+                    line-height: 1.2;
+                    padding: 0.9mm 0.8mm;
+                }
+                .triage-triase-table {
+                    display: grid;
+                }
+                .triage-triase-row {
+                    display: grid;
+                    grid-template-columns: 10mm 14mm 1fr;
+                    border-bottom: 1.5px solid #111111;
+                    min-height: 9.5mm;
+                }
+                .triage-triase-row:last-child {
+                    border-bottom: none;
+                }
+                .triage-triase-check {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-right: 1.5px solid #111111;
+                }
+                .triage-triase-code {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 400;
+                    border-right: 1.5px solid #111111;
+                }
+                .triage-triase-desc {
+                    padding: 0.65mm 1.1mm;
+                    font-size: 9pt;
+                    font-weight: 400;
+                    line-height: 1.08;
+                }
+                .triage-triase-p1 {
+                    background: #ef4444;
+                    color: #111111;
+                }
+                .triage-triase-p2 {
+                    background: #fde047;
+                    color: #111111;
+                }
+                .triage-triase-p3 {
+                    background: #22c55e;
+                    color: #111111;
+                }
+                .triage-triase-p0 {
+                    background: #111111;
+                    color: #ffffff;
+                }
+                .triage-p1-sign {
+                    margin-top: 1.8mm;
+                    text-align: center;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .triage-p1-sign-title {
+                    font-weight: 400;
+                    font-size: 9pt;
+                    margin-bottom: 1.2mm;
+                }
+                .triage-p1-sign-input {
+                    width: 60mm;
+                    margin: 0 auto;
+                    display: block;
+                    order: 2;
+                    text-align: center;
+                    padding-bottom: 0.8mm;
+                }
+                .triage-p1-sign-line {
+                    width: 60mm;
+                    height: 10.5mm;
+                    margin: 0;
+                    order: 1;
+                }
+                .triage-sheet .gc-header-left {
+                    grid-template-columns: 22mm 1fr;
+                    gap: 2mm;
+                }
+                .triage-sheet .gc-logo-wrap {
+                    justify-content: flex-end;
+                    padding-top: 2.2mm;
+                }
+                .triage-sheet .gc-logo {
+                    width: 19mm;
+                }
+                .triage-sheet .gc-header-center {
+                    padding-right: 0;
+                    padding-left: 1mm;
+                }
+                .triage-sheet .gc-header-line {
+                    font-size: 10.8pt;
+                }
+                .triage-sheet .gc-header-title {
+                    font-size: 12.2pt;
+                }
+                .triage-sheet .gc-header-address {
+                    font-size: 7.6pt;
+                }
+                .triage-section-title {
+                    font-weight: 800;
+                    text-align: center;
+                    border: 1.5px solid #111111;
+                    padding: 2mm 2mm;
+                    margin-bottom: 3mm;
+                    font-size: 11.5pt;
+                }
+                .triage-box {
+                    border: 1.5px solid #111111;
+                    padding: 3mm 3mm;
+                    margin-bottom: 4mm;
+                }
+                .triage-check-row {
+                    margin-bottom: 3mm;
+                }
+                .triage-check-grid {
+                    display: grid;
+                    gap: 2mm 6mm;
+                    align-items: center;
+                }
+                .triage-check-grid-5 {
+                    grid-template-columns: repeat(5, max-content);
+                }
+                .triage-check-grid-4 {
+                    grid-template-columns: repeat(4, minmax(0, 1fr));
+                }
+                .triage-check-grid-3 {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                    margin-bottom: 2mm;
+                }
+                .triage-check-item {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 2mm;
+                    font-size: 10.5pt;
+                    font-weight: 600;
+                }
+                .triage-check,
+                .triage-radio {
+                    appearance: none;
+                    width: 3.6mm;
+                    height: 3.6mm;
+                    border: 1.5px solid #111111;
+                    background: #ffffff;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-sizing: border-box;
+                    position: relative;
+                    flex: 0 0 3.6mm;
+                }
+                .triage-check {
+                    border-radius: 0.7mm;
+                }
+                .triage-radio {
+                    border-radius: 999px;
+                }
+                .triage-check::after,
+                .triage-radio::after {
+                    content: 'âœ“';
+                    display: block;
+                    width: 3.1mm;
+                    text-align: center;
+                    line-height: 1;
+                    font-size: 3.1mm;
+                    font-weight: 700;
+                    color: transparent;
+                }
+                .triage-check:checked {
+                    background: #ffffff;
+                    box-shadow: none;
+                }
+                .triage-check:checked::after {
+                    color: #111111;
+                }
+                .triage-radio:checked {
+                    background: #111111;
+                    box-shadow: inset 0 0 0 1.2mm #ffffff;
+                }
+                .triage-line-row {
+                    display: grid;
+                    grid-template-columns: 44mm repeat(2, max-content) 1fr;
+                    gap: 3mm;
+                    align-items: center;
+                    margin-top: 2mm;
+                }
+                .triage-line-label {
+                    font-weight: 800;
+                    font-size: 10.5pt;
+                }
+                .triage-line-fill {
+                    font-size: 10.5pt;
+                    font-weight: 600;
+                }
+                .triage-pain-grid {
+                    display: grid;
+                    grid-template-columns: 1.6fr 1fr;
+                    gap: 4mm;
+                    align-items: start;
+                    border: 1.5px solid #111111;
+                    padding: 3mm 3mm;
+                    margin-bottom: 4mm;
+                }
+                .triage-small-text {
+                    font-size: 9.8pt;
+                    font-weight: 600;
+                    line-height: 1.35;
+                    margin-bottom: 2.6mm;
+                }
+                .triage-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 10pt;
+                }
+                .triage-th,
+                .triage-td {
+                    border: 1px solid #111111;
+                    padding: 1.8mm 2mm;
+                    vertical-align: middle;
+                }
+                .triage-th {
+                    font-weight: 800;
+                    background: #f1f5f9;
+                    text-align: center;
+                }
+                .triage-th-left {
+                    text-align: left;
+                }
+                .triage-td-left {
+                    text-align: left;
+                    font-weight: 600;
+                }
+                .triage-center {
+                    text-align: center;
+                }
+                .triage-strong {
+                    font-weight: 900;
+                }
+                .triage-flacc-tag {
+                    display: inline-block;
+                    min-width: 14mm;
+                    font-weight: 900;
+                }
+                .triage-radio-item {
+                    display: inline-flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                }
+                .triage-wb-title {
+                    font-weight: 900;
+                    text-align: center;
+                    font-size: 10.5pt;
+                }
+                .triage-wb-sub {
+                    text-align: center;
+                    font-size: 9.5pt;
+                    font-weight: 700;
+                    margin-top: 0.8mm;
+                    color: #334155;
+                }
+                .triage-wb-faces {
+                    display: grid;
+                    grid-template-columns: repeat(6, 1fr);
+                    gap: 1.6mm;
+                    margin-top: 2.6mm;
+                }
+                .triage-wb-face {
+                    border: 1.5px solid #111111;
+                    padding: 1.4mm 1mm 1mm;
+                    text-align: center;
+                    background: #ffffff;
+                }
+                .triage-wb-svg {
+                    width: 100%;
+                    height: 18mm;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: currentColor;
+                }
+                .triage-wb-svg svg {
+                    width: 18mm;
+                    height: 18mm;
+                    display: block;
+                }
+                .triage-wb-num {
+                    font-weight: 900;
+                    font-size: 10pt;
+                    margin-top: 0.6mm;
+                }
+                .triage-wb-color-0 { color: #22c55e; }
+                .triage-wb-color-2 { color: #84cc16; }
+                .triage-wb-color-4 { color: #facc15; }
+                .triage-wb-color-6 { color: #fb923c; }
+                .triage-wb-color-8 { color: #f97316; }
+                .triage-wb-color-10 { color: #ef4444; }
+                .triage-wb-active {
+                    outline: 2.5px solid #111111;
+                    outline-offset: -2px;
+                    box-shadow: 0 0 0 1px #111111 inset;
+                }
+                .triage-wb-scale {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr 1fr;
+                    margin-top: 2mm;
+                    font-weight: 900;
+                    font-size: 9.5pt;
+                    text-align: center;
+                }
+                .triage-wb-score {
+                    margin-top: 2mm;
+                    font-weight: 900;
+                    text-align: center;
+                }
+                .triage-morse-grid {
+                    display: grid;
+                    grid-template-columns: 1.8fr 0.9fr;
+                    gap: 4mm;
+                    align-items: start;
+                }
+                .triage-radio-stack {
+                    display: grid;
+                    gap: 1.2mm;
+                }
+                .triage-risk-title {
+                    font-weight: 900;
+                    text-align: center;
+                    margin-bottom: 2mm;
+                }
+                .triage-risk-box {
+                    border: 1.5px solid #111111;
+                    padding: 3mm 3mm;
+                    margin-bottom: 2mm;
+                    text-align: center;
+                }
+                .triage-risk-label {
+                    font-weight: 900;
+                    font-size: 10.5pt;
+                }
+                .triage-risk-range {
+                    margin-top: 1mm;
+                    font-weight: 900;
+                    font-size: 14pt;
+                }
+                .triage-risk-high { background: #fee2e2; }
+                .triage-risk-med { background: #fef9c3; }
+                .triage-risk-low { background: #dcfce7; }
+                .triage-risk-active {
+                    outline: 3px solid #111111;
+                    outline-offset: -3px;
+                }
+                .triage-risk-score {
+                    font-weight: 900;
+                    text-align: center;
+                    margin-top: 2mm;
+                    font-size: 11pt;
+                }
+                .triage-page2 {
+                    font-size: 9pt;
+                    font-weight: 400;
+                }
+                .triage-page2 .triage-p2-frame {
+                    border: 1.5px solid #111111;
+                    padding: 2mm 2mm 2.2mm;
+                    margin-top: 2mm;
+                }
+                .triage-page2 .triage-section-title {
+                    font-weight: 900;
+                    text-align: center;
+                    border: 1.5px solid #111111;
+                    background: #e5e7eb;
+                    padding: 1.2mm 2mm;
+                    margin-bottom: 2mm;
+                    font-size: 9pt;
+                }
+                .triage-page2 .triage-box {
+                    padding: 0;
+                    margin-bottom: 3mm;
+                }
+                .triage-page2 .triage-check-row {
+                    margin-bottom: 0;
+                    padding: 1.4mm 2mm;
+                    border-bottom: 1px solid #111111;
+                }
+                .triage-page2 .triage-check-grid {
+                    gap: 1.2mm 5mm;
+                }
+                .triage-page2 .triage-check-item {
+                    font-size: 9pt;
+                    font-weight: 400;
+                    gap: 1.5mm;
+                }
+                .triage-page2 .triage-line-row {
+                    grid-template-columns: 40mm repeat(2, max-content) 1fr;
+                    gap: 2mm;
+                    align-items: center;
+                    margin-top: 0;
+                    padding: 1.4mm 2mm;
+                    border-top: 1px solid #111111;
+                }
+                .triage-page2 .triage-line-label {
+                    font-weight: 700;
+                    font-size: 9pt;
+                }
+                .triage-page2 .triage-line-fill {
+                    font-size: 9pt;
+                    font-weight: 400;
+                }
+                .triage-page2 .triage-p2-pain-grid {
+                    gap: 0;
+                    padding: 0;
+                    margin-bottom: 3mm;
+                    grid-template-columns: 1.9fr 1fr;
+                }
+                .triage-page2 .triage-pain-left {
+                    padding: 1.6mm 1.8mm;
+                    border-right: 1.5px solid #111111;
+                }
+                .triage-page2 .triage-pain-right {
+                    padding: 1.6mm 1.8mm;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+                .triage-page2 .triage-p2-pain-note {
+                    font-size: 8.7pt;
+                    font-weight: 400;
+                    line-height: 1.3;
+                    margin-bottom: 1.4mm;
+                    padding-bottom: 1.2mm;
+                    border-bottom: 1px solid #111111;
+                }
+                .triage-page2 .triage-table {
+                    font-size: 8pt;
+                }
+                .triage-page2 .triage-th,
+                .triage-page2 .triage-td {
+                    padding: 0.9mm 1.1mm;
+                }
+                .triage-page2 .triage-th {
+                    background: #ffffff;
+                }
+                .triage-flacc-cat {
+                    width: 20mm;
+                    text-align: left;
+                    font-weight: 900;
+                }
+                .triage-flacc-face { background: #c4b5fd; }
+                .triage-flacc-legs { background: #fdba74; }
+                .triage-flacc-activity { background: #86efac; }
+                .triage-flacc-cry { background: #fca5a5; }
+                .triage-flacc-consolability { background: #93c5fd; }
+                .triage-flacc-desc {
+                    font-weight: 400;
+                    line-height: 1.15;
+                    overflow: hidden;
+                    word-break: break-word;
+                }
+                .triage-flacc-choice {
+                    display: grid;
+                    grid-template-columns: 3.6mm minmax(0, 1fr);
+                    gap: 0.8mm;
+                    align-items: start;
+                    width: 100%;
+                }
+                .triage-flacc-choice > span {
+                    display: block;
+                    overflow-wrap: anywhere;
+                }
+                .triage-flacc-score {
+                    width: 10mm;
+                    font-weight: 900;
+                }
+                .triage-flacc-total-label,
+                .triage-flacc-total-score {
+                    background: #facc15;
+                }
+                .triage-flacc-total-label {
+                    text-align: center !important;
+                }
+                .triage-page2 .triage-wb-title {
+                    font-size: 9pt;
+                    font-weight: 900;
+                }
+                .triage-page2 .triage-wb-sub {
+                    font-size: 8.3pt;
+                    font-weight: 700;
+                    color: #111111;
+                }
+                .triage-page2 .triage-wb-faces {
+                    display: grid;
+                    grid-template-columns: repeat(6, 1fr);
+                    gap: 1mm;
+                    margin-top: 1.2mm;
+                }
+                .triage-page2 .triage-wb-face {
+                    padding: 0.7mm 0.6mm 0.5mm;
+                    text-align: center;
+                    cursor: pointer;
+                }
+                .triage-page2 .triage-wb-svg {
+                    height: 10mm;
+                }
+                .triage-page2 .triage-wb-svg svg {
+                    width: 10mm;
+                    height: 10mm;
+                }
+                .triage-page2 .triage-wb-indicator {
+                    margin-top: 1.4mm;
+                }
+                .triage-page2 .triage-wb-ind-row {
+                    display: grid;
+                    grid-template-columns: repeat(11, 1fr);
+                    width: 100%;
+                    border: 1.5px solid #111111;
+                    overflow: hidden;
+                }
+                .triage-page2 .triage-wb-ind {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 900;
+                    font-size: 8pt;
+                    height: 6mm;
+                    border-right: 1px solid #111111;
+                    color: #111111;
+                    cursor: pointer;
+                }
+                .triage-page2 .triage-wb-ind:last-child {
+                    border-right: none;
+                }
+                .triage-page2 .triage-wb-ind-active {
+                    outline: none;
+                    box-shadow: inset 0 0 0 2px #ffffff, inset 0 0 0 5px #111111;
+                }
+                .triage-page2 .triage-wb-ind-0 { background: #60a5fa; }
+                .triage-page2 .triage-wb-ind-1 { background: #93c5fd; }
+                .triage-page2 .triage-wb-ind-2 { background: #a7f3d0; }
+                .triage-page2 .triage-wb-ind-3 { background: #86efac; }
+                .triage-page2 .triage-wb-ind-4 { background: #fde047; }
+                .triage-page2 .triage-wb-ind-5 { background: #facc15; }
+                .triage-page2 .triage-wb-ind-6 { background: #fdba74; }
+                .triage-page2 .triage-wb-ind-7 { background: #fb923c; }
+                .triage-page2 .triage-wb-ind-8 { background: #f97316; }
+                .triage-page2 .triage-wb-ind-9 { background: #f87171; }
+                .triage-page2 .triage-wb-ind-10 { background: #ef4444; }
+                .triage-page2 .triage-wb-ind-labels {
+                    display: grid;
+                    grid-template-columns: repeat(11, 1fr);
+                    margin-top: 1mm;
+                    font-weight: 900;
+                    font-size: 8.5pt;
+                    text-align: center;
+                }
+                .triage-page2 .triage-wb-ind-label {
+                    border: 1.5px solid #111111;
+                    padding: 0.8mm 0.4mm;
+                }
+                .triage-page2 .triage-wb-ind-label-light {
+                    grid-column: 2 / 5;
+                }
+                .triage-page2 .triage-wb-ind-label-mid {
+                    grid-column: 5 / 8;
+                }
+                .triage-page2 .triage-wb-ind-label-high {
+                    grid-column: 8 / 11;
+                }
+                .triage-page2 .triage-wb-score {
+                    font-size: 9pt;
+                }
+                .triage-p2-bottom-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 2mm;
+                }
+                .triage-p2-panel {
+                    border: 1.5px solid #111111;
+                }
+                .triage-p2-panel-title {
+                    font-weight: 900;
+                    text-align: center;
+                    padding: 1mm 1.4mm;
+                    border-bottom: 1.5px solid #111111;
+                }
+                .triage-p2-panel-body {
+                    padding: 1.4mm 1.6mm;
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 1mm 4mm;
+                    align-items: start;
+                }
+                .triage-p2-panel-body .triage-check-item {
+                    width: 100%;
+                    display: grid;
+                    grid-template-columns: 4.2mm minmax(0, 1fr);
+                    gap: 1.2mm;
+                    align-items: start;
+                }
+                .triage-p2-inline-line {
+                    grid-column: 1 / -1;
+                    margin-top: 0.4mm;
+                }
+                .triage-page3 {
+                    font-size: 8.7pt;
+                    font-weight: 400;
+                }
+                .triage-page3.triage-sheet-break {
+                    padding-top: 4mm;
+                }
+                .triage-page3 .triage-p3-frame {
+                    border: 1.5px solid #111111;
+                    padding: 1.2mm 1.4mm 1.4mm;
+                    margin-top: 1.2mm;
+                }
+                .triage-page3 .triage-section-title {
+                    font-weight: 900;
+                    text-align: center;
+                    border: 1.5px solid #111111;
+                    background: #e5e7eb;
+                    padding: 0.9mm 1.6mm;
+                    margin-bottom: 1.1mm;
+                    font-size: 8.6pt;
+                }
+                .triage-page3 .triage-table {
+                    font-size: 7.7pt;
+                }
+                .triage-morse-table .triage-th:nth-child(1) { width: 38mm; }
+                .triage-morse-table .triage-th:nth-child(3) { width: 12mm; }
+                .triage-morse-table .triage-th:nth-child(4) { width: 14mm; }
+                .triage-morse-table .triage-th:nth-child(5) { width: 52mm; }
+                .triage-page3 .triage-th {
+                    background: #e5e7eb;
+                }
+                .triage-page3 .triage-th,
+                .triage-page3 .triage-td {
+                    padding: 0.45mm 0.7mm;
+                    line-height: 1.08;
+                }
+                .triage-p3-table .triage-th:last-child,
+                .triage-p3-table .triage-td:last-child {
+                    width: 42mm;
+                }
+                .triage-p3-score-input {
+                    width: 100%;
+                    text-align: center;
+                    padding-bottom: 0.1mm;
+                }
+                .triage-p3-risk-cell {
+                    padding: 0 !important;
+                    vertical-align: top;
+                }
+                .triage-morse-risk-stack {
+                    height: 100%;
+                    min-height: 0;
+                    display: flex;
+                    flex-direction: column;
+                }
+                .triage-morse-risk {
+                    flex: 1 1 0;
+                    border-bottom: 1.5px solid #111111;
+                    display: grid;
+                    grid-template-columns: 1fr 22mm;
+                    align-items: center;
+                    padding: 0;
+                    gap: 0;
+                    background: #ffffff;
+                }
+                .triage-morse-risk:last-of-type {
+                    border-bottom: 1.5px solid #111111;
+                }
+                .triage-morse-risk-label {
+                    font-weight: 900;
+                    text-align: left;
+                    padding: 0.8mm 0.9mm;
+                    border-right: 1.5px solid #111111;
+                    background: #ffffff;
+                    font-size: 8pt;
+                }
+                .triage-morse-risk-value {
+                    font-weight: 900;
+                    font-size: 10.5pt;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0.8mm 0.9mm;
+                    height: 100%;
+                    color: #111111;
+                }
+                .triage-p3-risk-high .triage-morse-risk-value { background: #ef4444; }
+                .triage-p3-risk-med .triage-morse-risk-value { background: #fde047; }
+                .triage-p3-risk-low .triage-morse-risk-value { background: #22c55e; }
+                .triage-morse-risk-note {
+                    border-top: 1.5px solid #111111;
+                    font-weight: 900;
+                    font-size: 7pt;
+                    padding: 0.7mm 0.8mm;
+                    text-align: center;
+                    background: #ffffff;
+                }
+                .triage-page3 .triage-risk-active {
+                    outline: none;
+                    box-shadow: none;
+                }
+                .triage-page3 .triage-risk-active .triage-morse-risk-value {
+                    outline: none;
+                    box-shadow: inset 0 0 0 2px #ffffff, inset 0 0 0 6px #111111;
+                }
+                .triage-p3-title-spaced {
+                    margin-top: 1.3mm;
+                }
+                .triage-hd-date-row {
+                    background: #e5e7eb;
+                    font-weight: 700;
+                }
+                .triage-hd-date-input {
+                    width: 78mm;
+                    margin-left: 1.2mm;
+                }
+                .triage-p3-hd-bottom {
+                    margin-top: 1mm;
+                }
+                .triage-p3-hd-bottom-title {
+                    font-weight: 900;
+                    text-align: center;
+                    margin-bottom: 0.8mm;
+                    font-size: 8.2pt;
+                }
+                .triage-p3-hd-risk-table {
+                    width: 100%;
+                    table-layout: fixed;
+                }
+                .triage-p3-hd-risk-table th:nth-child(1),
+                .triage-p3-hd-risk-table td:nth-child(1) {
+                    width: 20%;
+                }
+                .triage-p3-hd-risk-table th:nth-child(2),
+                .triage-p3-hd-risk-table td:nth-child(2) {
+                    width: 26%;
+                }
+                .triage-p3-hd-risk-table th:nth-child(3),
+                .triage-p3-hd-risk-table td:nth-child(3) {
+                    width: 54%;
+                }
+                .triage-p3-hd-risk-table tr.triage-risk-active td {
+                    outline: none;
+                    box-shadow: inset 0 0 0 1.5px #111111;
+                    background: #f8fafc;
+                }
+                .triage-p3-hd-risk-table tr.triage-risk-active td:nth-child(2) {
+                    font-weight: 900;
+                }
+                .triage-p3-hd-risk-table tr.triage-risk-active td:nth-child(3) {
+                    font-weight: 700;
+                }

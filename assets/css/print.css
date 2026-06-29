@@ -1,0 +1,189 @@
+﻿@media print {
+                    body[data-print-mode="barcode"],
+                    body[data-print-mode="wristband"] {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        overflow: hidden !important;
+                    }
+                    body[data-print-mode="barcode"] > *,
+                    body[data-print-mode="wristband"] > * {
+                        display: none !important;
+                    }
+                    body[data-print-mode="barcode"] {
+                        width: 50mm;
+                        height: 30mm;
+                    }
+                    body[data-print-mode="barcode"] #stickerContainer {
+                        display: block !important;
+                        position: fixed;
+                        left: 0;
+                        top: 0;
+                        width: 50mm;
+                        height: 30mm;
+                        margin: 0;
+                        padding: 0;
+                        overflow: hidden;
+                    }
+                    body[data-print-mode="barcode"] #sticker {
+                        width: 50mm !important;
+                        height: 30mm !important;
+                        box-sizing: border-box;
+                        overflow: hidden;
+                    }
+                    body[data-print-mode="wristband"] {
+                        width: 90mm;
+                        height: 25mm;
+                    }
+                    body[data-print-mode="wristband"] #wristbandContainer {
+                        display: block !important;
+                        position: fixed;
+                        left: 0;
+                        top: 0;
+                        width: 90mm;
+                        height: 25mm;
+                        margin: 0;
+                        padding: 0;
+                        overflow: hidden;
+                    }
+                    body[data-print-mode="wristband"] #wristband {
+                        width: 90mm !important;
+                        height: 25mm !important;
+                        box-sizing: border-box;
+                        overflow: hidden;
+                    }
+                }
+
+                @media print {
+                    body[data-print-mode="general-consent"] * {
+                        visibility: hidden;
+                    }
+                    body[data-print-mode="general-consent"] #generalConsentModal,
+                    body[data-print-mode="general-consent"] #generalConsentModal * {
+                        visibility: visible;
+                    }
+                    body[data-print-mode="general-consent"] #generalConsentModal {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        height: auto;
+                        background: white !important;
+                    }
+                    body[data-print-mode="general-consent"] #generalConsentModal > div:first-child {
+                        display: none;
+                    }
+                    body[data-print-mode="general-consent"] #generalConsentModal > div:last-child,
+                    body[data-print-mode="general-consent"] #generalConsentModal > div:last-child > div {
+                        display: block;
+                        min-height: auto;
+                        max-height: none;
+                        overflow: visible;
+                        box-shadow: none;
+                        border-radius: 0;
+                        background: white;
+                    }
+                    body[data-print-mode="general-consent"] #generalConsentModal .sticky {
+                        display: none !important;
+                    }
+                    body[data-print-mode="general-consent"] #generalConsentModal .p-6 {
+                        padding: 0 !important;
+                        background: white !important;
+                    }
+                    body[data-print-mode="general-consent"] #gcValidationMessage {
+                        display: none !important;
+                    }
+                    body[data-print-mode="general-consent"] .gc-sheet {
+                        margin: 0;
+                        width: auto;
+                        min-height: auto;
+                    padding: 5mm 8mm 5mm;
+                        box-shadow: none;
+                        break-after: auto;
+                        page-break-after: auto;
+                    }
+                    body[data-print-mode="general-consent"] .gc-sheet-break {
+                    padding-top: 4mm;
+                    }
+                    body[data-print-mode="general-consent"] .gc-body-box-second {
+                        min-height: auto;
+                    }
+                    body[data-print-mode="general-consent"] .gc-sheet:not(:last-of-type) {
+                        break-after: page;
+                        page-break-after: always;
+                    }
+                    body[data-print-mode="general-consent"] .gc-body-box,
+                    body[data-print-mode="general-consent"] .gc-family-table {
+                        break-inside: avoid;
+                        page-break-inside: avoid;
+                    }
+                    body[data-print-mode="general-consent"] .gc-witness-input {
+                        display: none !important;
+                    }
+                    body[data-print-mode="general-consent"] .gc-admin-select {
+                        display: none !important;
+                    }
+                    body[data-print-mode="general-consent"] .gc-input {
+                        -webkit-appearance: none;
+                        -moz-appearance: none;
+                        appearance: none;
+                        border: none !important;
+                        background: transparent !important;
+                    }
+                    body[data-print-mode="general-consent"] select.gc-input {
+                        pointer-events: none;
+                    }
+                    body[data-print-mode="triase-ugd"] * {
+                        visibility: hidden;
+                    }
+                    body[data-print-mode="triase-ugd"] #triageUgdModal,
+                    body[data-print-mode="triase-ugd"] #triageUgdModal * {
+                        visibility: visible;
+                    }
+                    body[data-print-mode="triase-ugd"] #triageUgdModal {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        height: auto;
+                        background: white !important;
+                    }
+                    body[data-print-mode="triase-ugd"] #triageUgdModal > div:first-child {
+                        display: none;
+                    }
+                    body[data-print-mode="triase-ugd"] #triageUgdModal > div:last-child,
+                    body[data-print-mode="triase-ugd"] #triageUgdModal > div:last-child > div {
+                        display: block;
+                        min-height: auto;
+                        max-height: none;
+                        overflow: visible;
+                        box-shadow: none;
+                        border-radius: 0;
+                        background: white;
+                    }
+                    body[data-print-mode="triase-ugd"] #triageUgdModal .sticky {
+                        display: none !important;
+                    }
+                    body[data-print-mode="triase-ugd"] #triageUgdModal .p-6 {
+                        padding: 0 !important;
+                        background: white !important;
+                    }
+                    body[data-print-mode="triase-ugd"] .triage-sheet {
+                        margin: 0;
+                        width: auto;
+                        min-height: auto;
+                        padding: 3mm 4mm 3mm;
+                        box-shadow: none;
+                        break-after: auto;
+                        page-break-after: auto;
+                    }
+                    body[data-print-mode="triase-ugd"] .triage-sheet-break {
+                        padding-top: 4mm;
+                    }
+                    body[data-print-mode="triase-ugd"] .triage-page3.triage-sheet-break {
+                        padding-top: 2mm;
+                    }
+                    body[data-print-mode="triase-ugd"] .triage-sheet:not(:last-of-type) {
+                        break-after: page;
+                        page-break-after: always;
+                    }
+                }

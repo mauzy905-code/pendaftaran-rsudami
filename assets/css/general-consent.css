@@ -1,0 +1,305 @@
+﻿.gc-document {
+                    font-family: Arial, sans-serif;
+                    color: #111827;
+                }
+                .gc-sheet {
+                    position: relative;
+                    width: 210mm;
+                    min-height: 330mm;
+                    margin: 0 auto 12mm;
+                    padding: 7.5mm 11mm 7mm;
+                    background: #ffffff;
+                    box-shadow: 0 18px 50px -24px rgba(15, 23, 42, 0.35);
+                    box-sizing: border-box;
+                }
+                .gc-sheet-break {
+                    padding-top: 10mm;
+                }
+                .gc-header-box {
+                    display: grid;
+                    grid-template-columns: 1fr 49mm;
+                    gap: 2mm;
+                    align-items: stretch;
+                    border: 1.5px solid #111111;
+                    padding: 3.6mm 3.2mm 3.2mm;
+                    margin-bottom: 3.2mm;
+                }
+                .gc-patient-col {
+                    padding-left: 1.4mm;
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: flex-start;
+                }
+                .gc-header-left {
+                    display: grid;
+                    grid-template-columns: 19mm 1fr;
+                    gap: 3mm;
+                    align-items: start;
+                    padding-top: 2.8mm;
+                }
+                .gc-logo-wrap {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding-top: 2.8mm;
+                }
+                .gc-logo {
+                    width: 16.8mm;
+                    height: auto;
+                }
+                .gc-header-center {
+                    text-align: center;
+                    line-height: 1.2;
+                    padding-right: 1mm;
+                }
+                .gc-header-line {
+                    font-size: 10pt;
+                }
+                .gc-header-strong {
+                    font-weight: 700;
+                }
+                .gc-header-title {
+                    font-size: 11pt;
+                    font-weight: 700;
+                    margin-top: 1mm;
+                    white-space: nowrap;
+                }
+                .gc-header-address {
+                    font-size: 7pt;
+                    margin-top: 0.4mm;
+                    white-space: nowrap;
+                }
+                .gc-patient-box {
+                    border: 1.5px solid #111111;
+                    border-radius: 5mm;
+                    width: 47.5mm;
+                    padding: 2.2mm 2.1mm;
+                    align-self: start;
+                    margin-left: 0;
+                    box-sizing: border-box;
+                }
+                .gc-patient-meta,
+                .gc-identity-table,
+                .gc-family-table,
+                .gc-sign-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                .gc-patient-meta {
+                    table-layout: fixed;
+                }
+                .gc-patient-meta td {
+                    font-size: 8.2pt;
+                    padding: 0.3mm 0;
+                    vertical-align: top;
+                }
+                .gc-patient-meta td:first-child {
+                    width: 18.5mm;
+                    font-weight: 700;
+                    white-space: nowrap;
+                }
+                .gc-patient-meta td:nth-child(2) {
+                    width: 2.5mm;
+                }
+                #gc_jk {
+                    white-space: nowrap;
+                }
+                .gc-title-box {
+                    border: 1.5px solid #111111;
+                    text-align: center;
+                    padding: 2.8mm 3mm;
+                    font-size: 12.5pt;
+                    font-weight: 700;
+                    margin-bottom: 1.4mm;
+                }
+                .gc-subtitle {
+                    text-align: center;
+                    font-size: 11pt;
+                    font-weight: 700;
+                    margin-bottom: 1.1mm;
+                    text-transform: uppercase;
+                    line-height: 1.2;
+                }
+                .gc-body-box {
+                    border: 1.5px solid #111111;
+                    padding: 3mm 3.5mm 3.2mm;
+                    font-size: 10.5pt;
+                    line-height: 1.36;
+                }
+                .gc-body-box-second {
+                    min-height: 260mm;
+                }
+                .gc-identity-table {
+                    margin-bottom: 2mm;
+                }
+                .gc-identity-table td {
+                    padding: 0.8mm 0;
+                    vertical-align: top;
+                }
+                .gc-label-wide {
+                    width: 60mm;
+                    white-space: nowrap;
+                }
+                .gc-colon {
+                    width: 4mm;
+                    text-align: center;
+                }
+                .gc-align-top {
+                    vertical-align: top;
+                }
+                .gc-input-inline {
+                    width: 58mm;
+                    font: inherit;
+                    border: none;
+                    border-bottom: 1px dotted #111111;
+                    background: transparent;
+                    padding: 0;
+                    outline: none;
+                }
+                .gc-signer-input {
+                    width: 100%;
+                }
+                .gc-witness-input {
+                    margin-top: 1.4mm;
+                }
+                .gc-admin-select {
+                    width: 100%;
+                    text-align: center;
+                }
+                .gc-section {
+                    margin-top: 2.4mm;
+                }
+                .gc-section-title {
+                    font-weight: 700;
+                    margin-bottom: 1.2mm;
+                }
+                .gc-paragraph,
+                .gc-plain-paragraph {
+                    text-align: justify;
+                    margin-bottom: 1.1mm;
+                }
+                .gc-paragraph {
+                    padding-left: 7mm;
+                    text-indent: -4.8mm;
+                }
+                .gc-bullet {
+                    display: inline-block;
+                    width: 4.3mm;
+                    font-weight: 700;
+                }
+                .gc-number-row {
+                    display: grid;
+                    grid-template-columns: 6mm 1fr;
+                    gap: 1mm;
+                    margin-left: 9.5mm;
+                    margin-bottom: 0.8mm;
+                    text-align: justify;
+                }
+                .gc-family-table {
+                    margin-top: 0.8mm;
+                    margin-left: 7mm;
+                    font-size: 10.5pt;
+                }
+                .gc-family-table td {
+                    padding: 0.5mm 1mm 0.5mm 0;
+                    vertical-align: top;
+                }
+                .gc-family-table td:first-child {
+                    width: 6mm;
+                }
+                .gc-line-input {
+                    width: 100%;
+                    font: inherit;
+                    border: none;
+                    border-bottom: 1px dotted #111111;
+                    background: transparent;
+                    padding: 0 0 0.4mm;
+                    outline: none;
+                }
+                .gc-auto-textarea {
+                    resize: none;
+                    overflow: hidden;
+                    display: block;
+                    line-height: 1.25;
+                }
+                select.gc-line-input {
+                    cursor: pointer;
+                }
+                .gc-line-row {
+                    display: grid;
+                    grid-template-columns: 22mm 1fr;
+                    gap: 2mm;
+                    align-items: end;
+                    margin-top: 1.8mm;
+                    margin-left: 6mm;
+                }
+                .gc-line-row-compact {
+                    grid-template-columns: 4mm 1fr;
+                    gap: 1mm;
+                }
+                .gc-line-fill {
+                    display: block;
+                    min-height: 5.5mm;
+                    border-bottom: 1px dotted #111111;
+                }
+                .gc-line-entry {
+                    width: 100%;
+                    font: inherit;
+                    border: none;
+                    border-bottom: 1px dotted #111111;
+                    background: transparent;
+                    padding: 0 0 0.6mm;
+                    outline: none;
+                }
+                .gc-line-entry::placeholder,
+                .gc-line-input::placeholder {
+                    color: #111111;
+                    opacity: 1;
+                }
+                .gc-signature-block {
+                    margin-top: 7mm;
+                }
+                .gc-signature-title {
+                    font-weight: 700;
+                    margin-bottom: 1.4mm;
+                }
+                .gc-signature-copy {
+                    margin-bottom: 8mm;
+                }
+                .gc-signature-date {
+                    margin-bottom: 5mm;
+                }
+                .gc-sign-table td {
+                    width: 33.33%;
+                    text-align: center;
+                    vertical-align: top;
+                    padding: 0 2mm;
+                }
+                .gc-sign-role {
+                    font-size: 11pt;
+                }
+                .gc-sign-subrole {
+                    font-size: 10.5pt;
+                    min-height: 10mm;
+                }
+                .gc-sign-space {
+                    height: 24mm;
+                }
+                .gc-sign-line {
+                    font-size: 11pt;
+                    white-space: nowrap;
+                    min-height: 5mm;
+                }
+                .gc-sign-note {
+                    font-size: 8.5pt;
+                    margin-top: 1mm;
+                }
+                .gc-notes-label {
+                    font-size: 9.5pt;
+                    margin-top: 8mm;
+                    margin-bottom: 1mm;
+                }
+                .gc-note-line {
+                    border-bottom: 1px dotted #111111;
+                    min-height: 7mm;
+                }
