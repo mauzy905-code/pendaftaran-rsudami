@@ -6751,7 +6751,7 @@
                                     }
                                     showTriaseUgdMessage('Triase berhasil disimpan. Saat dibuka lagi, data terakhir akan otomatis dimuat.', 'success');
                                 } else {
-                                    showTriaseUgdMessage('Triase berhasil disimpan di browser ini. Jika ingin tersimpan lintas perangkat, tambahkan kolom `triase_ugd_data` di Supabase.', 'info');
+                                    showTriaseUgdMessage('Triase berhasil disimpan,tambah kolom `triase_ugd_data`.', 'info');
                                 }
                             } catch (err) {
                                 showTriaseUgdMessage('Gagal menyimpan triase: ' + (err?.message || String(err)), 'error');
