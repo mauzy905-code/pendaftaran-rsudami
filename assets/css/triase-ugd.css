@@ -1027,6 +1027,33 @@
                 .triage-p3-risk-high .triage-morse-risk-value { background: #ef4444; }
                 .triage-p3-risk-med .triage-morse-risk-value { background: #fde047; }
                 .triage-p3-risk-low .triage-morse-risk-value { background: #22c55e; }
+                .triage-morse-score {
+                    border-top: 1.5px solid #111111;
+                    display: grid;
+                    grid-template-columns: 1fr 22mm;
+                    align-items: center;
+                    background: #ffffff;
+                }
+                .triage-morse-score-label {
+                    font-weight: 900;
+                    font-size: 7pt;
+                    padding: 0.7mm 0.8mm;
+                    text-align: center;
+                    border-right: 1.5px solid #111111;
+                }
+                .triage-morse-score-value {
+                    font-weight: 900;
+                    font-size: 10pt;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0.7mm 0.8mm;
+                    background: #ffffff;
+                }
+                .triage-score-low { color: #16a34a !important; }
+                .triage-score-med { color: #eab308 !important; }
+                .triage-score-high { color: #dc2626 !important; }
                 .triage-morse-risk-note {
                     border-top: 1.5px solid #111111;
                     font-weight: 900;
@@ -1056,6 +1083,25 @@
                 }
                 .triage-p3-hd-bottom {
                     margin-top: 1mm;
+                }
+                .triage-hd-score-line {
+                    margin-top: 0.7mm;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 1.2mm;
+                    font-weight: 900;
+                    font-size: 8pt;
+                }
+                .triage-hd-score-value {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-width: 12mm;
+                    border: 1.5px solid #111111;
+                    padding: 0.2mm 1mm;
+                    line-height: 1.1;
+                    background: #ffffff;
                 }
                 .triage-p3-hd-bottom-title {
                     font-weight: 900;
